@@ -1,0 +1,12 @@
+/* src/pages/HomePage/HomePage.css */
+.home-page {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Global container style */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 5%;
+}
