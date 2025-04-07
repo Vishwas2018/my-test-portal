@@ -2,11 +2,10 @@ import './styles/global.css';
 import './App.css';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Footer, Header } from './components/layout'; // lowercase 'c'
+import { Footer, Header } from './components/layout';
 
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
-// src/App.js
 import React from 'react';
 
 function App() {
@@ -17,9 +16,10 @@ function App() {
         <main className="main-content">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            {/* Add more routes as you develop additional pages */}
-            <Route path="/login" element={<div className="container page-content">Login Page (Coming Soon)</div>} />
-            <Route path="/signup" element={<div className="container page-content">Signup Page (Coming Soon)</div>} />
+            {/* Fixed route to use the actual login page component */}
+            <Route path="/login" element={<LoginPage />} />
+            {/* Use the same login page for signup with a prop to show signup form */}
+            <Route path="/signup" element={<LoginPage initialForm="register" />} />
             <Route path="/features" element={<div className="container page-content">Features Page (Coming Soon)</div>} />
             <Route path="/pricing" element={<div className="container page-content">Pricing Page (Coming Soon)</div>} />
             <Route path="/about" element={<div className="container page-content">About Page (Coming Soon)</div>} />

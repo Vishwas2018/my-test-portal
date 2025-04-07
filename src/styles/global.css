@@ -1,8 +1,8 @@
 /* src/styles/global.css */
-/* Import variables and fonts */
+/* Import variables and kid-friendly fonts */
 @import './variables.css';
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 
 /* CSS Reset */
 *,
@@ -19,7 +19,7 @@ html {
 
 /* Base styles */
 body {
-  font-family: 'Lato', sans-serif;
+  font-family: 'Nunito', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--off-white);
@@ -27,9 +27,11 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 25% 25%, rgba(157, 141, 241, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(56, 178, 172, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 25% 25%, rgba(110, 207, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(126, 217, 87, 0.08) 0%, transparent 50%);
   background-attachment: fixed;
+  font-size: var(--font-base);
+  letter-spacing: 0.01em;
 }
 
 img {
@@ -53,17 +55,17 @@ button,
 input,
 select,
 textarea {
-  font-family: inherit;
+  font-family: 'Nunito', sans-serif;
   font-size: inherit;
   line-height: inherit;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Comic Neue', cursive;
   line-height: 1.2;
   color: var(--dark);
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
 }
 
 p {
@@ -73,22 +75,24 @@ p {
 /* Text selection styling */
 ::selection {
   background-color: var(--primary-light);
-  color: var(--white);
+  color: var(--dark);
 }
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
 }
 
 ::-webkit-scrollbar-track {
   background: var(--light-gray);
+  border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--primary);
   border-radius: var(--radius-full);
+  border: 3px solid var(--light-gray);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -155,4 +159,44 @@ p {
 
 .glow-hover:hover {
   box-shadow: var(--glow-primary);
+}
+
+/* Kid-friendly elements */
+.bubble {
+  position: relative;
+  border-radius: var(--radius-full);
+  padding: 1rem 1.5rem;
+  background: var(--white);
+  box-shadow: var(--shadow-md);
+}
+
+.bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+  background: var(--white);
+  transform: rotate(45deg);
+  box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Fun hover animation for interactive elements */
+.hover-float {
+  transition: var(--transition-bounce);
+}
+
+.hover-float:hover {
+  transform: translateY(-5px);
+}
+
+/* Add a subtle tilt to cards */
+.tilt-card {
+  transform: rotate(-1deg);
+  transition: var(--transition-normal);
+}
+
+.tilt-card:hover {
+  transform: rotate(0);
 }

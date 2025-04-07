@@ -1,4 +1,4 @@
-/* src/components/layout/Navigation/Navigation.css */
+/* src/components/layout/Navigation/Navigation.css - Fixed underline */
 .main-nav {
   display: flex;
 }
@@ -18,13 +18,13 @@
   padding: 0.5rem 0;
   transition: var(--transition-normal);
   position: relative;
-  overflow: hidden;
 }
 
 .nav-links a:hover {
   color: var(--primary-dark);
 }
 
+/* Fixed underline - removed overflow:hidden and simplified the underline effect */
 .nav-links a::before {
   content: '';
   position: absolute;
@@ -33,12 +33,13 @@
   width: 100%;
   height: 2px;
   background: var(--gradient-primary);
-  transform: translateX(-100%);
-  transition: var(--transition-normal);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
 }
 
 .nav-links a:hover::before {
-  transform: translateX(0);
+  transform: scaleX(1);
 }
 
 .nav-links a.active {
@@ -47,18 +48,8 @@
 }
 
 .nav-links a.active::before {
-  transform: translateX(0);
+  transform: scaleX(1);
   height: 2px;
-  animation: glow 1.5s infinite alternate;
-}
-
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 5px rgba(157, 141, 241, 0.5);
-  }
-  100% {
-    box-shadow: 0 0 12px rgba(157, 141, 241, 0.7);
-  }
 }
 
 /* Responsive styles */
@@ -77,10 +68,6 @@
     display: block;
     padding: 0.75rem 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  }
-
-  .nav-links a::before {
-    display: none;
   }
 
   .nav-links a.active {

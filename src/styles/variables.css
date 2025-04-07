@@ -1,64 +1,78 @@
-/* src/styles/variables.css */
+/* src/styles/variables.css - Kid-friendly theme */
 :root {
-    /* Core Colors - Soothing & Attractive */
-    --lavender: #9d8df1;
-    --teal: #38b2ac;
-    --coral: #f08080;
-    --sage: #7aa095;
-    --amber: #ffc857;
-    
-    /* Functional Colors */
-    --primary: var(--lavender);
-    --primary-light: #b8abf2;
-    --primary-dark: #7b68ee;
-    
-    --secondary: var(--coral);
-    --secondary-light: #f4a7a7;
-    --secondary-dark: #e06666;
-    
-    --accent: var(--teal);
-    --accent-light: #4fd1c5;
-    --accent-dark: #2c7a7b;
-    
-    --highlight: var(--amber);
-    --highlight-dark: #e6b64c;
-    
-    /* Neutral colors */
-    --dark: #2d3748;
-    --dark-gray: #4a5568;
-    --medium-gray: #718096;
-    --light-gray: #e2e8f0;
-    --off-white: #f7fafc;
-    --white: #ffffff;
-    
-    /* Gradients */
-    --gradient-primary: linear-gradient(90deg, var(--lavender), var(--teal));
-    --gradient-secondary: linear-gradient(90deg, var(--coral), var(--amber));
-    --gradient-wild: linear-gradient(45deg, var(--lavender), var(--coral), var(--teal), var(--sage));
-    --gradient-cyber: linear-gradient(135deg, var(--lavender), var(--dark), var(--teal));
-    --gradient-retro: linear-gradient(90deg, var(--coral), var(--lavender), var(--teal));
-    
-    /* Shadows */
-    --glow-primary: 0 0 15px rgba(157, 141, 241, 0.4);
-    --glow-secondary: 0 0 15px rgba(240, 128, 128, 0.4);
-    --glow-accent: 0 0 15px rgba(56, 178, 172, 0.4);
-    --glow-highlight: 0 0 15px rgba(255, 200, 87, 0.4);
-    
-    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
-    --shadow-xl: 0 12px 30px rgba(0, 0, 0, 0.2);
-    
-    /* Border radius */
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
-    --radius-2xl: 32px;
-    --radius-full: 9999px;
-    
-    /* Animation */
-    --transition-fast: all 0.2s cubic-bezier(0.5, 0, 0.5, 1);
-    --transition-normal: all 0.3s cubic-bezier(0.5, 0, 0.5, 1);
-    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
+  /* Core Colors - Soothing & Kid-Friendly */
+  --sky-blue: #6ECFFF;
+  --sunny-yellow: #FFDE59;
+  --grass-green: #7ED957;
+  --soft-purple: #B39DDB;
+  --coral-pink: #FF9E80;
+  
+  /* Functional Colors */
+  --primary: var(--sky-blue);
+  --primary-light: #A5E1FF;
+  --primary-dark: #4BA3FF;
+  
+  --secondary: var(--coral-pink);
+  --secondary-light: #FFBDA7;
+  --secondary-dark: #FF7D57;
+  
+  --accent: var(--grass-green);
+  --accent-light: #A5F284;
+  --accent-dark: #5BB039;
+  
+  --highlight: var(--sunny-yellow);
+  --highlight-dark: #FFCE29;
+  
+  /* Neutral colors */
+  --dark: #4B5D67;
+  --dark-gray: #6B8A99;
+  --medium-gray: #A4B8C4;
+  --light-gray: #E4F0F7;
+  --off-white: #F9FDFF;
+  --white: #FFFFFF;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(90deg, var(--sky-blue), var(--grass-green));
+  --gradient-secondary: linear-gradient(90deg, var(--coral-pink), var(--sunny-yellow));
+  --gradient-wild: linear-gradient(45deg, var(--sky-blue), var(--coral-pink), var(--grass-green), var(--soft-purple));
+  --gradient-fun: linear-gradient(135deg, var(--sunny-yellow), var(--grass-green), var(--sky-blue));
+  --gradient-soft: linear-gradient(90deg, #E0F7FF, #FFF5E0, #E8F5E0);
+  
+  /* Shadows */
+  --glow-primary: 0 0 15px rgba(110, 207, 255, 0.5);
+  --glow-secondary: 0 0 15px rgba(255, 158, 128, 0.5);
+  --glow-accent: 0 0 15px rgba(126, 217, 87, 0.5);
+  --glow-highlight: 0 0 15px rgba(255, 222, 89, 0.5);
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 12px 36px rgba(0, 0, 0, 0.15);
+  --shadow-fun: 0 8px 0 rgba(0, 0, 0, 0.1);
+  
+  /* Border radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-2xl: 36px;
+  --radius-full: 9999px;
+  
+  /* Animation */
+  --transition-fast: all 0.2s cubic-bezier(0.5, 0, 0.5, 1);
+  --transition-normal: all 0.3s cubic-bezier(0.5, 0, 0.5, 1);
+  --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --transition-wobble: all 0.4s cubic-bezier(.82,1.46,.75,.71);
+  
+  /* Font sizes */
+  --font-xs: 0.75rem;
+  --font-sm: 0.875rem;
+  --font-base: 1rem;
+  --font-md: 1.125rem;
+  --font-lg: 1.25rem;
+  --font-xl: 1.5rem;
+  --font-2xl: 1.875rem;
+  --font-3xl: 2.25rem;
+  --font-4xl: 3rem;
+  --font-5xl: 3.75rem;
+}

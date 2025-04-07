@@ -54,7 +54,7 @@
 }
 
 .footer-description {
-  color: #9ca3af;
+  color: #e2e8f0; /* Lighter color for better visibility */
   margin-bottom: 1.5rem;
   max-width: 300px;
 }
@@ -77,7 +77,7 @@
 }
 
 .footer-links a {
-  color: #9ca3af;
+  color: #e2e8f0; /* Changed from #9ca3af to lighter color */
   text-decoration: none;
   transition: var(--transition-normal);
   position: relative;
@@ -98,7 +98,7 @@
 }
 
 .footer-links a:hover {
-  color: #f3f4f6;
+  color: #ffffff; /* Brighter color on hover */
   transform: translateX(3px);
 }
 
@@ -115,7 +115,7 @@
 }
 
 .copyright {
-  color: #6b7280;
+  color: #e2e8f0; /* Changed from #6b7280 to lighter color */
   margin: 0;
 }
 
@@ -126,18 +126,18 @@
 }
 
 .legal-links a {
-  color: #9ca3af;
+  color: #e2e8f0; /* Changed from #9ca3af to lighter color */
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .legal-links a:hover {
-  color: #f3f4f6;
+  color: #ffffff;
 }
 
 .divider {
   margin: 0 0.75rem;
-  color: #6b7280;
+  color: #e2e8f0; /* Changed from #6b7280 to lighter color */
 }
 
 /* Responsive adjustments */

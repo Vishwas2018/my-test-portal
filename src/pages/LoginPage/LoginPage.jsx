@@ -3,10 +3,10 @@ import './LoginPage.css';
 import AuthForms from '../../components/auth/AuthForms';
 import React from 'react';
 
-const LoginPage = () => {
+const LoginPage = ({ initialForm }) => {
   return (
     <div className="login-page">
-      <AuthForms />
+      <AuthForms initialForm={initialForm} />
     </div>
   );
 };

@@ -1,0 +1,41 @@
+/* CSS for toggle-box animation as shown in the screenshots */
+.toggle-box {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .toggle-box::before {
+    content: '';
+    position: absolute;
+    left: -250%;
+    width: 300%;
+    height: 100%;
+    background: #7494ec;
+    border-radius: 150px;
+    z-index: 2;
+    transition: 1.8s ease-in-out;
+  }
+  
+  /* This creates the blue curved section */
+  .auth-form-container.sign-up-mode .toggle-box::before {
+    transform: translate(50%, 0);
+  }
+  
+  /* When switching to sign-up mode */
+  .auth-form-container.sign-up-mode .auth-card {
+    transform: rotateY(180deg);
+  }
+  
+  .auth-left, .auth-right {
+    backface-visibility: hidden;
+    transition: transform 1.8s ease-in-out;
+  }
+  
+  .auth-form-container.sign-up-mode .auth-left {
+    transform: rotateY(180deg);
+  }
+  
+  .auth-form-container.sign-up-mode .auth-right {
+    transform: rotateY(0);
+  }
