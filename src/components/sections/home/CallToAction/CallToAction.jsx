@@ -1,6 +1,6 @@
 import './CallToAction.css';
 
-import Button from '../../../common/Button';
+import { Button } from '../../../common';
 // src/components/sections/home/CallToAction/CallToAction.jsx
 import React from 'react';
 

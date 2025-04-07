@@ -1,4 +1,3 @@
-// src/components/layout/index.js
-export { default as Header } from './Header';
-export { default as Footer } from './Footer';
-export { default as Navigation } from './Navigation';
+// src/components/common/index.js
+export { default as Button } from './Button/Button';
+export { default as Card } from './Card/Card';

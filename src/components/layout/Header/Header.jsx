@@ -3,7 +3,7 @@ import './Header.css';
 // src/components/layout/Header/Header.jsx
 import React, { useState } from 'react';
 
-import Button from '../../common/Button';
+import { Button } from '../../common';
 import { Link } from 'react-router-dom';
 import Navigation from '../Navigation';
 
