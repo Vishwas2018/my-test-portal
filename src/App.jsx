@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Footer, Header } from './components/layout'; // lowercase 'c'
 
 import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage/LoginPage';
 // src/App.js
 import React from 'react';
 

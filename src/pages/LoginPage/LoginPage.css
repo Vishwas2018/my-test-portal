@@ -1,0 +1,8 @@
+.login-page {
+    min-height: 100vh;
+    background-color: #f0f4fa;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(85, 132, 247, 0.15), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(85, 132, 247, 0.1), transparent 25%);
+    padding: 20px;
+  }

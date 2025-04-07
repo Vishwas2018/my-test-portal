@@ -1,53 +1,53 @@
 /* src/styles/variables.css */
 :root {
-    /* Core Colors - Bold and Electric */
-    --electric-violet: #8A2BE2;
-    --neon-blue: #00FFFF;
-    --hot-pink: #FF1493;
-    --neon-green: #39FF14;
-    --electric-yellow: #FFFF00;
+    /* Core Colors - Soothing & Attractive */
+    --lavender: #9d8df1;
+    --teal: #38b2ac;
+    --coral: #f08080;
+    --sage: #7aa095;
+    --amber: #ffc857;
     
     /* Functional Colors */
-    --primary: var(--electric-violet);
-    --primary-light: #B77BFF;
-    --primary-dark: #6A0DAD;
+    --primary: var(--lavender);
+    --primary-light: #b8abf2;
+    --primary-dark: #7b68ee;
     
-    --secondary: var(--hot-pink);
-    --secondary-light: #FF69B4;
-    --secondary-dark: #C71585;
+    --secondary: var(--coral);
+    --secondary-light: #f4a7a7;
+    --secondary-dark: #e06666;
     
-    --accent: var(--neon-blue);
-    --accent-light: #7FFFD4;
-    --accent-dark: #0096FF;
+    --accent: var(--teal);
+    --accent-light: #4fd1c5;
+    --accent-dark: #2c7a7b;
     
-    --highlight: var(--neon-green);
-    --highlight-dark: #32CD32;
+    --highlight: var(--amber);
+    --highlight-dark: #e6b64c;
     
     /* Neutral colors */
-    --dark: #121212;
-    --dark-gray: #232323;
-    --medium-gray: #555555;
-    --light-gray: #CCCCCC;
-    --off-white: #F8F8F8;
-    --white: #FFFFFF;
+    --dark: #2d3748;
+    --dark-gray: #4a5568;
+    --medium-gray: #718096;
+    --light-gray: #e2e8f0;
+    --off-white: #f7fafc;
+    --white: #ffffff;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(90deg, var(--electric-violet), var(--neon-blue));
-    --gradient-secondary: linear-gradient(90deg, var(--hot-pink), var(--electric-yellow));
-    --gradient-wild: linear-gradient(45deg, var(--electric-violet), var(--hot-pink), var(--neon-blue), var(--neon-green));
-    --gradient-cyber: linear-gradient(135deg, var(--electric-violet), var(--dark), var(--neon-blue));
-    --gradient-retro: linear-gradient(90deg, var(--hot-pink), var(--electric-violet), var(--neon-blue));
+    --gradient-primary: linear-gradient(90deg, var(--lavender), var(--teal));
+    --gradient-secondary: linear-gradient(90deg, var(--coral), var(--amber));
+    --gradient-wild: linear-gradient(45deg, var(--lavender), var(--coral), var(--teal), var(--sage));
+    --gradient-cyber: linear-gradient(135deg, var(--lavender), var(--dark), var(--teal));
+    --gradient-retro: linear-gradient(90deg, var(--coral), var(--lavender), var(--teal));
     
     /* Shadows */
-    --glow-primary: 0 0 15px rgba(138, 43, 226, 0.6);
-    --glow-secondary: 0 0 15px rgba(255, 20, 147, 0.6);
-    --glow-accent: 0 0 15px rgba(0, 255, 255, 0.6);
-    --glow-highlight: 0 0 15px rgba(57, 255, 20, 0.6);
+    --glow-primary: 0 0 15px rgba(157, 141, 241, 0.4);
+    --glow-secondary: 0 0 15px rgba(240, 128, 128, 0.4);
+    --glow-accent: 0 0 15px rgba(56, 178, 172, 0.4);
+    --glow-highlight: 0 0 15px rgba(255, 200, 87, 0.4);
     
-    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.25);
-    --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.3);
-    --shadow-xl: 0 12px 30px rgba(0, 0, 0, 0.35);
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 12px 30px rgba(0, 0, 0, 0.2);
     
     /* Border radius */
     --radius-sm: 4px;
