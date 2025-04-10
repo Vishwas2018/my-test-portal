@@ -1,7 +1,7 @@
 import './AuthForms.css';
 import './toggle-box.css';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Social Media Icons
 const GoogleIcon = () => (
@@ -49,11 +49,73 @@ const LockIcon = () => (
   </svg>
 );
 
-export const AuthForms = () => {
-  const [isLoginForm, setIsLoginForm] = useState(true);
+export const AuthForms = ({ initialForm = "login" }) => {
+  const [isLoginForm, setIsLoginForm] = useState(initialForm === "login");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  // Set initial form state based on prop
+  useEffect(() => {
+    setIsLoginForm(initialForm === "login");
+  }, [initialForm]);
 
   const toggleForm = () => {
     setIsLoginForm(!isLoginForm);
+    // Reset form fields and errors when switching forms
+    setUsername('');
+    setEmail('');
+    setPassword('');
+    setErrors({});
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!username.trim()) {
+      newErrors.username = 'Username is required';
+    }
+    
+    if (!isLoginForm && !email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!isLoginForm && !/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (validateForm()) {
+      setIsLoading(true);
+      
+      // Simulate API call
+      setTimeout(() => {
+        // Here you would normally make an API call to authenticate or register
+        console.log('Form submitted:', { 
+          username, 
+          email: isLoginForm ? undefined : email, 
+          password 
+        });
+        
+        setIsLoading(false);
+        
+        // Redirect to dashboard (in a real app)
+        // history.push('/dashboard');
+        alert(isLoginForm ? 'Login successful!' : 'Registration successful!');
+      }, 1500);
+    }
   };
 
   return (
@@ -64,42 +126,75 @@ export const AuthForms = () => {
             <div className="auth-left blue-side">
               <h2>Hello, Welcome!</h2>
               <p>Don't have an account?</p>
-              <button className="auth-secondary-btn" onClick={toggleForm}>
+              <button 
+                className="auth-secondary-btn" 
+                onClick={toggleForm}
+                type="button"
+                aria-label="Switch to registration form"
+              >
                 Register
               </button>
             </div>
             <div className="auth-right">
               <h2>Login</h2>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="form-group">
                   <div className="input-icon">
                     <UserIcon />
                   </div>
-                  <input type="text" placeholder="Username" />
+                  <input 
+                    type="text" 
+                    placeholder="Username" 
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    aria-label="Username"
+                    aria-required="true"
+                    aria-invalid={errors.username ? "true" : "false"}
+                  />
+                  {errors.username && (
+                    <div className="error-message">{errors.username}</div>
+                  )}
                 </div>
                 <div className="form-group">
                   <div className="input-icon">
                     <LockIcon />
                   </div>
-                  <input type="password" placeholder="Password" />
+                  <input 
+                    type="password" 
+                    placeholder="Password" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    aria-label="Password"
+                    aria-required="true"
+                    aria-invalid={errors.password ? "true" : "false"}
+                  />
+                  {errors.password && (
+                    <div className="error-message">{errors.password}</div>
+                  )}
                 </div>
                 <div className="form-link">
                   <a href="#">Forgot Password?</a>
                 </div>
-                <button className="auth-primary-btn">Login</button>
+                <button 
+                  className="auth-primary-btn" 
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Logging in...' : 'Login'}
+                </button>
                 <div className="social-login">
                   <p>or login with social platforms</p>
                   <div className="social-icons">
-                    <button className="social-icon-btn">
+                    <button type="button" className="social-icon-btn" aria-label="Login with Google">
                       <GoogleIcon />
                     </button>
-                    <button className="social-icon-btn">
+                    <button type="button" className="social-icon-btn" aria-label="Login with Facebook">
                       <FacebookIcon />
                     </button>
-                    <button className="social-icon-btn">
+                    <button type="button" className="social-icon-btn" aria-label="Login with GitHub">
                       <GithubIcon />
                     </button>
-                    <button className="social-icon-btn">
+                    <button type="button" className="social-icon-btn" aria-label="Login with LinkedIn">
                       <LinkedInIcon />
                     </button>
                   </div>
@@ -111,39 +206,78 @@ export const AuthForms = () => {
           <>
             <div className="auth-left">
               <h2>Registration</h2>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="form-group">
                   <div className="input-icon">
                     <UserIcon />
                   </div>
-                  <input type="text" placeholder="Username" />
+                  <input 
+                    type="text" 
+                    placeholder="Username" 
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    aria-label="Username"
+                    aria-required="true"
+                    aria-invalid={errors.username ? "true" : "false"}
+                  />
+                  {errors.username && (
+                    <div className="error-message">{errors.username}</div>
+                  )}
                 </div>
                 <div className="form-group">
                   <div className="input-icon">
                     <EmailIcon />
                   </div>
-                  <input type="email" placeholder="Email" />
+                  <input 
+                    type="email" 
+                    placeholder="Email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    aria-label="Email"
+                    aria-required="true"
+                    aria-invalid={errors.email ? "true" : "false"}
+                  />
+                  {errors.email && (
+                    <div className="error-message">{errors.email}</div>
+                  )}
                 </div>
                 <div className="form-group">
                   <div className="input-icon">
                     <LockIcon />
                   </div>
-                  <input type="password" placeholder="Password" />
+                  <input 
+                    type="password" 
+                    placeholder="Password" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    aria-label="Password"
+                    aria-required="true"
+                    aria-invalid={errors.password ? "true" : "false"}
+                  />
+                  {errors.password && (
+                    <div className="error-message">{errors.password}</div>
+                  )}
                 </div>
-                <button className="auth-primary-btn">Register</button>
+                <button 
+                  className="auth-primary-btn" 
+                  type="submit"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Registering...' : 'Register'}
+                </button>
                 <div className="social-login">
                   <p>or register with social platforms</p>
                   <div className="social-icons">
-                    <button className="social-icon-btn">
+                    <button type="button" className="social-icon-btn" aria-label="Register with Google">
                       <GoogleIcon />
                     </button>
-                    <button className="social-icon-btn">
+                    <button type="button" className="social-icon-btn" aria-label="Register with Facebook">
                       <FacebookIcon />
                     </button>
-                    <button className="social-icon-btn">
+                    <button type="button" className="social-icon-btn" aria-label="Register with GitHub">
                       <GithubIcon />
                     </button>
-                    <button className="social-icon-btn">
+                    <button type="button" className="social-icon-btn" aria-label="Register with LinkedIn">
                       <LinkedInIcon />
                     </button>
                   </div>
@@ -153,7 +287,12 @@ export const AuthForms = () => {
             <div className="auth-right blue-side">
               <h2>Welcome Back!</h2>
               <p>Already have an account?</p>
-              <button className="auth-secondary-btn" onClick={toggleForm}>
+              <button 
+                className="auth-secondary-btn" 
+                onClick={toggleForm}
+                type="button"
+                aria-label="Switch to login form"
+              >
                 Login
               </button>
             </div>

@@ -1,7 +1,6 @@
 import './Footer.css';
 
 import { Link } from 'react-router-dom';
-// src/components/layout/Footer/Footer.jsx
 import React from 'react';
 
 const Footer = () => {
@@ -34,39 +33,86 @@ const Footer = () => {
     ]
   };
 
-  // Helper function to render link columns
-  const renderLinkColumn = (title, links) => (
-    <div className="footer-section">
-      <h4 className="footer-heading">{title}</h4>
-      <ul className="footer-links">
-        {links.map((link) => (
-          <li key={link.path}>
-            <Link to={link.path}>{link.label}</Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-
   return (
     <footer className="footer">
       <div className="container footer-container">
         <div className="footer-grid">
           <div className="footer-section footer-brand">
-            <h3 className="footer-title">Portal</h3>
+            <h3 className="footer-title">Wonderlearn</h3>
             <p className="footer-description">
-              Your all-in-one web solution for modern businesses.
+              Your playful learning platform designed for young explorers and curious minds.
             </p>
-            {/* Social media links could go here */}
+            {/* Social media links */}
+            <div className="social-icons">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <i className="fab fa-facebook-f"></i>
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                <i className="fab fa-twitter"></i>
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <i className="fab fa-instagram"></i>
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <i className="fab fa-linkedin-in"></i>
+              </a>
+            </div>
           </div>
 
-          {renderLinkColumn('Company', footerLinks.company)}
-          {renderLinkColumn('Product', footerLinks.product)}
-          {renderLinkColumn('Resources', footerLinks.resources)}
+          <div className="footer-section">
+            <h4 className="footer-heading">Company</h4>
+            <ul className="footer-links">
+              {footerLinks.company.map((link) => (
+                <li key={link.path}>
+                  <Link to={link.path}>{link.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="footer-section">
+            <h4 className="footer-heading">Products</h4>
+            <ul className="footer-links">
+              {footerLinks.product.map((link) => (
+                <li key={link.path}>
+                  <Link to={link.path}>{link.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="footer-section">
+            <h4 className="footer-heading">Resources</h4>
+            <ul className="footer-links">
+              {footerLinks.resources.map((link) => (
+                <li key={link.path}>
+                  <Link to={link.path}>{link.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="footer-section">
+            <h4 className="footer-heading">Contact</h4>
+            <ul className="contact-info">
+              <li>
+                <i className="fas fa-envelope"></i>
+                <a href="mailto:hello@wonderlearn.com">hello@wonderlearn.com</a>
+              </li>
+              <li>
+                <i className="fas fa-phone"></i>
+                <a href="tel:+15551234567">+1 (555) 123-4567</a>
+              </li>
+              <li>
+                <i className="fas fa-map-marker-alt"></i>
+                <span>123 Learning Lane, Discovery City</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="footer-bottom">
-          <p className="copyright">© {currentYear} Portal. All rights reserved.</p>
+          <p className="copyright">© {currentYear} Wonderlearn. All rights reserved.</p>
           <div className="legal-links">
             {footerLinks.legal.map((link, index) => (
               <React.Fragment key={link.path}>

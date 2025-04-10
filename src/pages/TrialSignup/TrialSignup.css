@@ -1,0 +1,292 @@
+/* src/pages/TrialSignup/TrialSignup.css */
+.trial-signup-page {
+    padding: 4rem 0;
+    min-height: 90vh;
+    background-color: var(--off-white);
+    background-image: 
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%236ECFFF' fill-opacity='0.1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+      radial-gradient(circle at 15% 50%, rgba(110, 207, 255, 0.15), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(126, 217, 87, 0.15), transparent 25%);
+  }
+  
+  .trial-signup-container {
+    display: flex;
+    gap: 4rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .trial-info {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .trial-info h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--dark);
+    position: relative;
+  }
+  
+  .trial-info h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background: var(--gradient-fun);
+    border-radius: var(--radius-full);
+  }
+  
+  .trial-description {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: var(--dark-gray);
+  }
+  
+  .trial-benefits {
+    background-color: var(--white);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+    border: 3px solid var(--white);
+    transform: rotate(-1deg);
+    transition: var(--transition-bounce);
+  }
+  
+  .trial-benefits:hover {
+    transform: rotate(0) translateY(-5px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .trial-benefits h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-dark);
+    position: relative;
+    display: inline-block;
+  }
+  
+  .benefits-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .benefits-list li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    color: var(--dark-gray);
+  }
+  
+  .benefits-list li i {
+    color: var(--accent);
+    margin-right: 1rem;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+  
+  .trial-guarantee {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 222, 89, 0.2);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border-left: 4px solid var(--highlight);
+  }
+  
+  .trial-guarantee i {
+    font-size: 2rem;
+    color: var(--highlight-dark);
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  .trial-guarantee p {
+    font-size: 0.95rem;
+    margin: 0;
+    color: var(--dark);
+    line-height: 1.6;
+  }
+  
+  /* Form Container */
+  .signup-form-container {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .signup-form-card {
+    background-color: var(--white);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem;
+    box-shadow: 
+      0 15px 0 -8px var(--light-gray),
+      0 20px 30px rgba(0, 0, 0, 0.1);
+    border: 6px solid var(--white);
+    transform: rotate(1deg);
+    transition: var(--transition-bounce);
+  }
+  
+  .signup-form-card:hover {
+    transform: rotate(0) translateY(-5px);
+  }
+  
+  .signup-form-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--dark);
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="email"],
+  .form-group input[type="password"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--light-gray);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: var(--transition-normal);
+  }
+  
+  .form-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(110, 207, 255, 0.3);
+    outline: none;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  .checkbox-group input[type="checkbox"] {
+    margin-top: 0.25rem;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+  }
+  
+  .checkbox-label {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .checkbox-label a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+  .checkbox-label a:hover {
+    text-decoration: underline;
+  }
+  
+  .signup-button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: var(--radius-full);
+    background: var(--gradient-fun);
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: var(--transition-bounce);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .signup-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .signup-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  .login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--dark-gray);
+  }
+  
+  .login-link a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Status message styling */
+  .status-message {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+    animation: slide-in 0.3s ease-out;
+  }
+  
+  .status-message.error {
+    background-color: rgba(229, 62, 62, 0.1);
+    color: #e53e3e;
+    border-left: 4px solid #e53e3e;
+  }
+  
+  .status-message.success {
+    background-color: rgba(72, 187, 120, 0.1);
+    color: #48bb78;
+    border-left: 4px solid #48bb78;
+  }
+  
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 992px) {
+    .trial-signup-container {
+      gap: 3rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .trial-signup-page {
+      padding: 2rem 0;
+    }
+    
+    .trial-info h1 {
+      font-size: 2rem;
+    }
+  }

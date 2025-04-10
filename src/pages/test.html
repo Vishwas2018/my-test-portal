@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login/Register Toggle</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      position: relative;
+      width: 800px;
+      height: 500px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+    }
+
+    .form-container {
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      top: 0;
+      padding: 50px;
+      transition: all 0.6s ease-in-out;
+      z-index: 2;
+    }
+
+    .login-container {
+      left: 0;
+    }
+
+    .register-container {
+      left: 50%;
+      opacity: 0;
+    }
+
+    .container.active .login-container {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+
+    .container.active .register-container {
+      transform: translateX(-100%);
+      opacity: 1;
+    }
+
+    .overlay-container {
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: #7494ec;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.6s ease-in-out;
+      z-index: 1;
+      border-radius: 0 20px 20px 0;
+    }
+
+    .container.active .overlay-container {
+      transform: translateX(100%);
+      border-radius: 20px 0 0 20px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      background: #fff;
+      color: #7494ec;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 20px;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: #e0e0e0;
+    }
+
+    input {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="formToggle">
+  <!-- Login Form -->
+  <div class="form-container login-container">
+    <h2>Login</h2>
+    <input type="text" placeholder="Username" />
+    <input type="password" placeholder="Password" />
+    <button>Login</button>
+  </div>
+
+  <!-- Register Form -->
+  <div class="form-container register-container">
+    <h2>Register</h2>
+    <input type="text" placeholder="Username" />
+    <input type="email" placeholder="Email" />
+    <input type="password" placeholder="Password" />
+    <button>Register</button>
+  </div>
+
+  <!-- Overlay Panel -->
+  <div class="overlay-container" id="overlay">
+    <h2 id="overlayTitle">Hello, Welcome!</h2>
+    <p id="overlayText">Don't have an account?</p>
+    <button id="toggleBtn">Register</button>
+  </div>
+</div>
+
+<script>
+  const container = document.getElementById('formToggle');
+  const toggleBtn = document.getElementById('toggleBtn');
+  const overlayTitle = document.getElementById('overlayTitle');
+  const overlayText = document.getElementById('overlayText');
+
+  let isLogin = true;
+
+  toggleBtn.addEventListener('click', () => {
+    container.classList.toggle('active');
+    isLogin = !isLogin;
+
+    // Update overlay text
+    overlayTitle.textContent = isLogin ? 'Hello, Welcome!' : 'Welcome Back!';
+    overlayText.textContent = isLogin
+      ? \"Don't have an account?\"
+      : 'Already have an account?';
+    toggleBtn.textContent = isLogin ? 'Register' : 'Login';
+  });
+</script>
+
+</body>
+</html>
