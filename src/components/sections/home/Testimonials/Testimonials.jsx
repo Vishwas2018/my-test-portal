@@ -2,84 +2,6 @@ import './Testimonials.css';
 
 import React, { useState } from 'react';
 
-// Create TestimonialCard component directly in this file to fix import issues
-const StarRating = ({ rating }) => {
-  const stars = [];
-  
-  for (let i = 1; i <= 5; i++) {
-    if (i <= rating) {
-      // Full star
-      stars.push(
-        <svg 
-          key={i} 
-          className="star filled" 
-          xmlns="http://www.w3.org/2000/svg" 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-      );
-    } else {
-      // Empty star
-      stars.push(
-        <svg 
-          key={i} 
-          className="star empty" 
-          xmlns="http://www.w3.org/2000/svg" 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          aria-hidden="true"
-        >
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-      );
-    }
-  }
-  
-  return (
-    <div className="star-rating" aria-label={`${rating} out of 5 stars`}>
-      {stars}
-    </div>
-  );
-};
-
-const TestimonialCard = ({ testimonial }) => {
-  const { name, role, avatar, content, rating } = testimonial;
-  
-  return (
-    <div className="testimonial-card">
-      <div className="quote-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-        </svg>
-      </div>
-      
-      <div className="testimonial-content">
-        <p>{content}</p>
-      </div>
-      
-      <div className="testimonial-footer">
-        <div className="testimonial-avatar">
-          <img src={avatar} alt={`${name}`} />
-        </div>
-        <div className="testimonial-author">
-          <h4>{name}</h4>
-          <p>{role}</p>
-          <StarRating rating={rating} />
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const Testimonials = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   
@@ -89,7 +11,7 @@ const Testimonials = () => {
       name: 'Jamie Smith',
       role: 'Web Developer',
       avatar: '/api/placeholder/80/80',
-      content: 'This portal is amazing! It made our team collaboration so much easier and more fun. The colorful interface makes working a joy!',
+      content: 'This learning platform is amazing! It made learning so much easier and more fun. The colorful interface makes studying a joy!',
       rating: 5
     },
     {
@@ -97,7 +19,7 @@ const Testimonials = () => {
       name: 'Alex Johnson',
       role: 'Product Manager',
       avatar: '/api/placeholder/80/80',
-      content: 'I\'ve tried many portals but this one is different. The intuitive design and engaging features help our team stay connected.',
+      content: 'I\'ve tried many learning platforms but WonderLearn is different. The intuitive design and engaging features help kids stay connected with the material.',
       rating: 5
     },
     {
@@ -106,14 +28,14 @@ const Testimonials = () => {
       role: 'Graphic Designer',
       avatar: '/api/placeholder/80/80',
       content: 'As a designer, I appreciate the attention to detail in this portal. The playful elements make even mundane tasks enjoyable!',
-      rating: 4
+      rating: 5
     },
     {
       id: 4,
       name: 'Taylor Reed',
       role: 'Marketing Director',
       avatar: '/api/placeholder/80/80',
-      content: 'Our marketing team loves using this portal! The bright colors and friendly interface make our daily stand-ups something to look forward to.',
+      content: 'Our children love using WonderLearn! The bright colors and friendly interface make their daily learning something to look forward to.',
       rating: 5
     }
   ];
@@ -149,7 +71,30 @@ const Testimonials = () => {
           <div className="testimonials-slider" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
             {testimonials.map((testimonial) => (
               <div className="testimonial-slide" key={testimonial.id}>
-                <TestimonialCard testimonial={testimonial} />
+                <div className="testimonial-card">
+                  <div className="quote-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                    </svg>
+                  </div>
+                  
+                  <div className="testimonial-content">
+                    <p>{testimonial.content}</p>
+                  </div>
+                  
+                  <div className="testimonial-footer">
+                    <div className="testimonial-avatar">
+                      <img src={testimonial.avatar} alt={`${testimonial.name}`} />
+                    </div>
+                    <div className="testimonial-author">
+                      <h4>{testimonial.name}</h4>
+                      <p>{testimonial.role}</p>
+                      <div className="star-rating" aria-label="5 out of 5 stars">
+                        <span className="star-text">* * * * *</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>

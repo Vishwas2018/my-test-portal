@@ -3,8 +3,10 @@ import './HomePage.css';
 import { Button } from '../../components/common';
 import { Link } from 'react-router-dom';
 import React from 'react';
-import {Testinomials} from '../../components/sections/home/Testimonial';
+import Testimonials from '../../components/sections/home/Testimonials';
 import { useAuth } from '../../contexts/AuthContext';
+
+;
 
 const HomePage = () => {
   const { isAuthenticated } = useAuth();
@@ -19,7 +21,7 @@ const HomePage = () => {
         <div className="container hero-container">
           <div className="hero-content">
             <h1 className="hero-title">
-              Discover the <span className="highlight">Joy of Learning</span> with Wonderlearn!
+              Discover the <span className="highlight">Joy of Learning</span> with WonderLearn!
             </h1>
             <p className="hero-subtitle">
               Unleash your child's potential through interactive, engaging, and fun educational adventures!
@@ -65,7 +67,7 @@ const HomePage = () => {
       {/* Features Section */}
       <section id="features" className="features">
         <div className="container features-container">
-          <h2 className="section-title">Why Choose Wonderlearn?</h2>
+          <h2 className="section-title">Why Choose WonderLearn?</h2>
           <p className="section-subtitle">Our platform is designed to make learning an exciting adventure</p>
           
           <div className="features-grid">
@@ -159,11 +161,14 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <Testimonials />
+
       {/* Sample Activity Section */}
       <section id="sample-activity" className="sample-activity">
         <div className="container">
           <h2 className="section-title">Try a Free Activity</h2>
-          <p className="section-description">Experience the magic of Wonderlearn with a free sample activity. No sign-up required!</p>
+          <p className="section-description">Experience the magic of WonderLearn with a free sample activity. No sign-up required!</p>
           <div className="sample-activity-container">
             <div className="sample-activity-info">
               <h3>Sample Activity Features:</h3>
@@ -202,7 +207,7 @@ const HomePage = () => {
       <section id="free-trial" className="cta-section">
         <div className="container cta-container">
           <div className="cta-content">
-            <h2>Try Wonderlearn Free for 7 Days!</h2>
+            <h2>Try WonderLearn Free for 7 Days!</h2>
             <p>Get full access to all our learning adventures.</p>
             <ul className="cta-features">
               <li><i className="fas fa-check"></i> Full access to all learning modules</li>

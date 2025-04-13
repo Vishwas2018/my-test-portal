@@ -112,7 +112,7 @@ const TrialSignup = () => {
           <div className="trial-info">
             <h1>Start Your 7-Day Free Trial</h1>
             <p className="trial-description">
-              Experience all the magic of Wonderlearn with full access to our premium features.
+              Experience all the magic of WonderLearn with full access to our premium features.
               No credit card required!
             </p>
             

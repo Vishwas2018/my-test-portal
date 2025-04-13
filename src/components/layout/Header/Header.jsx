@@ -69,7 +69,7 @@ const Header = () => {
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="container header-container">
         <Link to="/" className="logo">
-          <span className="logo-text">Wonderlearn</span>
+          <span className="logo-text">WonderLearn</span>
         </Link>
 
         {/* Mobile menu button */}

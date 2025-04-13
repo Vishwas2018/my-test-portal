@@ -38,7 +38,7 @@ const Footer = () => {
       <div className="container footer-container">
         <div className="footer-grid">
           <div className="footer-section footer-brand">
-            <h3 className="footer-title">Wonderlearn</h3>
+            <h3 className="footer-title">WonderLearn</h3>
             <p className="footer-description">
               Your playful learning platform designed for young explorers and curious minds.
             </p>
@@ -97,7 +97,7 @@ const Footer = () => {
             <ul className="contact-info">
               <li>
                 <i className="fas fa-envelope"></i>
-                <a href="mailto:hello@wonderlearn.com">hello@wonderlearn.com</a>
+                <a href="mailto:hello@WonderLearn.com">hello@WonderLearn.com</a>
               </li>
               <li>
                 <i className="fas fa-phone"></i>
@@ -112,7 +112,7 @@ const Footer = () => {
         </div>
 
         <div className="footer-bottom">
-          <p className="copyright">© {currentYear} Wonderlearn. All rights reserved.</p>
+          <p className="copyright">© {currentYear} WonderLearn. All rights reserved.</p>
           <div className="legal-links">
             {footerLinks.legal.map((link, index) => (
               <React.Fragment key={link.path}>
