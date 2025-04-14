@@ -1,12 +1,9 @@
 import './HomePage.css';
 
-import { Button } from '../../components/common';
 import { Link } from 'react-router-dom';
 import React from 'react';
 import Testimonials from '../../components/sections/home/Testimonials';
 import { useAuth } from '../../contexts/AuthContext';
-
-;
 
 const HomePage = () => {
   const { isAuthenticated } = useAuth();
@@ -28,17 +25,17 @@ const HomePage = () => {
             </p>
             <div className="hero-buttons">
               {isAuthenticated ? (
-                <Button to="/dashboard" variant="primary" size="large">
+                <Link to="/dashboard" className="hero-btn primary">
                   <i className="fas fa-rocket"></i> Go to Dashboard
-                </Button>
+                </Link>
               ) : (
-                <Button to="/signup" variant="primary" size="large">
+                <Link to="/signup" className="hero-btn primary">
                   <i className="fas fa-star"></i> JOIN THE FUN!
-                </Button>
+                </Link>
               )}
-              <Button to="/demo" variant="secondary" size="large">
+              <Link to="/demo" className="hero-btn secondary">
                 <i className="fas fa-play-circle"></i> WATCH DEMO
-              </Button>
+              </Link>
             </div>
           </div>
           <div className="hero-image">
@@ -178,7 +175,7 @@ const HomePage = () => {
                 <li><i className="fas fa-check"></i> Instant feedback and rewards</li>
                 <li><i className="fas fa-check"></i> Full access to learning tools</li>
               </ul>
-              <Button to="/sample-activity" variant="primary" size="medium">Try Free Activity</Button>
+              <Link to="/sample-activity" className="hero-btn primary">Try Free Activity</Link>
             </div>
             <div className="sample-activity-image">
               <div className="placeholder-image activity-preview">
@@ -197,7 +194,7 @@ const HomePage = () => {
             <p>Subscribe to our newsletter for the latest updates and learning tips</p>
             <form className="newsletter-form">
               <input type="email" placeholder="Enter your email" required />
-              <Button type="submit" variant="primary" size="medium">Subscribe</Button>
+              <button type="submit" className="hero-btn primary">Subscribe</button>
             </form>
           </div>
         </div>
@@ -215,7 +212,7 @@ const HomePage = () => {
               <li><i className="fas fa-check"></i> Unlimited activities and games</li>
               <li><i className="fas fa-check"></i> No credit card required</li>
             </ul>
-            <Button to="/trial-signup" variant="cta" size="large">Start Your Free Trial!</Button>
+            <Link to="/trial-signup" className="hero-btn cta">Start Your Free Trial!</Link>
             <p className="cta-note">No payment details needed. Trial automatically ends after 7 days.</p>
           </div>
           <div className="cta-background">

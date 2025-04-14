@@ -3,10 +3,9 @@ import './Header.css';
 import { Link, useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 
-import { Button } from '../../common';
 import { useAuth } from '../../../contexts/AuthContext';
 
-const Header = () => {
+const Header = ({ darkMode, toggleDarkMode }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { currentUser, logout, isAuthenticated } = useAuth();
@@ -96,26 +95,39 @@ const Header = () => {
             </ul>
           </nav>
 
-          <div className="auth-buttons">
-            {isAuthenticated ? (
-              <>
-                {isTrialActive && (
-                  <div className="trial-status">
-                    <i className="fas fa-clock"></i>
-                    <span>{trialDaysRemaining} days left</span>
-                  </div>
-                )}
-                <span className="welcome-text">Welcome, {currentUser?.username || 'Friend'}</span>
-                <Button onClick={handleLogout} variant="text">Log Out</Button>
-              </>
-            ) : (
-              <>
-                <Button to="/login" variant="text">Log In</Button>
-                <Button to="/trial-signup" variant="primary">
-                  <i className="fas fa-star"></i> Free 7-Day Trial
-                </Button>
-              </>
-            )}
+          <div className="header-controls">
+            {/* Dark Mode Toggle button */}
+            <div className="theme-toggle-wrapper">
+              <button 
+                onClick={toggleDarkMode}
+                className="theme-toggle-btn"
+                aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {darkMode ? "☀️" : "🌙"}
+              </button>
+            </div>
+            
+            <div className="auth-buttons">
+              {isAuthenticated ? (
+                <>
+                  {isTrialActive && (
+                    <div className="trial-status">
+                      <i className="fas fa-clock"></i>
+                      <span>{trialDaysRemaining} days left</span>
+                    </div>
+                  )}
+                  <span className="welcome-text">Welcome, {currentUser?.username || 'Friend'}</span>
+                  <Link to="/" onClick={handleLogout} className="btn-text">Log Out</Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="btn-text">Log In</Link>
+                  <Link to="/trial-signup" className="btn-primary">
+                    <i className="fas fa-star"></i> Free 7-Day Trial
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

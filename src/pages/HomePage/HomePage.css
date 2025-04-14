@@ -1040,3 +1040,127 @@
     font-size: 2rem;
   }
 }
+
+/* Hero button styles for HomePage.css */
+.hero-buttons {
+  display: flex;
+  gap: 1.5rem;
+  animation: fadeInUp 1s 0.6s ease-out both;
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.hero-btn i {
+  font-size: 1.2em;
+}
+
+.hero-btn.primary {
+  background-color: var(--primary);
+  color: white;
+  box-shadow: 0 8px 0 var(--primary-dark);
+  transform: translateY(-4px);
+}
+
+.hero-btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--primary-dark);
+  background-color: var(--primary-dark);
+}
+
+.hero-btn.primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 0 var(--primary-dark);
+}
+
+.hero-btn.secondary {
+  background-color: var(--white);
+  color: var(--primary);
+  border: 3px solid var(--primary);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+}
+
+.hero-btn.secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+  background-color: var(--light-gray);
+}
+
+.hero-btn.secondary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.hero-btn.cta {
+  background-color: var(--secondary);
+  color: white;
+  box-shadow: 0 8px 0 var(--secondary-dark);
+  transform: translateY(-4px);
+}
+
+.hero-btn.cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--secondary-dark);
+  background-color: var(--secondary-dark);
+}
+
+.hero-btn.cta:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 0 var(--secondary-dark);
+}
+
+/* Dark mode adjustments */
+.dark-mode .hero-btn.primary {
+  background-color: var(--primary-dark);
+  box-shadow: 0 8px 0 var(--primary);
+}
+
+.dark-mode .hero-btn.primary:hover {
+  background-color: var(--primary);
+}
+
+.dark-mode .hero-btn.secondary {
+  background-color: transparent;
+  border-color: var(--primary-light);
+  color: var(--primary-light);
+}
+
+.dark-mode .hero-btn.secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .hero-btn.cta {
+  background-color: var(--secondary-dark);
+  box-shadow: 0 8px 0 var(--secondary);
+}
+
+.dark-mode .hero-btn.cta:hover {
+  background-color: var(--secondary);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  .hero-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
