@@ -1,15 +1,15 @@
-import './LoginPage.css';
+import './SignupPage.css';
 
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 
 import GlassContainer from '../../components/common/GlassContainer/GlassContainer';
 import styled from 'styled-components';
 import { useAuth } from '../../contexts/AuthContext';
-import { validateLoginForm } from '../../utils/validation';
+import { validateRegisterForm } from '../../utils/validation';
 
-// Styled components for LoginPage
-const LoginPageContainer = styled.div`
+// Styled components for SignupPage
+const SignupPageContainer = styled.div`
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -17,22 +17,22 @@ const LoginPageContainer = styled.div`
   padding: 2rem;
   background-color: var(--off-white);
   background-image: 
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%236ECFFF' fill-opacity='0.1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
-    radial-gradient(circle at 15% 50%, rgba(110, 207, 255, 0.15), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(126, 217, 87, 0.15), transparent 25%);
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%237ED957' fill-opacity='0.1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(circle at 15% 50%, rgba(126, 217, 87, 0.15), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(110, 207, 255, 0.15), transparent 25%);
 `;
 
-const LoginContent = styled.div`
+const SignupContent = styled.div`
   width: 100%;
-  max-width: 480px;
+  max-width: 520px;
 `;
 
-const LoginHeader = styled.div`
+const SignupHeader = styled.div`
   text-align: center;
   margin-bottom: 2rem;
 `;
 
-const LoginTitle = styled.h1`
+const SignupTitle = styled.h1`
   font-size: 2.5rem;
   color: var(--dark);
   margin-bottom: 1rem;
@@ -52,7 +52,7 @@ const LoginTitle = styled.h1`
   }
 `;
 
-const LoginSubtitle = styled.p`
+const SignupSubtitle = styled.p`
   font-size: 1.1rem;
   color: var(--dark-gray);
   margin-bottom: 1rem;
@@ -145,6 +145,34 @@ const FormDivider = styled.div`
   }
 `;
 
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+`;
+
+const CheckboxInput = styled.input`
+  margin-top: 0.25rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+`;
+
+const CheckboxLabel = styled.label`
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--dark-gray);
+  
+  a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 const SocialLoginButtons = styled.div`
   display: flex;
   justify-content: center;
@@ -177,9 +205,6 @@ const HelperLinks = styled.div`
   text-align: center;
   margin-top: 1.5rem;
   font-size: 0.95rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
 `;
 
 const StyledLink = styled(Link)`
@@ -211,9 +236,26 @@ const StatusMessage = styled.div`
     color: #48bb78;
     border-left: 4px solid #48bb78;
   }
+  
+  &.info {
+    background-color: rgba(66, 153, 225, 0.1);
+    color: #4299e1;
+    border-left: 4px solid #4299e1;
+  }
 `;
 
-// Icons for social login buttons
+const TwoColumnForm = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+`;
+
+// Icons for social signup buttons
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
     <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
@@ -232,21 +274,26 @@ const GithubIcon = () => (
   </svg>
 );
 
-const LoginPage = () => {
-  const [formData, setFormData] = useState({ username: '', password: '' });
+const SignupPage = () => {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+    agreeTerms: false
+  });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState({ type: '', message: '' });
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { register } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // Get redirect path if coming from a protected route
-  const from = location.state?.from || '/dashboard';
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    const newValue = type === 'checkbox' ? checked : value;
+    
+    setFormData(prev => ({ ...prev, [name]: newValue }));
     
     // Clear error for this field when user starts typing
     if (errors[name]) {
@@ -254,46 +301,78 @@ const LoginPage = () => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Basic validation
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
+    }
+    
+    // Use the validation from utils
+    const registerValidation = validateRegisterForm({
+      username: formData.username,
+      email: formData.email,
+      password: formData.password
+    });
+    
+    // Merge errors
+    Object.assign(newErrors, registerValidation.errors);
+    
+    // Additional validations
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    if (!formData.agreeTerms) {
+      newErrors.agreeTerms = 'You must agree to the terms and conditions';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Validate form
-    const validation = validateLoginForm(formData);
-    if (!validation.isValid) {
-      setErrors(validation.errors);
+    const isValid = validateForm();
+    if (!isValid) {
       return;
     }
     
-    // Clear errors and status
-    setErrors({});
+    // Clear status and show loading
     setStatus({ type: '', message: '' });
-    
-    // Show loading state
     setLoading(true);
     
     try {
-      // Try to login
-      const result = await login(formData);
+      // Register the user
+      const result = await register({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        fullName: formData.fullName
+      });
       
       if (!result.success) {
         setStatus({
           type: 'error',
-          message: result.message || 'Login failed. Please check your credentials.'
+          message: result.message || 'Registration failed. Please try again.'
         });
         setLoading(false);
         return;
       }
       
-      // Show success message briefly before redirecting
+      // Show success message
       setStatus({
         type: 'success',
-        message: 'Login successful! Redirecting...'
+        message: 'Registration successful! Redirecting to login...'
       });
       
-      // Redirect after a short delay
+      // Redirect to login page after delay
       setTimeout(() => {
-        navigate(from, { replace: true });
-      }, 1000);
+        navigate('/login');
+      }, 2000);
       
     } catch (error) {
       setStatus({
@@ -304,24 +383,25 @@ const LoginPage = () => {
     }
   };
 
-  const handleSocialLogin = (provider) => {
+  const handleSocialSignup = (provider) => {
     // For demo purposes, show a message
     setStatus({
       type: 'info',
-      message: `${provider} login is not implemented yet.`
+      message: `${provider} signup is not implemented yet.`
     });
-    
-    // In a real app, you would implement social login
-    // e.g., firebaseAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
   };
 
   return (
-    <LoginPageContainer>
-      <LoginContent>
-        <LoginHeader>
-          <LoginTitle>Welcome Back!</LoginTitle>
-          <LoginSubtitle>Log in to continue your learning adventure</LoginSubtitle>
-        </LoginHeader>
+    <SignupPageContainer>
+      <div className="star star1"></div>
+      <div className="star star2"></div>
+      <div className="star star3"></div>
+      
+      <SignupContent className="signup-content">
+        <SignupHeader>
+          <SignupTitle>Join the Adventure!</SignupTitle>
+          <SignupSubtitle>Create your account and start exploring</SignupSubtitle>
+        </SignupHeader>
         
         <GlassContainer padding="2.5rem" borderRadius="var(--radius-xl)">
           {status.message && (
@@ -332,78 +412,134 @@ const LoginPage = () => {
           
           <form onSubmit={handleSubmit}>
             <FormGroup>
-              <FormLabel htmlFor="username">Username or Email</FormLabel>
+              <FormLabel htmlFor="fullName">Full Name</FormLabel>
               <FormInput
                 type="text"
-                id="username"
-                name="username"
-                value={formData.username}
+                id="fullName"
+                name="fullName"
+                value={formData.fullName}
                 onChange={handleChange}
-                placeholder="Enter your username or email"
+                placeholder="Enter your full name"
                 disabled={loading}
               />
-              {errors.username && <FormError>{errors.username}</FormError>}
+              {errors.fullName && <FormError>{errors.fullName}</FormError>}
             </FormGroup>
             
-            <FormGroup>
-              <FormLabel htmlFor="password">Password</FormLabel>
-              <FormInput
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
+            <TwoColumnForm>
+              <FormGroup>
+                <FormLabel htmlFor="email">Email</FormLabel>
+                <FormInput
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Enter your email"
+                  disabled={loading}
+                />
+                {errors.email && <FormError>{errors.email}</FormError>}
+              </FormGroup>
+              
+              <FormGroup>
+                <FormLabel htmlFor="username">Username</FormLabel>
+                <FormInput
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  placeholder="Choose a username"
+                  disabled={loading}
+                />
+                {errors.username && <FormError>{errors.username}</FormError>}
+              </FormGroup>
+            </TwoColumnForm>
+            
+            <TwoColumnForm>
+              <FormGroup>
+                <FormLabel htmlFor="password">Password</FormLabel>
+                <FormInput
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Create a password"
+                  disabled={loading}
+                />
+                {errors.password && <FormError>{errors.password}</FormError>}
+              </FormGroup>
+              
+              <FormGroup>
+                <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+                <FormInput
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm your password"
+                  disabled={loading}
+                />
+                {errors.confirmPassword && <FormError>{errors.confirmPassword}</FormError>}
+              </FormGroup>
+            </TwoColumnForm>
+            
+            <CheckboxContainer>
+              <CheckboxInput
+                type="checkbox"
+                id="agreeTerms"
+                name="agreeTerms"
+                checked={formData.agreeTerms}
                 onChange={handleChange}
-                placeholder="Enter your password"
                 disabled={loading}
               />
-              {errors.password && <FormError>{errors.password}</FormError>}
-            </FormGroup>
+              <CheckboxLabel htmlFor="agreeTerms">
+                I agree to the <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>
+                {errors.agreeTerms && <FormError>{errors.agreeTerms}</FormError>}
+              </CheckboxLabel>
+            </CheckboxContainer>
             
             <FormButton type="submit" disabled={loading}>
-              {loading ? 'Logging in...' : 'Log In'}
+              {loading ? 'Creating Account...' : 'Sign Up'}
             </FormButton>
           </form>
           
           <FormDivider>
-            <span>OR CONTINUE WITH</span>
+            <span>OR SIGN UP WITH</span>
           </FormDivider>
           
           <SocialLoginButtons>
             <SocialButton
               type="button"
-              onClick={() => handleSocialLogin('Google')}
-              aria-label="Sign in with Google"
+              onClick={() => handleSocialSignup('Google')}
+              aria-label="Sign up with Google"
             >
               <GoogleIcon />
             </SocialButton>
             <SocialButton
               type="button"
-              onClick={() => handleSocialLogin('Facebook')}
-              aria-label="Sign in with Facebook"
+              onClick={() => handleSocialSignup('Facebook')}
+              aria-label="Sign up with Facebook"
             >
               <FacebookIcon />
             </SocialButton>
             <SocialButton
               type="button"
-              onClick={() => handleSocialLogin('GitHub')}
-              aria-label="Sign in with GitHub"
+              onClick={() => handleSocialSignup('GitHub')}
+              aria-label="Sign up with GitHub"
             >
               <GithubIcon />
             </SocialButton>
           </SocialLoginButtons>
           
           <HelperLinks>
-            <div>
-              <StyledLink to="/forgot-password">Forgot your password?</StyledLink>
-            </div>
-            <div>
-              Don't have an account? <StyledLink to="/signup">Sign up</StyledLink>
-            </div>
+            Already have an account? <StyledLink to="/login">Log in</StyledLink>
           </HelperLinks>
         </GlassContainer>
-      </LoginContent>
-    </LoginPageContainer>
+      </SignupContent>
+    </SignupPageContainer>
   );
 };
 
-export default LoginPage;
+export default SignupPage;

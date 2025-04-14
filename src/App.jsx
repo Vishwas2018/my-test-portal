@@ -6,10 +6,13 @@ import { Footer, Header } from './components/layout';
 import React, { useEffect, useState } from 'react';
 
 import { AuthProvider } from './contexts/AuthContext';
+import DashboardPage from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage/LoginPage';
-import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
+import LoginPage from './pages/LoginPage';
+import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import SignupPage from './pages/SignupPage';
+import TrialSignup from './pages/TrialSignup';
 
 function App() {
   // State to track dark mode
@@ -37,14 +40,14 @@ function App() {
   // Listen for system theme changes
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
+
     const handleChange = (e) => {
       // Only change if user hasn't explicitly set a preference
       if (localStorage.getItem('darkMode') === null) {
         setDarkMode(e.matches);
       }
     };
-    
+
     // Add listener for system preference changes
     if (typeof mediaQuery.addEventListener === 'function') {
       mediaQuery.addEventListener('change', handleChange);
@@ -52,7 +55,7 @@ function App() {
       // Older browsers
       mediaQuery.addListener(handleChange);
     }
-    
+
     return () => {
       if (typeof mediaQuery.removeEventListener === 'function') {
         mediaQuery.removeEventListener('change', handleChange);
@@ -76,21 +79,19 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<LoginPage initialForm="register" />} />
+              <Route path="/signup" element={<SignupPage />} />
               <Route path="/features" element={<div className="container page-content">Features Page (Coming Soon)</div>} />
               <Route path="/pricing" element={<div className="container page-content">Pricing Page (Coming Soon)</div>} />
               <Route path="/about" element={<div className="container page-content">About Page (Coming Soon)</div>} />
-              <Route 
-                path="/dashboard" 
+              <Route
+                path="/dashboard"
                 element={
                   <ProtectedRoute>
-                    <div className="container page-content">
-                      <h1>Dashboard</h1>
-                      <p>Welcome to your dashboard! This is a protected route.</p>
-                    </div>
+                    <DashboardPage />
                   </ProtectedRoute>
-                } 
+                }
               />
+              <Route path="/trial-signup" element={<TrialSignup />} />
               <Route path="/demo" element={<div className="container page-content">Demo Page (Coming Soon)</div>} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
