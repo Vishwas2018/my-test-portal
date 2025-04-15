@@ -1,12 +1,12 @@
 // src/pages/ExamPage.jsx
 import React, { useEffect, useState } from 'react';
-import { getQuestions, getSubjects, saveExamResult } from '../utils/examUtils';
+import { getQuestions, getSubjects, saveExamResult } from '../../utils/examUtils';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import ConfettiEffect from '../components/ExamInterface/ConfettiEffect';
-import ExamTimer from '../components/ExamInterface/ExamTimer';
-import ProgressTracker from '../components/ExamInterface/ProgressTracker';
-import QuestionDisplay from '../components/ExamInterface/QuestionDisplay';
+import ConfettiEffect from '../../components/ExamInterface/ConfettiEffect/ConfettiEffect';
+import ExamTimer from '../../components/ExamInterface/ExamTimer/ExamTimer';
+import ProgressTracker from '../../components/ExamInterface/ProgressTracker';
+import QuestionDisplay from '../../components/ExamInterface/QuestionDisplay/QuestionDisplay';
 import styled from 'styled-components';
 
 // Styled components

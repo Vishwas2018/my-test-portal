@@ -117,3 +117,8 @@ const ProgressTracker = ({
           </QuestionIndicator>
         );
       })}
+    </ProgressContainer>
+  );
+};
+
+export default ProgressTracker;

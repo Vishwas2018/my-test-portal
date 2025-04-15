@@ -1,9 +1,9 @@
 // src/pages/ResultsPage.jsx
 import React, { useEffect, useState } from 'react';
-import { formatTime, getExamResults, getQuestions, getSubjects } from '../utils/examUtils';
+import { formatTime, getExamResults, getQuestions, getSubjects } from '../../utils/examUtils';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import ConfettiEffect from '../components/ExamInterface/ConfettiEffect';
+import ConfettiEffect from '../../components/ExamInterface/ConfettiEffect/ConfettiEffect';
 import styled from 'styled-components';
 
 // Styled components

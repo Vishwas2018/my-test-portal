@@ -20,12 +20,12 @@ import TrialSignup from './pages/TrialSignup';
 function App() {
   // State to track dark mode
   const [darkMode, setDarkMode] = useState(() => {
-    // Check localStorage or system preference
+    // Check localStorage first
     const savedMode = localStorage.getItem('darkMode');
     if (savedMode !== null) {
-      return savedMode === 'true';
+      return JSON.parse(savedMode); // Parse the stored boolean value
     }
-    // Check system preference
+    // Check system preference as fallback
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
@@ -36,8 +36,8 @@ function App() {
     } else {
       document.body.classList.remove('dark-mode');
     }
-    // Save preference to localStorage
-    localStorage.setItem('darkMode', darkMode);
+    // Save preference to localStorage as string representation of boolean
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
   }, [darkMode]);
 
   // Listen for system theme changes

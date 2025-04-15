@@ -1,8 +1,8 @@
 // src/components/sections/ExamSection.jsx
 import React from 'react';
-import styled from 'styled-components';
-import SubjectCard from '../ExamInterface/SubjectCard';
+import SubjectCard from '../ExamInterface/SubjectCard/SubjectCard';
 import { getSubjects } from '../../utils/examUtils';
+import styled from 'styled-components';
 
 const SectionContainer = styled.section`
   padding: 4rem 0;
@@ -68,4 +68,19 @@ const ExamSection = () => {
   return (
     <SectionContainer>
       <ContentContainer>
-        <SectionTitle>Practice
+        <SectionTitle>Practice Exams</SectionTitle>
+        <SectionDescription>
+          Test your knowledge with our interactive exams. Select a subject to begin.
+        </SectionDescription>
+        
+        <SubjectsGrid>
+          {subjects.map(subject => (
+            <SubjectCard key={subject.id} subject={subject} />
+          ))}
+        </SubjectsGrid>
+      </ContentContainer>
+    </SectionContainer>
+  );
+};
+
+export default ExamSection;
