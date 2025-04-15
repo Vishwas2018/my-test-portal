@@ -3,7 +3,6 @@ import './App.css';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Footer, Header } from './components/layout';
-import React, { useEffect, useState } from 'react';
 
 import { AuthProvider } from './contexts/AuthContext';
 import DashboardPage from './pages/DashboardPage';
@@ -13,65 +12,15 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import React from 'react';
 import ResultsPage from './pages/ResultsPage';
 import SignupPage from './pages/SignupPage';
 import TrialSignup from './pages/TrialSignup';
+import { useDarkMode } from './hooks'; // Import the new hook
 
 function App() {
-  // State to track dark mode
-  const [darkMode, setDarkMode] = useState(() => {
-    // Check localStorage first
-    const savedMode = localStorage.getItem('darkMode');
-    if (savedMode !== null) {
-      return JSON.parse(savedMode); // Parse the stored boolean value
-    }
-    // Check system preference as fallback
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
-
-  // Apply dark mode class to document when darkMode changes
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
-    // Save preference to localStorage as string representation of boolean
-    localStorage.setItem('darkMode', JSON.stringify(darkMode));
-  }, [darkMode]);
-
-  // Listen for system theme changes
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const handleChange = (e) => {
-      // Only change if user hasn't explicitly set a preference
-      if (localStorage.getItem('darkMode') === null) {
-        setDarkMode(e.matches);
-      }
-    };
-
-    // Add listener for system preference changes
-    if (typeof mediaQuery.addEventListener === 'function') {
-      mediaQuery.addEventListener('change', handleChange);
-    } else {
-      // Older browsers
-      mediaQuery.addListener(handleChange);
-    }
-
-    return () => {
-      if (typeof mediaQuery.removeEventListener === 'function') {
-        mediaQuery.removeEventListener('change', handleChange);
-      } else {
-        mediaQuery.removeListener(handleChange);
-      }
-    };
-  }, []);
-
-  // Function to toggle dark mode
-  const toggleDarkMode = () => {
-    setDarkMode(prev => !prev);
-  };
+  // Replace the useState and useEffect blocks with the custom hook
+  const [darkMode, toggleDarkMode] = useDarkMode();
 
   return (
     <AuthProvider>

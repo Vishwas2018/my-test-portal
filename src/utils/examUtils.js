@@ -1,4 +1,5 @@
 // src/utils/examUtils.js
+import { EXAM, STORAGE_KEYS, UI } from './constants';
 
 /**
  * Get questions for a subject
@@ -102,14 +103,14 @@ export const getQuestions = (subjectId) => {
       };
       
       // Get existing results
-      const existingResultsStr = localStorage.getItem('exam_results');
+      const existingResultsStr = localStorage.getItem(STORAGE_KEYS.EXAM_RESULTS);
       const existingResults = existingResultsStr ? JSON.parse(existingResultsStr) : [];
       
       // Add new result
       const updatedResults = [resultWithDate, ...existingResults];
       
       // Save back to localStorage
-      localStorage.setItem('exam_results', JSON.stringify(updatedResults));
+      localStorage.setItem(STORAGE_KEYS.EXAM_RESULTS, JSON.stringify(updatedResults));
       
       // Update streak data
       updateStreak();
@@ -127,7 +128,7 @@ export const getQuestions = (subjectId) => {
    */
   export const getExamResults = () => {
     try {
-      const resultsStr = localStorage.getItem('exam_results');
+      const resultsStr = localStorage.getItem(STORAGE_KEYS.EXAM_RESULTS);
       return resultsStr ? JSON.parse(resultsStr) : [];
     } catch (error) {
       console.error('Error getting exam results:', error);
@@ -141,7 +142,7 @@ export const getQuestions = (subjectId) => {
   const updateStreak = () => {
     try {
       // Get current streak data
-      const streakDataStr = localStorage.getItem('streak_data');
+      const streakDataStr = localStorage.getItem(STORAGE_KEYS.STREAK_DATA);
       const streakData = streakDataStr 
         ? JSON.parse(streakDataStr) 
         : { currentStreak: 0, longestStreak: 0, lastExamDate: null };
@@ -175,7 +176,7 @@ export const getQuestions = (subjectId) => {
       streakData.lastExamDate = today;
       
       // Save back to localStorage
-      localStorage.setItem('streak_data', JSON.stringify(streakData));
+      localStorage.setItem(STORAGE_KEYS.STREAK_DATA, JSON.stringify(streakData));
       
       return streakData;
     } catch (error) {

@@ -2,12 +2,15 @@ import './DashboardPage.css';
 
 import Button from '../../components/common/Button';
 import React from 'react';
+import { SubjectCard } from '../../components/ExamInterface';
+import { getSubjects } from '../../utils/examUtils';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const DashboardPage = () => {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+  const subjects = getSubjects();
 
   const handleLogout = () => {
     logout();
@@ -53,12 +56,11 @@ const DashboardPage = () => {
         </div>
         
         <div className="dashboard-features">
-          <h2>Your Portal Features</h2>
-          <div className="features-grid">
-            <div className="feature-box">
-              <h3>Coming Soon</h3>
-              <p>More features are being developed and will be available soon!</p>
-            </div>
+          <h2>Available Exams</h2>
+          <div className="features-grid exam-grid">
+            {subjects.map(subject => (
+              <SubjectCard key={subject.id} subject={subject} />
+            ))}
           </div>
         </div>
       </div>

@@ -1,20 +1,33 @@
 // src/services/authService.js
 /**
  * Authentication service for handling user registration and login
- * This is a simple localStorage implementation for demonstration
- * In a real application, you would connect to a backend API
+ * Improved with better security practices
  */
+import { STORAGE_KEYS } from '../utils/constants';
 
-// Key for storing users in localStorage
-const USERS_STORAGE_KEY = 'portal_users';
-const CURRENT_USER_KEY = 'portal_current_user';
+/**
+ * Simple hash function for password obfuscation
+ * Note: This is NOT secure enough for production, just a demo improvement
+ * In production, use a proper backend with secure authentication
+ * @param {string} str - String to hash
+ * @returns {string} Hashed string
+ */
+const simpleHash = (str) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash.toString(16); // Convert to hex string
+};
 
 /**
  * Get all registered users from localStorage
  * @returns {Array} Array of user objects
  */
 const getUsers = () => {
-  const users = localStorage.getItem(USERS_STORAGE_KEY);
+  const users = localStorage.getItem(STORAGE_KEYS.USERS);
   return users ? JSON.parse(users) : [];
 };
 
@@ -23,7 +36,7 @@ const getUsers = () => {
  * @param {Array} users - Array of user objects
  */
 const saveUsers = (users) => {
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+  localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(users));
 };
 
 /**
@@ -52,7 +65,7 @@ const findUserByEmail = (email) => {
  * @returns {Object} Result object with success status and message
  */
 const register = (userData) => {
-  const { username, email, password } = userData;
+  const { username, email, password, fullName } = userData;
   
   // Check if username or email already exists
   if (findUserByUsername(username)) {
@@ -63,12 +76,13 @@ const register = (userData) => {
     return { success: false, message: 'Email already exists' };
   }
   
-  // Create new user object (in a real app, password would be hashed)
+  // Create new user object with hashed password
   const newUser = {
     id: Date.now().toString(), // Simple ID generation
     username,
     email,
-    password, // WARNING: In a real app, never store plain text passwords
+    fullName: fullName || username,
+    passwordHash: simpleHash(password), // Store hash instead of plain text
     createdAt: new Date().toISOString(),
   };
   
@@ -77,8 +91,12 @@ const register = (userData) => {
   users.push(newUser);
   saveUsers(users);
   
-  // Return success with user data (excluding password)
-  const { password: _, ...userWithoutPassword } = newUser;
+  // Return success with user data (excluding password hash)
+  const { passwordHash: _, ...userWithoutPassword } = newUser;
+  
+  // Set current user in localStorage
+  localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutPassword));
+  
   return {
     success: true,
     message: 'Registration successful',
@@ -102,18 +120,19 @@ const login = (credentials) => {
     user = findUserByEmail(username);
   }
   
-  // Check if user exists and password matches
+  // Check if user exists
   if (!user) {
     return { success: false, message: 'User not found' };
   }
   
-  if (user.password !== password) {
+  // Verify password by comparing hashes
+  if (user.passwordHash !== simpleHash(password)) {
     return { success: false, message: 'Incorrect password' };
   }
   
-  // Save current user to localStorage (without password)
-  const { password: _, ...userWithoutPassword } = user;
-  localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userWithoutPassword));
+  // Save current user to localStorage (without password hash)
+  const { passwordHash: _, ...userWithoutPassword } = user;
+  localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(userWithoutPassword));
   
   return {
     success: true,
@@ -127,7 +146,7 @@ const login = (credentials) => {
  * @returns {Object|null} User object if logged in, null otherwise
  */
 const getCurrentUser = () => {
-  const user = localStorage.getItem(CURRENT_USER_KEY);
+  const user = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
   return user ? JSON.parse(user) : null;
 };
 
@@ -135,7 +154,7 @@ const getCurrentUser = () => {
  * Logout the current user
  */
 const logout = () => {
-  localStorage.removeItem(CURRENT_USER_KEY);
+  localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
   return { success: true, message: 'Logout successful' };
 };
 

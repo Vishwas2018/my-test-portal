@@ -1,5 +1,6 @@
 import './TrialSignup.css';
 
+import { AUTH, STORAGE_KEYS } from '../../utils/constants';
 import React, { useState } from 'react';
 
 import { useAuth } from '../../contexts/AuthContext';
@@ -82,10 +83,10 @@ const TrialSignup = () => {
       // Set up trial information
       const trialInfo = {
         startDate: new Date().toISOString(),
-        trialDays: 7
+        trialDays: AUTH.TRIAL_DAYS
       };
       
-      localStorage.setItem('trial_info', JSON.stringify(trialInfo));
+      localStorage.setItem(STORAGE_KEYS.TRIAL_INFO, JSON.stringify(trialInfo));
       
       setStatusMessage({
         type: 'success',

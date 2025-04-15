@@ -29,23 +29,23 @@ const QuestionIndicator = styled.button`
   
   /* Status-based styling */
   background-color: ${props => {
-    if (props.isCurrent) return 'var(--primary)';
-    if (props.isAnswered && props.isFlagged) return 'var(--secondary)';
-    if (props.isAnswered) return 'var(--accent)';
-    if (props.isFlagged) return 'var(--highlight)';
+    if (props.$isCurrent) return 'var(--primary)';
+    if (props.$isAnswered && props.$isFlagged) return 'var(--secondary)';
+    if (props.$isAnswered) return 'var(--accent)';
+    if (props.$isFlagged) return 'var(--highlight)';
     return 'var(--light-gray)';
   }};
   
   color: ${props => {
-    if (props.isCurrent || props.isAnswered || props.isFlagged) return 'white';
+    if (props.$isCurrent || props.$isAnswered || props.$isFlagged) return 'white';
     return 'var(--dark)';
   }};
   
   border-color: ${props => {
-    if (props.isCurrent) return 'var(--primary-dark)';
-    if (props.isAnswered && props.isFlagged) return 'var(--secondary-dark)';
-    if (props.isAnswered) return 'var(--accent-dark)';
-    if (props.isFlagged) return 'var(--highlight-dark)';
+    if (props.$isCurrent) return 'var(--primary-dark)';
+    if (props.$isAnswered && props.$isFlagged) return 'var(--secondary-dark)';
+    if (props.$isAnswered) return 'var(--accent-dark)';
+    if (props.$isFlagged) return 'var(--highlight-dark)';
     return 'transparent';
   }};
   
@@ -55,12 +55,12 @@ const QuestionIndicator = styled.button`
   }
   
   &::after {
-    content: ${props => (props.isFlagged && !props.isCurrent) ? "'⚑'" : "none"};
+    content: ${props => (props.$isFlagged && !props.$isCurrent) ? "'⚑'" : "none"};
     position: absolute;
     top: -5px;
     right: -5px;
     font-size: 10px;
-    background: ${props => props.isAnswered ? 'var(--accent)' : 'var(--highlight)'};
+    background: ${props => props.$isAnswered ? 'var(--accent)' : 'var(--highlight)'};
     color: white;
     width: 14px;
     height: 14px;
@@ -71,7 +71,7 @@ const QuestionIndicator = styled.button`
   }
   
   &::before {
-    content: ${props => (props.isAnswered && !props.isCurrent && !props.isFlagged) ? "'✓'" : "none"};
+    content: ${props => (props.$isAnswered && !props.$isCurrent && !props.$isFlagged) ? "'✓'" : "none"};
     position: absolute;
     top: -5px;
     right: -5px;
@@ -107,9 +107,9 @@ const ProgressTracker = ({
         return (
           <QuestionIndicator
             key={questionIndex}
-            isAnswered={isAnswered}
-            isFlagged={isFlagged}
-            isCurrent={isCurrent}
+            $isAnswered={isAnswered}
+            $isFlagged={isFlagged}
+            $isCurrent={isCurrent}
             onClick={() => onQuestionClick(questionIndex)}
             aria-label={`Question ${questionIndex + 1}${isAnswered ? ', answered' : ''}${isFlagged ? ', flagged for review' : ''}`}
           >

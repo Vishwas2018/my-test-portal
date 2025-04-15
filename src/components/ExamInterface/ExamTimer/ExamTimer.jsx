@@ -17,12 +17,12 @@ const TimerHeader = styled.div`
 
 const TimerText = styled.span`
   font-size: 1.2rem;
-  font-weight: ${props => props.warning ? '700' : '600'};
+  font-weight: ${props => props.$warning ? '700' : '600'};
   color: ${props => {
-    if (props.warning) return 'var(--error)';
+    if (props.$warning) return 'var(--error)';
     return 'var(--dark)';
   }};
-  animation: ${props => props.blinking ? 'blink 1s infinite' : 'none'};
+  animation: ${props => props.$blinking ? 'blink 1s infinite' : 'none'};
   
   @keyframes blink {
     0%, 100% { opacity: 1; }
@@ -123,7 +123,7 @@ const ExamTimer = ({ duration, onTimeUp, isPaused = false }) => {
   return (
     <TimerContainer>
       <TimerHeader>
-        <TimerText warning={timeLeft < 60} blinking={isBlinking}>
+        <TimerText $warning={timeLeft < 60} $blinking={isBlinking}>
           Time Remaining: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
         </TimerText>
         

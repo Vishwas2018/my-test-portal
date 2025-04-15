@@ -1,15 +1,24 @@
 import { Navigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
-import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 
 /**
  * A wrapper for routes that should only be accessible to authenticated users
  * Redirects to login if not authenticated
+ * Improved to prevent redirect loops
  */
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+
+  // Only redirect after the loading state is complete to prevent redirect loops
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      setShouldRedirect(true);
+    }
+  }, [loading, isAuthenticated]);
 
   // Show loading state if auth is being checked
   if (loading) {
@@ -21,9 +30,8 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // Redirect to login if not authenticated
-  // Store the current location to redirect back after login
-  if (!isAuthenticated) {
+  // Redirect to login if not authenticated and loading is complete
+  if (shouldRedirect) {
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 

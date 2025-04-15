@@ -151,7 +151,7 @@ const ButtonBase = styled.button`
   }
   
   /* Icon styling */
-  ${props => props.hasIcon && `
+  ${props => props.$hasIcon && `
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
@@ -195,13 +195,13 @@ const Button = ({
     child => React.isValidElement(child) && (child.type === 'svg' || child.type === 'i')
   );
 
-  // Common props for all button types
+  // Common props for all button types - use $hasIcon to prevent passing to DOM
   const buttonProps = {
     variant,
     size,
     disabled,
     className,
-    hasIcon,
+    $hasIcon: hasIcon,
     ...rest
   };
 

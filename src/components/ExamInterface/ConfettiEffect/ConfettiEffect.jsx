@@ -1,4 +1,4 @@
-// src/components/ExamInterface/ConfettiEffect.jsx
+// src/components/ExamInterface/ConfettiEffect/ConfettiEffect.jsx
 import React, { useEffect, useRef } from 'react';
 
 /**
@@ -9,6 +9,7 @@ import React, { useEffect, useRef } from 'react';
  */
 const ConfettiEffect = () => {
   const canvasRef = useRef(null);
+  const animationRef = useRef(null);
 
   // Colors to use for confetti pieces
   const colors = [
@@ -98,17 +99,28 @@ const ConfettiEffect = () => {
 
       // Continue animation if there's still active confetti
       if (stillActive) {
-        requestAnimationFrame(updateConfetti);
+        animationRef.current = requestAnimationFrame(updateConfetti);
       }
     };
 
     // Initialize and start animation
     createConfetti();
-    updateConfetti();
+    animationRef.current = requestAnimationFrame(updateConfetti);
+
+    // Handle window resize
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    
+    window.addEventListener('resize', handleResize);
 
     // Cleanup function
     return () => {
-      // Nothing specific to clean up for canvas
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -124,6 +136,7 @@ const ConfettiEffect = () => {
         pointerEvents: 'none', // Let clicks pass through
         zIndex: 9999
       }}
+      aria-hidden="true"
     />
   );
 };
