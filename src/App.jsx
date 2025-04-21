@@ -19,6 +19,9 @@ import SignupPage from './pages/SignupPage';
 import TrialSignup from './pages/TrialSignup';
 import { useDarkMode } from './hooks';
 
+/**
+ * Main App component that sets up routing and context providers
+ */
 function App() {
   // Use the improved dark mode hook
   const [darkMode, toggleDarkMode] = useDarkMode();

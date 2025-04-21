@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import styled from 'styled-components';
 
@@ -20,7 +20,7 @@ const ToggleContainer = styled.button`
 
   &:focus {
     outline: none;
-    box-shadow: var(--glow-primary);
+    box-shadow: var(--shadow-sm);
   }
 `;
 
@@ -39,7 +39,7 @@ const Icons = styled.div`
     
     &:first-child {
       transform: ${({ theme }) => theme === 'light' ? 'translateY(0)' : 'translateY(100px)'};
-      color: var(--yellow-400);
+      color: var(--highlight);
     }
     
     &:nth-child(2) {
@@ -76,84 +76,30 @@ const MoonIcon = () => (
   </svg>
 );
 
-const DarkModeToggle = ({ initialTheme, onChange }) => {
-  // Use the initialTheme prop if provided, otherwise get user preference
-  const [theme, setTheme] = useState(() => {
-    if (initialTheme !== undefined) {
-      return initialTheme ? 'dark' : 'light';
-    }
-    
-    // Check for stored preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      return savedTheme;
-    }
-    
-    // Check system preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  });
-
-  // Handle theme change
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    
-    // Call onChange callback if provided
-    if (onChange) {
-      onChange(newTheme === 'dark');
-    }
-  };
-
-  // Apply theme to document (if not controlled by parent)
+/**
+ * A toggle component that switches between light and dark mode
+ * 
+ * @param {boolean} darkMode - Current dark mode state
+ * @param {function} onChange - Callback when toggle is clicked
+ */
+const DarkModeToggle = ({ darkMode, onChange }) => {
+  const theme = darkMode ? 'dark' : 'light';
+  
+  // Apply theme class to document
   useEffect(() => {
-    if (!onChange) {
-      const htmlElement = document.documentElement;
-      
-      if (theme === 'dark') {
-        htmlElement.classList.add('dark-mode');
-      } else {
-        htmlElement.classList.remove('dark-mode');
-      }
+    if (darkMode) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
     }
-  }, [theme, onChange]);
-
-  // Listen for system preference changes
-  useEffect(() => {
-    // Only apply these listeners if not controlled by parent
-    if (initialTheme === undefined) {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      
-      const handleChange = (e) => {
-        const newTheme = e.matches ? 'dark' : 'light';
-        // Only change if user hasn't set a preference
-        if (!localStorage.getItem('theme')) {
-          setTheme(newTheme);
-          // Call onChange callback if provided
-          if (onChange) {
-            onChange(newTheme === 'dark');
-          }
-        }
-      };
-      
-      mediaQuery.addEventListener('change', handleChange);
-      
-      return () => mediaQuery.removeEventListener('change', handleChange);
-    }
-  }, [initialTheme, onChange]);
-
-  // Sync with parent's theme state if controlled
-  useEffect(() => {
-    if (initialTheme !== undefined) {
-      setTheme(initialTheme ? 'dark' : 'light');
-    }
-  }, [initialTheme]);
+  }, [darkMode]);
 
   return (
     <ToggleContainer 
-      onClick={toggleTheme} 
+      onClick={onChange}
       theme={theme}
-      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      aria-label={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
+      title={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
     >
       <Icons theme={theme}>
         <SunIcon />
