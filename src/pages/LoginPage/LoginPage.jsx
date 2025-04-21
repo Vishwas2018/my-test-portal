@@ -1,11 +1,13 @@
 import './LoginPage.css';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import GlassContainer from '../../components/common/GlassContainer/GlassContainer';
 import styled from 'styled-components';
 import { useAuth } from '../../contexts/AuthContext';
+import useErrorHandler from '../../hooks/useErrorHandler';
+import useForm from '../../hooks/useForm';
 import { validateLoginForm } from '../../utils/validation';
 
 // Styled components for LoginPage
@@ -72,15 +74,17 @@ const FormLabel = styled.label`
 const FormInput = styled.input`
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 2px solid var(--light-gray);
+  border: 2px solid ${props => props.$hasError ? 'var(--error)' : 'var(--light-gray)'};
   border-radius: var(--radius-md);
   font-size: 1rem;
   transition: var(--transition-normal);
   background-color: ${props => props.dark ? 'rgba(36, 40, 46, 0.1)' : 'rgba(255, 255, 255, 0.8)'};
   
   &:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(110, 207, 255, 0.3);
+    border-color: ${props => props.$hasError ? 'var(--error)' : 'var(--primary)'};
+    box-shadow: 0 0 0 3px ${props => props.$hasError 
+      ? 'rgba(229, 62, 62, 0.3)' 
+      : 'rgba(110, 207, 255, 0.3)'};
     outline: none;
   }
 `;
@@ -109,12 +113,12 @@ const FormButton = styled.button`
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
   transform: translateY(-4px);
   
-  &:hover {
+  &:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
   }
   
-  &:active {
+  &:active:not(:disabled) {
     transform: translateY(0);
     box-shadow: 0 0px 0 rgba(0, 0, 0, 0.1);
   }
@@ -211,6 +215,12 @@ const StatusMessage = styled.div`
     color: #48bb78;
     border-left: 4px solid #48bb78;
   }
+
+  &.info {
+    background-color: rgba(66, 153, 225, 0.1);
+    color: #4299e1;
+    border-left: 4px solid #4299e1;
+  }
 `;
 
 // Icons for social login buttons
@@ -233,75 +243,68 @@ const GithubIcon = () => (
 );
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({ username: '', password: '' });
-  const [errors, setErrors] = useState({});
   const [status, setStatus] = useState({ type: '', message: '' });
-  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { error, handleAsyncError } = useErrorHandler();
 
   // Get redirect path if coming from a protected route
   const from = location.state?.from || '/dashboard';
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+  // Initialize form with useForm hook and validation
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    validateForm
+  } = useForm(
+    { username: '', password: '' },
+    (values) => {
+      const validation = validateLoginForm(values);
+      return validation.errors;
     }
-  };
+  );
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Show error from error handler if present
+  useEffect(() => {
+    if (error) {
+      setStatus({
+        type: 'error',
+        message: error.message || 'An unexpected error occurred. Please try again.'
+      });
+    }
+  }, [error]);
+
+  const performLogin = async () => {
+    // Clear status before attempting login
+    setStatus({ type: '', message: '' });
     
-    // Validate form
-    const validation = validateLoginForm(formData);
-    if (!validation.isValid) {
-      setErrors(validation.errors);
+    // Attempt to login with auth service
+    const result = await login(values);
+    
+    if (!result.success) {
+      setStatus({
+        type: 'error',
+        message: result.message || 'Login failed. Please check your credentials.'
+      });
       return;
     }
     
-    // Clear errors and status
-    setErrors({});
-    setStatus({ type: '', message: '' });
+    // Show success message briefly before redirecting
+    setStatus({
+      type: 'success',
+      message: 'Login successful! Redirecting...'
+    });
     
-    // Show loading state
-    setLoading(true);
-    
-    try {
-      // Try to login
-      const result = await login(formData);
-      
-      if (!result.success) {
-        setStatus({
-          type: 'error',
-          message: result.message || 'Login failed. Please check your credentials.'
-        });
-        setLoading(false);
-        return;
-      }
-      
-      // Show success message briefly before redirecting
-      setStatus({
-        type: 'success',
-        message: 'Login successful! Redirecting...'
-      });
-      
-      // Redirect after a short delay
-      setTimeout(() => {
-        navigate(from, { replace: true });
-      }, 1000);
-      
-    } catch (error) {
-      setStatus({
-        type: 'error',
-        message: 'An unexpected error occurred. Please try again.'
-      });
-      setLoading(false);
-    }
+    // Redirect after a short delay
+    setTimeout(() => {
+      navigate(from, { replace: true });
+    }, 1000);
   };
 
   const handleSocialLogin = (provider) => {
@@ -310,9 +313,6 @@ const LoginPage = () => {
       type: 'info',
       message: `${provider} login is not implemented yet.`
     });
-    
-    // In a real app, you would implement social login
-    // e.g., firebaseAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
   };
 
   return (
@@ -330,19 +330,23 @@ const LoginPage = () => {
             </StatusMessage>
           )}
           
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(performLogin)}>
             <FormGroup>
               <FormLabel htmlFor="username">Username or Email</FormLabel>
               <FormInput
                 type="text"
                 id="username"
                 name="username"
-                value={formData.username}
+                value={values.username}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="Enter your username or email"
-                disabled={loading}
+                disabled={isSubmitting}
+                $hasError={touched.username && errors.username}
               />
-              {errors.username && <FormError>{errors.username}</FormError>}
+              {touched.username && errors.username && (
+                <FormError>{errors.username}</FormError>
+              )}
             </FormGroup>
             
             <FormGroup>
@@ -351,16 +355,20 @@ const LoginPage = () => {
                 type="password"
                 id="password"
                 name="password"
-                value={formData.password}
+                value={values.password}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 placeholder="Enter your password"
-                disabled={loading}
+                disabled={isSubmitting}
+                $hasError={touched.password && errors.password}
               />
-              {errors.password && <FormError>{errors.password}</FormError>}
+              {touched.password && errors.password && (
+                <FormError>{errors.password}</FormError>
+              )}
             </FormGroup>
             
-            <FormButton type="submit" disabled={loading}>
-              {loading ? 'Logging in...' : 'Log In'}
+            <FormButton type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Logging in...' : 'Log In'}
             </FormButton>
           </form>
           

@@ -1,245 +1,120 @@
-import { Link } from 'react-router-dom';
-import React from 'react';
-import styled from 'styled-components';
+import { render, screen } from '@testing-library/react';
 
-// Base button styles
-const ButtonBase = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: var(--transition-bounce);
-  text-decoration: none;
-  border: none;
-  outline: none;
-  font-family: 'Nunito', sans-serif;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-  letter-spacing: 0.5px;
-  box-shadow: var(--shadow-fun);
-  text-transform: uppercase;
-  
-  /* Size variants */
-  ${props => props.size === 'small' && `
-    padding: 0.6rem 1.5rem;
-    font-size: 0.9rem;
-  `}
-  
-  ${props => props.size === 'medium' && `
-    padding: 0.9rem 2rem;
-    font-size: 1.1rem;
-  `}
-  
-  ${props => props.size === 'large' && `
-    padding: 1.2rem 2.5rem;
-    font-size: 1.25rem;
-  `}
-  
-  /* Button variants */
-  ${props => props.variant === 'primary' && `
-    background: var(--primary);
-    color: white;
-    box-shadow: 0 8px 0 var(--primary-dark);
-    transform: translateY(-4px);
-    
-    &:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 0 var(--primary-dark);
-    }
-    
-    &:active:not(:disabled) {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 var(--primary-dark);
-    }
-    
-    &:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: translateY(0);
-      box-shadow: 0 4px 0 var(--primary-dark);
-    }
-    
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
-      z-index: -1;
-    }
-  `}
-  
-  ${props => props.variant === 'secondary' && `
-    background: var(--white);
-    color: var(--primary);
-    border: 3px solid var(--primary);
-    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.1);
-    transform: translateY(-3px);
-    
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
-      background: var(--light-gray);
-    }
-    
-    &:active {
-      transform: translateY(0);
-      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-    }
-  `}
-  
-  ${props => props.variant === 'cta' && `
-    background: var(--secondary);
-    color: white;
-    box-shadow: 0 8px 0 var(--secondary-dark);
-    transform: translateY(-4px);
-    position: relative;
-    z-index: 1;
-    
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 0 var(--secondary-dark);
-      animation: wobble 0.8s ease;
-    }
-    
-    &:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 var(--secondary-dark);
-    }
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
-      z-index: -1;
-    }
-  `}
-  
-  ${props => props.variant === 'text' && `
-    background: transparent;
-    color: var(--primary);
-    padding: 0.5rem 1rem;
-    position: relative;
-    font-weight: 600;
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-decoration-color: transparent;
-    text-underline-offset: 4px;
-    box-shadow: none;
-    
-    &:hover {
-      text-decoration-color: var(--primary);
-      transform: scale(1.05);
-    }
-  `}
-  
-  /* Disabled state */
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
-  }
-  
-  /* Icon styling */
-  ${props => props.$hasIcon && `
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    
-    svg {
-      width: 1.5em;
-      height: 1.5em;
-      transition: transform 0.3s ease;
-    }
-    
-    &:hover svg {
-      transform: rotate(10deg) scale(1.1);
-    }
-  `}
-`;
+import { BrowserRouter } from 'react-router-dom';
+import Button from './Button';
+import userEvent from '@testing-library/user-event';
 
-// Link version of the button
-const LinkButton = styled(Link)`
-  ${ButtonBase}
-`;
-
-// Anchor version of the button
-const AnchorButton = styled.a`
-  ${ButtonBase}
-`;
-
-const Button = ({
-  children,
-  variant = 'primary',
-  size = 'medium',
-  to,
-  href,
-  onClick,
-  type = 'button',
-  disabled = false,
-  className = '',
-  ...rest
-}) => {
-  // Check if button has icon children
-  const hasIcon = React.Children.toArray(children).some(
-    child => React.isValidElement(child) && (child.type === 'svg' || child.type === 'i')
-  );
-
-  // Common props for all button types - use $hasIcon to prevent passing to DOM
-  const buttonProps = {
-    variant,
-    size,
-    disabled,
-    className,
-    $hasIcon: hasIcon,
-    ...rest
-  };
-
-  // Internal link (React Router)
-  if (to) {
-    return (
-      <LinkButton to={to} {...buttonProps}>
-        {children}
-      </LinkButton>
-    );
-  }
-
-  // External link
-  if (href) {
-    return (
-      <AnchorButton
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        {...buttonProps}
-      >
-        {children}
-      </AnchorButton>
-    );
-  }
-
-  // Standard button
-  return (
-    <ButtonBase
-      as="button"
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      {...buttonProps}
-    >
-      {children}
-    </ButtonBase>
-  );
+// Helper function to render Button components with router
+const renderWithRouter = (ui, { route = '/' } = {}) => {
+  window.history.pushState({}, 'Test page', route);
+  return render(ui, { wrapper: BrowserRouter });
 };
 
-export default Button;
+describe('Button Component', () => {
+  test('renders standard button correctly with text', () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument();
+  });
+
+  test('applies primary variant class correctly', () => {
+    render(<Button variant="primary">Primary Button</Button>);
+    const button = screen.getByRole('button', { name: /primary button/i });
+    expect(button).toHaveStyle(`background: var(--primary)`);
+  });
+
+  test('applies secondary variant class correctly', () => {
+    render(<Button variant="secondary">Secondary Button</Button>);
+    const button = screen.getByRole('button', { name: /secondary button/i });
+    expect(button).toHaveStyle(`background-color: var(--white)`);
+  });
+
+  test('applies cta variant class correctly', () => {
+    render(<Button variant="cta">CTA Button</Button>);
+    const button = screen.getByRole('button', { name: /cta button/i });
+    expect(button).toHaveStyle(`background: var(--secondary)`);
+  });
+
+  test('applies size variants correctly', () => {
+    const { rerender } = render(<Button size="small">Small Button</Button>);
+    let button = screen.getByRole('button', { name: /small button/i });
+    expect(button).toHaveStyle(`padding: 0.6rem 1.5rem`);
+
+    rerender(<Button size="large">Large Button</Button>);
+    button = screen.getByRole('button', { name: /large button/i });
+    expect(button).toHaveStyle(`padding: 1.2rem 2.5rem`);
+  });
+
+  test('renders as a link when "to" prop is provided', () => {
+    renderWithRouter(<Button to="/test-route">Link Button</Button>);
+    
+    const linkButton = screen.getByRole('link', { name: /link button/i });
+    expect(linkButton).toBeInTheDocument();
+    expect(linkButton.getAttribute('href')).toBe('/test-route');
+  });
+
+  test('renders as an anchor when "href" prop is provided', () => {
+    render(<Button href="https://example.com">External Link</Button>);
+    
+    const linkButton = screen.getByRole('link', { name: /external link/i });
+    expect(linkButton).toBeInTheDocument();
+    expect(linkButton.getAttribute('href')).toBe('https://example.com');
+    expect(linkButton.getAttribute('target')).toBe('_blank');
+    expect(linkButton.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+
+  test('calls onClick handler when clicked', async () => {
+    const handleClick = jest.fn();
+    render(<Button onClick={handleClick}>Click Handler</Button>);
+    
+    const button = screen.getByRole('button', { name: /click handler/i });
+    await userEvent.click(button);
+    
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  test('sets disabled state correctly', () => {
+    const handleClick = jest.fn();
+    render(
+      <Button onClick={handleClick} disabled>
+        Disabled Button
+      </Button>
+    );
+    
+    const button = screen.getByRole('button', { name: /disabled button/i });
+    expect(button).toBeDisabled();
+    
+    // Verify that clicking a disabled button doesn't trigger the handler
+    userEvent.click(button);
+    expect(handleClick).not.toHaveBeenCalled();
+  });
+
+  test('renders with icon children correctly', () => {
+    render(
+      <Button>
+        <svg data-testid="test-icon" />
+        With Icon
+      </Button>
+    );
+    
+    expect(screen.getByTestId('test-icon')).toBeInTheDocument();
+    expect(screen.getByText('With Icon')).toBeInTheDocument();
+  });
+
+  test('applies custom className correctly', () => {
+    render(<Button className="custom-class">Custom Class Button</Button>);
+    
+    const button = screen.getByRole('button', { name: /custom class button/i });
+    expect(button).toHaveClass('custom-class');
+  });
+
+  test('forwards additional props to the button element', () => {
+    render(
+      <Button data-testid="extra-props" aria-label="Special Button">
+        Extra Props
+      </Button>
+    );
+    
+    const button = screen.getByTestId('extra-props');
+    expect(button).toHaveAttribute('aria-label', 'Special Button');
+  });
+});

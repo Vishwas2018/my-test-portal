@@ -1,4 +1,6 @@
 // src/hooks/index.js
-// This file is intentionally left empty for future hooks
-// You can add custom hooks exports here// src/hooks/index.js
+// Export all custom hooks for easy imports
 export { default as useDarkMode } from './useDarkMode';
+export { default as useForm } from './useForm';
+export { default as useModal } from './useModal';
+export { default as useErrorHandler } from './useErrorHandler';
