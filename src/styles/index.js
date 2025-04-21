@@ -1,6 +1,13 @@
-// src/styles/index.js
-// This file can be used to export styles or theme variables
-// For now it's a placeholder for importing global styles in one place
-// import './global.css';
-// import './animations.css';
-// import './typography.css';
+/* 
+  index.css - Main stylesheet entry point
+  Import all CSS files in the correct order
+*/
+
+/* Core styles - theme and base styles */
+@import './base.css';
+
+/* Component styles - animations and utilities */
+@import './animations.css';
+@import './utilities.css';
+
+/* Any additional custom styles can be added below */
