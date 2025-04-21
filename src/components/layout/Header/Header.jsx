@@ -10,67 +10,62 @@ const Header = ({ darkMode, toggleDarkMode }) => {
   const [scrolled, setScrolled] = useState(false);
   const { currentUser, logout, isAuthenticated } = useAuth();
   const location = useLocation();
-
+  
   // Add trial functionality
   const [isTrialActive, setIsTrialActive] = useState(false);
   const [trialDaysRemaining, setTrialDaysRemaining] = useState(0);
-
+  
   useEffect(() => {
     // Check if user is in trial period
     if (isAuthenticated && currentUser) {
       const trialInfo = localStorage.getItem('trial_info');
       if (trialInfo) {
-        const { startDate, trialDays } = JSON.parse(trialInfo);
-        const trialStartDate = new Date(startDate);
-        const currentDate = new Date();
-        const daysPassed = Math.floor((currentDate - trialStartDate) / (1000 * 60 * 60 * 24));
-        const daysRemaining = trialDays - daysPassed;
-        
-        if (daysRemaining > 0) {
-          setIsTrialActive(true);
-          setTrialDaysRemaining(daysRemaining);
-        } else {
-          setIsTrialActive(false);
-          // Trial expired, could implement additional logic here
+        try {
+          const { startDate, trialDays } = JSON.parse(trialInfo);
+          const trialStartDate = new Date(startDate);
+          const currentDate = new Date();
+          const daysPassed = Math.floor((currentDate - trialStartDate) / (1000 * 60 * 60 * 24));
+          const daysRemaining = trialDays - daysPassed;
+          
+          setIsTrialActive(daysRemaining > 0);
+          setTrialDaysRemaining(Math.max(0, daysRemaining));
+        } catch (error) {
+          console.error('Error parsing trial info:', error);
         }
       }
     }
   }, [isAuthenticated, currentUser]);
-
+  
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 100);
     };
-
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
+  
   // Close mobile menu when location changes
   useEffect(() => {
     setMenuOpen(false);
   }, [location]);
-
+  
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen(prevState => !prevState);
   };
-
+  
   const handleLogout = () => {
     logout();
     setMenuOpen(false);
   };
-
+  
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
       <div className="container header-container">
         <Link to="/" className="logo">
           <span className="logo-text">WonderLearn</span>
         </Link>
-
+        
         {/* Mobile menu button */}
         <button
           className={`mobile-menu-btn ${menuOpen ? 'open' : ''}`}
@@ -80,7 +75,7 @@ const Header = ({ darkMode, toggleDarkMode }) => {
         >
           <span className="menu-icon"></span>
         </button>
-
+        
         {/* Navigation and auth buttons */}
         <div className={`header-content ${menuOpen ? 'open' : ''}`}>
           <nav className="main-nav">
@@ -90,7 +85,11 @@ const Header = ({ darkMode, toggleDarkMode }) => {
               <li><Link to="/activities" className={location.pathname === '/activities' ? 'active' : ''}>Activities</Link></li>
               <li><Link to="/about" className={location.pathname === '/about' ? 'active' : ''}>About</Link></li>
               {isAuthenticated && (
-                <li><Link to="/dashboard" className={location.pathname === '/dashboard' ? 'active' : ''}>Dashboard</Link></li>
+                <>
+                  <li><Link to="/dashboard" className={location.pathname === '/dashboard' ? 'active' : ''}>Dashboard</Link></li>
+                  <li><Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''}>Profile</Link></li>
+                  <li><Link to="/settings" className={location.pathname === '/settings' ? 'active' : ''}>Settings</Link></li>
+                  </>
               )}
             </ul>
           </nav>

@@ -12,9 +12,11 @@ import { ExamProvider } from './contexts/ExamContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ProfilePage from './pages/ProfilePage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import React from 'react';
 import ResultsPage from './pages/ResultsPage';
+import SettingsPage from './pages/SettingsPage/SettingsPage'; // Add this import
 import SignupPage from './pages/SignupPage';
 import TrialSignup from './pages/TrialSignup';
 import { useDarkMode } from './hooks';
@@ -47,6 +49,22 @@ function App() {
                       element={
                         <ProtectedRoute>
                           <DashboardPage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/profile"
+                      element={
+                        <ProtectedRoute>
+                          <ProfilePage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/settings"
+                      element={
+                        <ProtectedRoute>
+                          <SettingsPage />
                         </ProtectedRoute>
                       }
                     />

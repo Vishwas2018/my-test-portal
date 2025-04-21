@@ -1,69 +1,101 @@
 import './DashboardPage.css';
 
-import Button from '../../components/common/Button';
 import React from 'react';
 import { SubjectCard } from '../../components/ExamInterface';
 import { getSubjects } from '../../utils/examUtils';
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
+// Styled components
+const DashboardContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+`;
+
+const DashboardHeader = styled.div`
+  margin-bottom: 2.5rem;
+  text-align: center;
+`;
+
+const Title = styled.h1`
+  font-size: 2.5rem;
+  color: var(--dark);
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--gradient-fun);
+    border-radius: var(--radius-full);
+  }
+`;
+
+const Subtitle = styled.p`
+  font-size: 1.2rem;
+  color: var(--dark-gray);
+  max-width: 700px;
+  margin: 1.5rem auto 0;
+`;
+
+const ExamsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  animation: fadeInUp 0.8s ease-out;
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+/**
+ * Dashboard page that displays available exams
+ * 
+ * @returns {JSX.Element} Dashboard component
+ */
 const DashboardPage = () => {
-  const { currentUser, logout } = useAuth();
-  const navigate = useNavigate();
+  // Get available subjects for exams
   const subjects = getSubjects();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
 
   return (
     <div className="dashboard-page">
-      <div className="container dashboard-container">
-        <div className="dashboard-welcome">
-          <div className="welcome-card">
-            <h1>Welcome to your Dashboard, <span className="highlight">{currentUser?.username}</span>!</h1>
-            <p className="welcome-message">
-              You've successfully logged into your Portal account. This is your personal dashboard where you can manage your account and access all the features of Portal.
-            </p>
-            
-            <div className="user-info-box">
-              <h3>Your Account Information</h3>
-              <div className="user-info-item">
-                <span className="label">Username:</span>
-                <span className="value">{currentUser?.username}</span>
-              </div>
-              <div className="user-info-item">
-                <span className="label">Email:</span>
-                <span className="value">{currentUser?.email}</span>
-              </div>
-              <div className="user-info-item">
-                <span className="label">Account Created:</span>
-                <span className="value">
-                  {currentUser?.createdAt 
-                    ? new Date(currentUser.createdAt).toLocaleDateString() 
-                    : 'Unknown'}
-                </span>
-              </div>
-            </div>
-            
-            <div className="dashboard-actions">
-              <Button variant="secondary" size="medium" onClick={handleLogout}>
-                Logout
-              </Button>
-            </div>
-          </div>
-        </div>
+      <DashboardContainer>
+        <DashboardHeader>
+          <Title>Available Exams</Title>
+          <Subtitle>
+            Select an exam to begin practicing. Each subject has a different set of questions
+            designed to test your knowledge and help you improve your understanding.
+          </Subtitle>
+        </DashboardHeader>
         
-        <div className="dashboard-features">
-          <h2>Available Exams</h2>
-          <div className="features-grid exam-grid">
-            {subjects.map(subject => (
-              <SubjectCard key={subject.id} subject={subject} />
-            ))}
-          </div>
-        </div>
-      </div>
+        <ExamsGrid>
+          {subjects.map(subject => (
+            <SubjectCard key={subject.id} subject={subject} />
+          ))}
+        </ExamsGrid>
+      </DashboardContainer>
     </div>
   );
 };
