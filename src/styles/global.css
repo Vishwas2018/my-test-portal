@@ -1,100 +1,14 @@
-/* src/styles/global.css - Simplified version without dependencies */
+/* src/styles/global.css - Core application styles */
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&display=swap');
 
-/* CSS Variables */
-:root {
-  /* Colors */
-  --primary: #6ECFFF;
-  --primary-light: #A5E1FF;
-  --primary-dark: #4BA3FF;
-  
-  --secondary: #FF9E80;
-  --secondary-light: #FFBDA7;
-  --secondary-dark: #FF7D57;
-  
-  --accent: #7ED957;
-  --accent-light: #A5F284;
-  --accent-dark: #5BB039;
-  
-  --highlight: #FFDE59;
-  --highlight-dark: #FFCE29;
-  
-  /* Neutral colors */
-  --dark: #4B5D67;
-  --dark-gray: #6B8A99;
-  --medium-gray: #A4B8C4;
-  --light-gray: #E4F0F7;
-  --off-white: #F9FDFF;
-  --white: #FFFFFF;
-  
-  /* Gradients */
-  --gradient-primary: linear-gradient(90deg, var(--primary), var(--accent));
-  --gradient-secondary: linear-gradient(90deg, var(--secondary), var(--highlight));
-  --gradient-wild: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent), #B39DDB);
-  --gradient-fun: linear-gradient(135deg, var(--highlight), var(--accent), var(--primary));
-  
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-  --shadow-fun: 0 8px 0 rgba(0, 0, 0, 0.1);
-  
-  /* Border radius */
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --radius-full: 9999px;
-  
-  /* Animation */
-  --transition-normal: all 0.3s cubic-bezier(0.5, 0, 0.5, 1);
-  --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  
-  /* Font sizes */
-  --font-xs: 0.75rem;
-  --font-sm: 0.875rem;
-  --font-base: 1rem;
-  --font-md: 1.125rem;
-  --font-lg: 1.25rem;
-  --font-xl: 1.5rem;
-  --font-2xl: 1.875rem;
-  --font-3xl: 2.25rem;
-  --font-4xl: 3rem;
-  --font-5xl: 3.75rem;
-}
+/* Import theme variables */
+@import './theme.css';
 
-/* Dark mode variables */
-.dark-mode {
-  --primary: #6ECFFF;
-  --primary-light: #4BA3FF;
-  --primary-dark: #A5E1FF;
-  
-  --secondary: #FF9E80;
-  --secondary-light: #FF7D57;
-  --secondary-dark: #FFBDA7;
-  
-  --accent: #7ED957;
-  --accent-light: #5BB039;
-  --accent-dark: #A5F284;
-  
-  --highlight: #FFDE59;
-  --highlight-light: #FFCE29;
-  --highlight-dark: #FFF3C4;
-  
-  --dark: #E4F0F7;
-  --dark-gray: #A4B8C4;
-  --medium-gray: #6B8A99;
-  --light-gray: #2A3035;
-  --off-white: #1A1D20;
-  --white: #242830;
-  
-  /* Shadow adjustments for dark mode */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-}
+/* Import utility styles */
+@import './utilities.css';
+@import './animations.css';
 
 /* CSS Reset */
 *,
@@ -111,14 +25,14 @@ html {
 
 /* Base styles */
 body {
-  font-family: 'Nunito', sans-serif;
+  font-family: var(--font-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--off-white);
   color: var(--dark-gray);
   line-height: 1.6;
   overflow-x: hidden;
-  font-size: var(--font-base);
+  font-size: var(--text-base);
   letter-spacing: 0.01em;
   background-image: 
     radial-gradient(circle at 25% 25%, rgba(110, 207, 255, 0.08) 0%, transparent 50%),
@@ -126,46 +40,21 @@ body {
   background-attachment: fixed;
 }
 
-/* Dark mode body adjustments */
-.dark-mode body {
-  background-color: var(--off-white);
-  color: var(--dark-gray);
-}
-
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Comic Neue', cursive;
+  font-family: var(--font-heading);
   line-height: 1.2;
   color: var(--dark);
   margin-bottom: 1rem;
   font-weight: 700;
 }
 
-h1 {
-  font-size: var(--font-4xl);
-  letter-spacing: -0.025em;
-}
-
-h2 {
-  font-size: var(--font-3xl);
-  letter-spacing: -0.025em;
-}
-
-h3 {
-  font-size: var(--font-2xl);
-}
-
-h4 {
-  font-size: var(--font-xl);
-}
-
-h5 {
-  font-size: var(--font-lg);
-}
-
-h6 {
-  font-size: var(--font-md);
-}
+h1 { font-size: var(--text-h1); }
+h2 { font-size: var(--text-h2); }
+h3 { font-size: var(--text-h3); }
+h4 { font-size: var(--text-h4); }
+h5 { font-size: var(--text-h5); }
+h6 { font-size: var(--text-h6); }
 
 p {
   margin-bottom: 1rem;
@@ -181,15 +70,6 @@ a:hover {
   color: var(--primary-dark);
 }
 
-/* Dark mode link adjustments */
-.dark-mode a {
-  color: var(--primary-light);
-}
-
-.dark-mode a:hover {
-  color: var(--primary);
-}
-
 button {
   background: none;
   border: none;
@@ -197,18 +77,29 @@ button {
   cursor: pointer;
 }
 
-img {
+img, svg {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-/* Utility classes */
+/* Basic layout classes */
 .container {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 1.5rem;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 1rem;
 }
 
 .page-content {
@@ -222,26 +113,31 @@ img {
   color: var(--dark-gray);
 }
 
-/* Common animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Dark mode specific styles */
+.dark-mode body {
+  background-color: var(--off-white);
+  color: var(--dark-gray);
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.dark-mode a {
+  color: var(--primary-light);
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+.dark-mode a:hover {
+  color: var(--primary);
+}
+
+/* A11y utilities */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* Motion preferences */
@@ -254,16 +150,4 @@ img {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* App specific styles */
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.main-content {
-  flex: 1;
-  padding-top: 1rem;
 }

@@ -1,180 +1,194 @@
-import { useCallback, useState } from 'react';
+// src/hooks/useForm.js
+import { useCallback, useReducer } from 'react';
+
+// Form reducer to handle all form state logic
+const formReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_VALUE':
+      return {
+        ...state,
+        values: {
+          ...state.values,
+          [action.field]: action.value
+        },
+        // Clear error for this field when value changes
+        errors: {
+          ...state.errors,
+          [action.field]: ''
+        },
+        // Mark field as touched
+        touched: {
+          ...state.touched,
+          [action.field]: true
+        }
+      };
+
+    case 'SET_ERRORS':
+      return {
+        ...state,
+        errors: action.errors
+      };
+
+    case 'SET_TOUCHED':
+      return {
+        ...state,
+        touched: {
+          ...state.touched,
+          [action.field]: true
+        }
+      };
+
+    case 'SET_SUBMITTING':
+      return {
+        ...state,
+        isSubmitting: action.isSubmitting
+      };
+
+    case 'RESET_FORM':
+      return {
+        values: action.values || state.initialValues,
+        errors: {},
+        touched: {},
+        isSubmitting: false,
+        submitCount: state.submitCount
+      };
+
+    case 'INCREMENT_SUBMIT_COUNT':
+      return {
+        ...state,
+        submitCount: state.submitCount + 1
+      };
+
+    default:
+      return state;
+  }
+};
 
 /**
- * Custom hook for form state management
+ * Custom hook for managing form state with validation
  * 
  * @param {Object} initialValues - Initial form values
- * @param {Function} validateFn - Validation function that returns errors object
- * @returns {Object} Form state and handlers
+ * @param {Function} validateFn - Validation function
+ * @returns {Object} Form state and methods
  */
 const useForm = (initialValues = {}, validateFn = null) => {
-  const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState({});
-  const [touched, setTouched] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitCount, setSubmitCount] = useState(0);
-  
-  /**
-   * Handle input change
-   * 
-   * @param {Event|Object} event - DOM event or object with name and value
-   */
+  // Initialize the form state with reducer
+  const [state, dispatch] = useReducer(formReducer, {
+    values: initialValues,
+    initialValues,
+    errors: {},
+    touched: {},
+    isSubmitting: false,
+    submitCount: 0
+  });
+
+  // Handle field change
   const handleChange = useCallback((event) => {
-    const { name, value, type, checked } = event.target || event;
-    const fieldValue = type === 'checkbox' ? checked : value;
-    
-    setValues(prevValues => ({
-      ...prevValues,
-      [name]: fieldValue
-    }));
-    
-    // Clear error when field is modified
-    if (errors[name]) {
-      setErrors(prevErrors => {
-        const newErrors = { ...prevErrors };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  }, [errors]);
-  
-  /**
-   * Handle input blur for field-level validation
-   * 
-   * @param {Event|Object} event - DOM event or object with name
-   */
+    const target = event.target || event;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    dispatch({
+      type: 'SET_VALUE',
+      field: name,
+      value
+    });
+  }, []);
+
+  // Handle field blur
   const handleBlur = useCallback((event) => {
-    const { name } = event.target || event;
+    const field = event.target.name;
     
-    // Mark field as touched
-    setTouched(prevTouched => ({
-      ...prevTouched,
-      [name]: true
-    }));
-    
-    // Validate field if validation function exists
+    dispatch({
+      type: 'SET_TOUCHED',
+      field
+    });
+
+    // Field-level validation on blur if validation function exists
     if (validateFn) {
-      const fieldErrors = validateFn({
-        ...values,
-        // Ensure latest value is used for validation
-        [name]: event.target?.value ?? values[name]
-      });
-      
-      if (fieldErrors && fieldErrors[name]) {
-        setErrors(prevErrors => ({
-          ...prevErrors,
-          [name]: fieldErrors[name]
-        }));
+      const errors = validateFn(state.values);
+      if (errors && errors[field]) {
+        dispatch({
+          type: 'SET_ERRORS',
+          errors
+        });
       }
     }
-  }, [values, validateFn]);
-  
-  /**
-   * Validate all form values
-   * 
-   * @returns {boolean} Is form valid
-   */
+  }, [state.values, validateFn]);
+
+  // Validate all form values
   const validateForm = useCallback(() => {
     if (!validateFn) return true;
-    
-    const validationErrors = validateFn(values);
-    setErrors(validationErrors || {});
-    
-    return !validationErrors || Object.keys(validationErrors).length === 0;
-  }, [values, validateFn]);
-  
-  /**
-   * Handle form submission
-   * 
-   * @param {Function} submitFn - Function to call with form values if valid
-   * @returns {Function} Event handler function for form submission
-   */
-  const handleSubmit = useCallback(
-    (submitFn) => async (event) => {
+
+    const errors = validateFn(state.values);
+    dispatch({
+      type: 'SET_ERRORS',
+      errors: errors || {}
+    });
+
+    return !errors || Object.keys(errors).length === 0;
+  }, [state.values, validateFn]);
+
+  // Handle form submission
+  const handleSubmit = useCallback((submitFn) => {
+    return async (event) => {
       if (event && event.preventDefault) {
         event.preventDefault();
       }
-      
-      setSubmitCount(prev => prev + 1);
-      
+
+      dispatch({ type: 'INCREMENT_SUBMIT_COUNT' });
+
       // Mark all fields as touched
-      const allTouched = Object.keys(values).reduce(
-        (acc, key) => ({ ...acc, [key]: true }), 
+      const allTouched = Object.keys(state.values).reduce(
+        (acc, key) => ({ ...acc, [key]: true }),
         {}
       );
-      setTouched(allTouched);
       
+      Object.keys(allTouched).forEach(field => {
+        dispatch({
+          type: 'SET_TOUCHED',
+          field
+        });
+      });
+
       // Validate form
       const isValid = validateForm();
-      
+
       if (isValid && submitFn) {
-        setIsSubmitting(true);
+        dispatch({ type: 'SET_SUBMITTING', isSubmitting: true });
+        
         try {
-          await submitFn(values);
+          await submitFn(state.values);
         } finally {
-          setIsSubmitting(false);
+          dispatch({ type: 'SET_SUBMITTING', isSubmitting: false });
         }
       }
-    },
-    [values, validateForm]
-  );
-  
-  /**
-   * Set a specific field value
-   * 
-   * @param {string} name - Field name
-   * @param {any} value - Field value
-   */
+    };
+  }, [state.values, validateForm]);
+
+  // Set a specific field value
   const setFieldValue = useCallback((name, value) => {
-    setValues(prevValues => ({
-      ...prevValues,
-      [name]: value
-    }));
+    dispatch({
+      type: 'SET_VALUE',
+      field: name,
+      value
+    });
   }, []);
-  
-  /**
-   * Set a specific field error
-   * 
-   * @param {string} name - Field name
-   * @param {string} error - Error message
-   */
-  const setFieldError = useCallback((name, error) => {
-    setErrors(prevErrors => ({
-      ...prevErrors,
-      [name]: error
-    }));
+
+  // Reset form to initial values or new values
+  const resetForm = useCallback((newValues) => {
+    dispatch({
+      type: 'RESET_FORM',
+      values: newValues
+    });
   }, []);
-  
-  /**
-   * Reset form to initial values or new values
-   * 
-   * @param {Object} newValues - New values to reset to (optional)
-   */
-  const resetForm = useCallback((newValues = initialValues) => {
-    setValues(newValues);
-    setErrors({});
-    setTouched({});
-    setIsSubmitting(false);
-  }, [initialValues]);
-  
+
   return {
-    // State
-    values,
-    errors,
-    touched,
-    isSubmitting,
-    submitCount,
-    
-    // Handlers
+    ...state,
     handleChange,
     handleBlur,
     handleSubmit,
-    
-    // Helpers
     setFieldValue,
-    setFieldError,
-    setValues,
-    setErrors,
     resetForm,
     validateForm
   };

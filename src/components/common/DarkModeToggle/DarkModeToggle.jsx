@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-
+// src/components/common/DarkModeToggle/DarkModeToggle.jsx
+import React from 'react';
 import styled from 'styled-components';
 
 const ToggleContainer = styled.button`
@@ -84,15 +84,6 @@ const MoonIcon = () => (
  */
 const DarkModeToggle = ({ darkMode, onChange }) => {
   const theme = darkMode ? 'dark' : 'light';
-  
-  // Apply theme class to document
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark-mode');
-    } else {
-      document.documentElement.classList.remove('dark-mode');
-    }
-  }, [darkMode]);
 
   return (
     <ToggleContainer 

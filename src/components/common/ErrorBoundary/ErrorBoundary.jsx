@@ -1,9 +1,9 @@
+// src/components/common/ErrorBoundary/ErrorBoundary.jsx
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-// Styled components for error UI
 const ErrorContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -87,10 +87,10 @@ class ErrorBoundary extends Component {
     console.error('ErrorBoundary caught an error', error, errorInfo);
     this.setState({ errorInfo });
     
-    // You could send this error to an analytics service like Sentry
-    // if (typeof window.Sentry !== 'undefined') {
-    //   window.Sentry.captureException(error);
-    // }
+    // Send to analytics service if available
+    if (this.props.onError) {
+      this.props.onError(error, errorInfo);
+    }
   }
 
   resetErrorBoundary = () => {
@@ -107,47 +107,45 @@ class ErrorBoundary extends Component {
   };
 
   render() {
-    if (this.state.hasError) {
-      const { fallback } = this.props;
-      
-      // If a custom fallback UI is provided, use it
-      if (fallback) {
-        return typeof fallback === 'function'
-          ? fallback({
-              error: this.state.error,
-              errorInfo: this.state.errorInfo,
-              resetErrorBoundary: this.resetErrorBoundary
-            })
-          : fallback;
-      }
-
-      // Default error UI
-      return (
-        <ErrorContainer>
-          <ErrorIcon>⚠️</ErrorIcon>
-          <ErrorTitle>Something went wrong</ErrorTitle>
-          <ErrorMessage>
-            <p>We're sorry, but an error occurred while processing your request.</p>
-            {this.state.error && (
-              <p>{this.state.error.toString()}</p>
-            )}
-          </ErrorMessage>
-          
-          {this.props.showStack && this.state.errorInfo && (
-            <ErrorStack>
-              {this.state.errorInfo.componentStack}
-            </ErrorStack>
-          )}
-          
-          <RetryButton onClick={this.resetErrorBoundary}>
-            Try again
-          </RetryButton>
-        </ErrorContainer>
-      );
+    const { hasError, error, errorInfo } = this.state;
+    const { fallback, children, showStack } = this.props;
+    
+    if (!hasError) {
+      return children;
+    }
+    
+    // If a custom fallback UI is provided, use it
+    if (fallback) {
+      return typeof fallback === 'function'
+        ? fallback({
+            error,
+            errorInfo,
+            resetErrorBoundary: this.resetErrorBoundary
+          })
+        : fallback;
     }
 
-    // If there's no error, render children normally
-    return this.props.children;
+    // Default error UI
+    return (
+      <ErrorContainer>
+        <ErrorIcon>⚠️</ErrorIcon>
+        <ErrorTitle>Something went wrong</ErrorTitle>
+        <ErrorMessage>
+          <p>We're sorry, but an error occurred while processing your request.</p>
+          {error && <p>{error.toString()}</p>}
+        </ErrorMessage>
+        
+        {showStack && errorInfo && (
+          <ErrorStack>
+            {errorInfo.componentStack}
+          </ErrorStack>
+        )}
+        
+        <RetryButton onClick={this.resetErrorBoundary}>
+          Try again
+        </RetryButton>
+      </ErrorContainer>
+    );
   }
 }
 
@@ -155,12 +153,14 @@ ErrorBoundary.propTypes = {
   children: PropTypes.node.isRequired,
   fallback: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   onReset: PropTypes.func,
+  onError: PropTypes.func,
   showStack: PropTypes.bool
 };
 
 ErrorBoundary.defaultProps = {
   fallback: null,
   onReset: null,
+  onError: null,
   showStack: process.env.NODE_ENV !== 'production'
 };
 

@@ -1,7 +1,57 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+// src/contexts/ToastContext.jsx
+import React, { createContext, useCallback, useContext, useEffect, useReducer } from 'react';
 
 import PropTypes from 'prop-types';
 import ToastContainer from './ToastContainer';
+
+// Initial state
+const initialState = {
+  toasts: [],
+  darkMode: false
+};
+
+// Action types
+const ADD_TOAST = 'ADD_TOAST';
+const REMOVE_TOAST = 'REMOVE_TOAST';
+const REMOVE_ALL_TOASTS = 'REMOVE_ALL_TOASTS';
+const SET_DARK_MODE = 'SET_DARK_MODE';
+
+// Reducer
+const toastReducer = (state, action) => {
+  switch (action.type) {
+    case ADD_TOAST:
+      // If we already have the maximum toasts, remove the oldest one
+      const newToasts = [...state.toasts];
+      if (newToasts.length >= action.payload.maxToasts) {
+        newToasts.shift();
+      }
+      return {
+        ...state,
+        toasts: [...newToasts, action.payload.toast]
+      };
+    
+    case REMOVE_TOAST:
+      return {
+        ...state,
+        toasts: state.toasts.filter(toast => toast.id !== action.payload.id)
+      };
+    
+    case REMOVE_ALL_TOASTS:
+      return {
+        ...state,
+        toasts: []
+      };
+    
+    case SET_DARK_MODE:
+      return {
+        ...state,
+        darkMode: action.payload.darkMode
+      };
+    
+    default:
+      return state;
+  }
+};
 
 // Create context
 const ToastContext = createContext({
@@ -21,17 +71,22 @@ export const ToastProvider = ({
   hasProgress = true,
   hasBackground = false,
 }) => {
-  const [toasts, setToasts] = useState([]);
-  const [darkMode, setDarkMode] = useState(dark);
+  const [state, dispatch] = useReducer(toastReducer, {
+    ...initialState,
+    darkMode: dark
+  });
   
   // Remove a toast by ID
   const removeToast = useCallback((id) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
+    dispatch({
+      type: REMOVE_TOAST,
+      payload: { id }
+    });
   }, []);
   
   // Remove all toasts
   const removeAllToasts = useCallback(() => {
-    setToasts([]);
+    dispatch({ type: REMOVE_ALL_TOASTS });
   }, []);
   
   // Add a new toast
@@ -45,7 +100,7 @@ export const ToastProvider = ({
     const id = `toast-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     
     // Create new toast
-    const newToast = {
+    const toast = {
       id,
       type,
       title,
@@ -53,13 +108,10 @@ export const ToastProvider = ({
       duration,
     };
     
-    // Add toast to state (limit to maxToasts)
-    setToasts(prev => {
-      // If we already have the maximum toasts, remove the oldest one
-      if (prev.length >= maxToasts) {
-        return [...prev.slice(1), newToast];
-      }
-      return [...prev, newToast];
+    // Add toast to state
+    dispatch({
+      type: ADD_TOAST,
+      payload: { toast, maxToasts }
     });
     
     // Return the ID for potential manual removal
@@ -68,7 +120,10 @@ export const ToastProvider = ({
   
   // Update darkMode when the dark prop changes
   useEffect(() => {
-    setDarkMode(dark);
+    dispatch({
+      type: SET_DARK_MODE,
+      payload: { darkMode: dark }
+    });
   }, [dark]);
   
   // Check if dark mode preference changes
@@ -78,7 +133,10 @@ export const ToastProvider = ({
     const handleChange = (e) => {
       // Don't override explicit dark prop
       if (dark === undefined) {
-        setDarkMode(e.matches);
+        dispatch({
+          type: SET_DARK_MODE,
+          payload: { darkMode: e.matches }
+        });
       }
     };
     
@@ -110,10 +168,10 @@ export const ToastProvider = ({
     <ToastContext.Provider value={value}>
       {children}
       <ToastContainer
-        toasts={toasts}
+        toasts={state.toasts}
         position={position}
         onClose={removeToast}
-        dark={darkMode}
+        dark={state.darkMode}
         hasProgress={hasProgress}
         hasBackground={hasBackground}
       />
@@ -122,9 +180,7 @@ export const ToastProvider = ({
 };
 
 ToastProvider.propTypes = {
-  /** React children */
   children: PropTypes.node.isRequired,
-  /** Position on screen */
   position: PropTypes.oneOf([
     'top-left',
     'top-right',
@@ -133,13 +189,9 @@ ToastProvider.propTypes = {
     'top-center',
     'bottom-center'
   ]),
-  /** Maximum number of toasts to show at once */
   maxToasts: PropTypes.number,
-  /** Use dark theme */
   dark: PropTypes.bool,
-  /** Show progress bar */
   hasProgress: PropTypes.bool,
-  /** Use colored background */
   hasBackground: PropTypes.bool,
 };
 
