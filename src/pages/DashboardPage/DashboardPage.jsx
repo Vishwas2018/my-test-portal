@@ -1,9 +1,9 @@
 import './DashboardPage.css';
 
+import ExamSelection from '../ExamSelection/ExamSelection';
 import React from 'react';
-import { SubjectCard } from '../../components/ExamInterface';
-import { getSubjects } from '../../utils/examUtils';
 import styled from 'styled-components';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Styled components
 const DashboardContainer = styled.div`
@@ -21,16 +21,17 @@ const Title = styled.h1`
   font-size: 2.5rem;
   color: var(--dark);
   margin-bottom: 1rem;
+`;
+
+const HighlightedName = styled.span`
   position: relative;
-  display: inline-block;
   
   &::after {
     content: '';
     position: absolute;
     bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
+    left: 0;
+    width: 100%;
     height: 4px;
     background: var(--gradient-fun);
     border-radius: var(--radius-full);
@@ -44,57 +45,40 @@ const Subtitle = styled.p`
   margin: 1.5rem auto 0;
 `;
 
-const ExamsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  animation: fadeInUp 0.8s ease-out;
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  }
-  
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
+const SelectionContainer = styled.div`
+  margin-bottom: 3rem;
+  background-color: var(--light);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 `;
 
 /**
- * Dashboard page that displays available exams
+ * Dashboard page that displays exam selection interface
  * 
  * @returns {JSX.Element} Dashboard component
  */
 const DashboardPage = () => {
-  // Get available subjects for exams
-  const subjects = getSubjects();
+  const { currentUser } = useAuth();
+  const firstName = currentUser?.fullName?.split(' ')[0] || 'Student';
 
   return (
     <div className="dashboard-page">
       <DashboardContainer>
         <DashboardHeader>
-          <Title>Available Exams</Title>
+          <Title>
+            Welcome to your Dashboard, <HighlightedName>{firstName}</HighlightedName>
+          </Title>
           <Subtitle>
-            Select an exam to begin practicing. Each subject has a different set of questions
-            designed to test your knowledge and help you improve your understanding.
+            Continue your learning journey by selecting an exam below.
           </Subtitle>
         </DashboardHeader>
         
-        <ExamsGrid>
-          {subjects.map(subject => (
-            <SubjectCard key={subject.id} subject={subject} />
-          ))}
-        </ExamsGrid>
+        <SelectionContainer>
+          <ExamSelection />
+        </SelectionContainer>
+        
+        {/* Subject categories have been moved to Activities page */}
       </DashboardContainer>
     </div>
   );

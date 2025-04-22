@@ -4,6 +4,7 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Footer, Header } from './components/layout';
 
+import ActivitiesPage from './pages/ActivitiesPage/ActivitiesPage';
 import { AuthProvider } from './contexts/AuthContext';
 import DashboardPage from './pages/DashboardPage';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -87,6 +88,7 @@ function App() {
                     <Route path="/trial-signup" element={<TrialSignup />} />
                     <Route path="/demo" element={<div className="container page-content">Demo Page (Coming Soon)</div>} />
                     <Route path="*" element={<NotFoundPage />} />
+                    <Route path="/activities" element={<ActivitiesPage />} />
                   </Routes>
                 </ErrorBoundary>
               </main>

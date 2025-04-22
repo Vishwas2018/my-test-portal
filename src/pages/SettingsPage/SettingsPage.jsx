@@ -1,346 +1,9 @@
+import './SettingsPage.css';
+
 import React, { useEffect, useState } from 'react';
 
 import { Button } from '../../components/common';
-import styled from 'styled-components';
 import { useAuth } from '../../contexts/AuthContext';
-
-// Styled components for Settings layout
-const SettingsContainer = styled.div`
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-`;
-
-const SettingsHeader = styled.div`
-  margin-bottom: 2rem;
-`;
-
-const Title = styled.h1`
-  font-size: 2.2rem;
-  margin-bottom: 1rem;
-  color: var(--dark);
-  position: relative;
-  display: inline-block;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    width: 60px;
-    height: 3px;
-    background: var(--gradient-fun);
-    border-radius: var(--radius-full);
-  }
-`;
-
-const Subtitle = styled.p`
-  font-size: 1.1rem;
-  color: var(--dark-gray);
-  max-width: 700px;
-`;
-
-const TabsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  
-  @media (min-width: 768px) {
-    flex-direction: row;
-    gap: 2rem;
-  }
-`;
-
-const TabsList = styled.div`
-  display: flex;
-  overflow-x: auto;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--light-gray);
-  
-  @media (min-width: 768px) {
-    flex-direction: column;
-    min-width: 200px;
-    border-bottom: none;
-    border-right: 1px solid var(--light-gray);
-    margin-bottom: 0;
-    padding-right: 1rem;
-  }
-`;
-
-const TabButton = styled.button`
-  background: none;
-  border: none;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  color: var(--dark-gray);
-  cursor: pointer;
-  position: relative;
-  transition: var(--transition-standard);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: ${props => props.active ? '100%' : '0'};
-    height: 3px;
-    background: var(--gradient-fun);
-    transition: var(--transition-standard);
-  }
-  
-  &:hover {
-    color: var(--dark);
-  }
-  
-  ${props => props.active && `
-    color: var(--dark);
-    font-weight: 600;
-  `}
-  
-  @media (min-width: 768px) {
-    width: 100%;
-    justify-content: flex-start;
-    padding: 0.75rem 0;
-    
-    &::after {
-      bottom: auto;
-      top: 0;
-      left: auto;
-      right: -1rem;
-      width: 3px;
-      height: ${props => props.active ? '100%' : '0'};
-    }
-  }
-`;
-
-const TabIcon = styled.span`
-  font-size: 1.2rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const TabContent = styled.div`
-  flex: 1;
-  display: ${props => props.active ? 'block' : 'none'};
-  animation: fadeIn 0.3s ease-in-out;
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-`;
-
-const Card = styled.div`
-  background-color: var(--white);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 15px 0 -8px var(--light-gray), 0 20px 30px rgba(0, 0, 0, 0.1);
-  border: 6px solid var(--white);
-  overflow: hidden;
-  transition: var(--transition-bounce);
-  margin-bottom: 2rem;
-  
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-
-const CardHeader = styled.div`
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--light-gray);
-`;
-
-const CardTitle = styled.h2`
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: var(--dark);
-`;
-
-const CardDescription = styled.p`
-  font-size: 1rem;
-  color: var(--dark-gray);
-`;
-
-const CardContent = styled.div`
-  padding: 1.5rem;
-`;
-
-const CardFooter = styled.div`
-  padding: 1.5rem;
-  border-top: 1px solid var(--light-gray);
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-`;
-
-const FormSection = styled.div`
-  margin-bottom: 2rem;
-`;
-
-const SectionTitle = styled.h3`
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: var(--dark);
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
-const FormRow = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  
-  @media (min-width: 640px) {
-    grid-template-columns: ${props => props.columns || '1fr 1fr'};
-  }
-`;
-
-const FormLabel = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: var(--dark);
-`;
-
-const FormInput = styled.input`
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 2px solid var(--light-gray);
-  border-radius: var(--radius-lg);
-  font-size: 1rem;
-  transition: var(--transition-standard);
-  
-  &:focus {
-    border-color: var(--primary);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
-  }
-`;
-
-const FormTextarea = styled.textarea`
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 2px solid var(--light-gray);
-  border-radius: var(--radius-lg);
-  font-size: 1rem;
-  min-height: 100px;
-  resize: vertical;
-  transition: var(--transition-standard);
-  
-  &:focus {
-    border-color: var(--primary);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
-  }
-`;
-
-const HelpText = styled.p`
-  font-size: 0.875rem;
-  color: var(--dark-gray);
-  margin-top: 0.5rem;
-`;
-
-const Avatar = styled.div`
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: var(--gradient-fun);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--white);
-  font-size: 3rem;
-  font-weight: 700;
-  box-shadow: var(--shadow-md);
-`;
-
-const AvatarContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-`;
-
-const Separator = styled.hr`
-  border: none;
-  height: 1px;
-  background-color: var(--light-gray);
-  margin: 2rem 0;
-`;
-
-const SwitchContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-`;
-
-const SwitchLabel = styled.div`
-  flex: 1;
-`;
-
-const ToggleSwitch = styled.label`
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 24px;
-  
-  input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  
-  span {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--light-gray);
-    transition: .4s;
-    border-radius: 34px;
-  }
-  
-  span:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-  }
-  
-  input:checked + span {
-    background: var(--gradient-fun);
-  }
-  
-  input:checked + span:before {
-    transform: translateX(26px);
-  }
-`;
-
-const DangerZone = styled.div`
-  background-color: rgba(var(--error-rgb), 0.1);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  border: 1px solid rgba(var(--error-rgb), 0.3);
-`;
-
 
 const SettingsPage = () => {
   const { currentUser } = useAuth();
@@ -370,22 +33,22 @@ const SettingsPage = () => {
   useEffect(() => {
     if (currentUser) {
       setIsLoading(true);
-      
+
       // Simulate API call to fetch user settings
       setTimeout(() => {
         const names = currentUser.fullName?.split(' ') || ['', ''];
-        
-        setFormData({
-          ...formData,
+
+        // Use functional update pattern to avoid dependency on formData
+        setFormData(prevData => ({
+          ...prevData,
           firstName: names[0] || '',
           lastName: names.slice(1).join(' ') || '',
           email: currentUser.email || '',
           username: currentUser.username || '',
-          // In a real app, these would come from an API
           bio: currentUser.bio || '',
           location: currentUser.location || ''
-        });
-        
+        }));
+
         setIsLoading(false);
       }, 500);
     }
@@ -397,36 +60,34 @@ const SettingsPage = () => {
       const timer = setTimeout(() => {
         setSaveMessage({ type: '', text: '' });
       }, 3000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [saveMessage]);
 
-  // Handle URL hash for direct tab access
+  // Handle URL hash for direct tab access - runs only once on mount
   useEffect(() => {
     const hash = window.location.hash.replace('#', '');
     const validTabs = ['profile', 'account', 'notifications', 'subscription', 'privacy'];
-    
+
     if (hash && validTabs.includes(hash)) {
       setActiveTab(hash);
     }
-    
-    // Update URL when tab changes without full page reload
-    const updateHash = () => {
-      window.history.replaceState(
-        null, 
-        document.title, 
-        `${window.location.pathname}#${activeTab}`
-      );
-    };
-    
-    updateHash();
+  }, []);
+
+  // Update URL when tab changes
+  useEffect(() => {
+    window.history.replaceState(
+      null,
+      document.title,
+      `${window.location.pathname}#${activeTab}`
+    );
   }, [activeTab]);
 
   // Handle form input changes
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-    
+
     setFormData(prev => ({
       ...prev,
       [id]: value
@@ -448,16 +109,15 @@ const SettingsPage = () => {
   const handleSaveChanges = (e) => {
     e.preventDefault();
     setIsSaving(true);
-    
+
     // Simulate API call to save settings
     setTimeout(() => {
       setIsSaving(false);
-      setSaveMessage({ 
-        type: 'success', 
-        text: 'Your settings have been saved successfully!' 
+      setSaveMessage({
+        type: 'success',
+        text: 'Your settings have been saved successfully!'
       });
-      
-      // In a real app, you would update user data in your backend here
+
       console.log('Saving settings:', formData);
     }, 800);
   };
@@ -465,243 +125,534 @@ const SettingsPage = () => {
   // Get user initials for avatar
   const getInitials = () => {
     if (!currentUser?.fullName) return '?';
-    
+
     const names = currentUser.fullName.split(' ');
     if (names.length >= 2) {
       return `${names[0][0]}${names[1][0]}`.toUpperCase();
     }
     return currentUser.fullName[0].toUpperCase();
   };
-  
-  // Format date for display
-  const formatDate = (dateString) => {
-    if (!dateString) return 'Unknown';
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
   return (
     <div className="settings-page">
-      <SettingsContainer>
-        <SettingsHeader>
-          <Title>Settings</Title>
-          <Subtitle>
+      <div className="settings-container">
+        <div className="settings-header">
+          <h1 className="title">Settings</h1>
+          <p className="subtitle">
             Manage your account preferences, profile information, and notification settings
-          </Subtitle>
-          
+          </p>
+
           {saveMessage.text && (
-            <div style={{ 
-              marginTop: '1rem', 
-              padding: '0.75rem 1rem', 
-              backgroundColor: saveMessage.type === 'success' ? 'rgba(0, 200, 83, 0.1)' : 'rgba(255, 0, 0, 0.1)',
-              borderLeft: `4px solid ${saveMessage.type === 'success' ? 'var(--accent)' : 'var(--error)'}`,
-              borderRadius: 'var(--radius-sm)',
-              color: saveMessage.type === 'success' ? 'var(--accent)' : 'var(--error)'
-            }}>
+            <div className={`alert-message ${saveMessage.type}`}>
               {saveMessage.text}
             </div>
           )}
-        </SettingsHeader>
-        
+        </div>
+
         {isLoading ? (
           <div style={{ textAlign: 'center', padding: '3rem 0' }}>
             <p>Loading your settings...</p>
           </div>
         ) : (
-          <TabsContainer>
-            <TabsList>
-              <TabButton 
-                active={activeTab === 'profile'} 
+          <div className="tabs-container">
+            <div className="tabs-list">
+              <button
+                className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
                 onClick={() => setActiveTab('profile')}
               >
-                <TabIcon>👤</TabIcon> Profile
-              </TabButton>
-              <TabButton 
-                active={activeTab === 'account'} 
+                <span className="tab-icon">👤</span> Profile
+              </button>
+              <button
+                className={`tab-button ${activeTab === 'account' ? 'active' : ''}`}
                 onClick={() => setActiveTab('account')}
               >
-                <TabIcon>🔒</TabIcon> Account
-              </TabButton>
-              <TabButton 
-                active={activeTab === 'notifications'} 
+                <span className="tab-icon">🔒</span> Account
+              </button>
+              <button
+                className={`tab-button ${activeTab === 'notifications' ? 'active' : ''}`}
                 onClick={() => setActiveTab('notifications')}
               >
-                <TabIcon>🔔</TabIcon> Notifications
-              </TabButton>
-              <TabButton 
-                active={activeTab === 'subscription'} 
+                <span className="tab-icon">🔔</span> Notifications
+              </button>
+              <button
+                className={`tab-button ${activeTab === 'subscription' ? 'active' : ''}`}
                 onClick={() => setActiveTab('subscription')}
               >
-                <TabIcon>💳</TabIcon> Subscription
-              </TabButton>
-              <TabButton 
-                active={activeTab === 'privacy'} 
+                <span className="tab-icon">💳</span> Subscription
+              </button>
+              <button
+                className={`tab-button ${activeTab === 'privacy' ? 'active' : ''}`}
                 onClick={() => setActiveTab('privacy')}
               >
-                <TabIcon>🛡️</TabIcon> Privacy
-              </TabButton>
-            </TabsList>
-            
-            <TabContent active={activeTab === 'profile'}>
+                <span className="tab-icon">🛡️</span> Privacy
+              </button>
+            </div>
+
+            <div className={`tab-content ${activeTab === 'profile' ? 'active' : ''}`}>
               <form onSubmit={handleSaveChanges}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Profile Information</CardTitle>
-                    <CardDescription>Update your personal details and profile picture</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <FormSection>
-                      <FormRow>
-                        <AvatarContainer>
-                          <Avatar>{getInitials()}</Avatar>
+                <div className="card">
+                  <div className="card-header">
+                    <h2 className="card-title">Profile Information</h2>
+                    <p className="card-description">Update your personal details and profile picture</p>
+                  </div>
+                  <div className="card-content">
+                    <div className="form-section">
+                      <div className="form-row">
+                        <div className="avatar-container">
+                          <div className="avatar">{getInitials()}</div>
                           <Button variant="secondary" size="small" type="button">Change Photo</Button>
-                        </AvatarContainer>
-                        
+                        </div>
+
                         <div>
-                          <FormRow>
-                            <FormGroup>
-                              <FormLabel htmlFor="firstName">First Name</FormLabel>
-                              <FormInput 
-                                id="firstName" 
+                          <div className="form-row">
+                            <div className="form-group">
+                              <label className="form-label" htmlFor="firstName">First Name</label>
+                              <input
+                                className="form-input"
+                                id="firstName"
                                 type="text"
                                 value={formData.firstName}
                                 onChange={handleInputChange}
                               />
-                            </FormGroup>
-                            <FormGroup>
-                              <FormLabel htmlFor="lastName">Last Name</FormLabel>
-                              <FormInput 
-                                id="lastName" 
+                            </div>
+                            <div className="form-group">
+                              <label className="form-label" htmlFor="lastName">Last Name</label>
+                              <input
+                                className="form-input"
+                                id="lastName"
                                 type="text"
                                 value={formData.lastName}
                                 onChange={handleInputChange}
                               />
-                            </FormGroup>
-                          </FormRow>
-                          
-                          <FormGroup>
-                            <FormLabel htmlFor="email">Email Address</FormLabel>
-                            <FormInput 
-                              id="email" 
+                            </div>
+                          </div>
+
+                          <div className="form-group">
+                            <label className="form-label" htmlFor="email">Email Address</label>
+                            <input
+                              className="form-input"
+                              id="email"
                               type="email"
                               value={formData.email}
                               onChange={handleInputChange}
                             />
-                          </FormGroup>
-                          
-                          <FormGroup>
-                            <FormLabel htmlFor="username">Username</FormLabel>
-                            <FormInput 
-                              id="username" 
+                          </div>
+
+                          <div className="form-group">
+                            <label className="form-label" htmlFor="username">Username</label>
+                            <input
+                              className="form-input"
+                              id="username"
                               type="text"
                               value={formData.username}
                               onChange={handleInputChange}
                             />
-                          </FormGroup>
+                          </div>
                         </div>
-                      </FormRow>
-                    </FormSection>
-                    
-                    <Separator />
-                    
-                    <FormSection>
-                      <SectionTitle>Additional Information</SectionTitle>
-                      
-                      <FormGroup>
-                        <FormLabel htmlFor="bio">Bio</FormLabel>
-                        <FormTextarea 
-                          id="bio" 
+                      </div>
+                    </div>
+
+                    <hr className="separator" />
+
+                    <div className="form-section">
+                      <h3 className="section-title">Additional Information</h3>
+
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="bio">Bio</label>
+                        <textarea
+                          className="form-textarea"
+                          id="bio"
                           placeholder="Tell us a bit about yourself..."
                           value={formData.bio}
                           onChange={handleInputChange}
-                        />
-                        <HelpText>This will be displayed on your public profile.</HelpText>
-                      </FormGroup>
-                      
-                      <FormGroup>
-                        <FormLabel htmlFor="location">Location</FormLabel>
-                        <FormInput 
-                          id="location" 
+                        ></textarea>
+                        <p className="help-text">This will be displayed on your public profile.</p>
+                      </div>
+
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="location">Location</label>
+                        <input
+                          className="form-input"
+                          id="location"
                           type="text"
                           placeholder="City, Country"
                           value={formData.location}
                           onChange={handleInputChange}
                         />
-                      </FormGroup>
-                    </FormSection>
-                  </CardContent>
-                  <CardFooter>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card-footer">
                     <Button variant="secondary" type="button" onClick={() => setActiveTab('account')}>Next: Account Settings</Button>
                     <Button variant="primary" type="submit" disabled={isSaving}>
                       {isSaving ? 'Saving...' : 'Save Changes'}
                     </Button>
-                  </CardFooter>
-                </Card>
+                  </div>
+                </div>
               </form>
-            </TabContent>
+            </div>
             
-            {/* Other tab contents with form submission handling... */}
-            
-            <TabContent active={activeTab === 'notifications'}>
+            <div className={`tab-content ${activeTab === 'account' ? 'active' : ''}`}>
               <form onSubmit={handleSaveChanges}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Notification Preferences</CardTitle>
-                    <CardDescription>Control how and when you receive notifications</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <FormSection>
-                      <SectionTitle>Email Notifications</SectionTitle>
-                      
-                      <SwitchContainer>
-                        <SwitchLabel>
-                          <FormLabel style={{ margin: 0 }}>Exam Reminders</FormLabel>
-                          <HelpText>Receive reminders about upcoming exams</HelpText>
-                        </SwitchLabel>
-                        <ToggleSwitch>
-                          <input 
-                            type="checkbox" 
+                <div className="card">
+                  <div className="card-header">
+                    <h2 className="card-title">Account Settings</h2>
+                    <p className="card-description">Manage your account security and preferences</p>
+                  </div>
+                  <div className="card-content">
+                    <div className="form-section">
+                      <h3 className="section-title">Password</h3>
+
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="currentPassword">Current Password</label>
+                        <input
+                          className="form-input"
+                          id="currentPassword"
+                          type="password"
+                          placeholder="Enter your current password"
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="newPassword">New Password</label>
+                        <input
+                          className="form-input"
+                          id="newPassword"
+                          type="password"
+                          placeholder="Enter new password"
+                        />
+                        <p className="help-text">Password must be at least 8 characters long</p>
+                      </div>
+
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="confirmPassword">Confirm Password</label>
+                        <input
+                          className="form-input"
+                          id="confirmPassword"
+                          type="password"
+                          placeholder="Confirm new password"
+                        />
+                      </div>
+                    </div>
+
+                    <hr className="separator" />
+
+                    <div className="form-section">
+                      <h3 className="section-title">Two-Factor Authentication</h3>
+
+                      <div className="switch-container">
+                        <div className="switch-label">
+                          <label className="form-label" style={{ margin: 0 }}>Enable 2FA</label>
+                          <p className="help-text">Add an extra layer of security to your account</p>
+                        </div>
+                        <label className="toggle-switch">
+                          <input type="checkbox" />
+                          <span></span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <hr className="separator" />
+
+                    <div className="form-section">
+                      <h3 className="section-title">Language Preference</h3>
+
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="language">Language</label>
+                        <select className="form-input" id="language" value={formData.language} onChange={handleInputChange}>
+                          <option value="English">English</option>
+                          <option value="Spanish">Spanish</option>
+                          <option value="French">French</option>
+                          <option value="German">German</option>
+                          <option value="Japanese">Japanese</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card-footer">
+                    <Button variant="primary" type="submit" disabled={isSaving}>
+                      {isSaving ? 'Saving...' : 'Save Changes'}
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div className={`tab-content ${activeTab === 'notifications' ? 'active' : ''}`}>
+              <form onSubmit={handleSaveChanges}>
+                <div className="card">
+                  <div className="card-header">
+                    <h2 className="card-title">Notification Preferences</h2>
+                    <p className="card-description">Control how and when you receive notifications</p>
+                  </div>
+                  <div className="card-content">
+                    <div className="form-section">
+                      <h3 className="section-title">Email Notifications</h3>
+
+                      <div className="switch-container">
+                        <div className="switch-label">
+                          <label className="form-label" style={{ margin: 0 }}>Exam Reminders</label>
+                          <p className="help-text">Receive reminders about upcoming exams</p>
+                        </div>
+                        <label className="toggle-switch">
+                          <input
+                            type="checkbox"
                             checked={formData.notifications.examReminders}
                             onChange={() => handleToggleChange('examReminders')}
                           />
                           <span></span>
-                        </ToggleSwitch>
-                      </SwitchContainer>
-                      
-                      <SwitchContainer>
-                        <SwitchLabel>
-                          <FormLabel style={{ margin: 0 }}>Weekly Progress Summary</FormLabel>
-                          <HelpText>Get a weekly summary of your learning progress</HelpText>
-                        </SwitchLabel>
-                        <ToggleSwitch>
-                          <input 
-                            type="checkbox" 
+                        </label>
+                      </div>
+
+                      <div className="switch-container">
+                        <div className="switch-label">
+                          <label className="form-label" style={{ margin: 0 }}>Weekly Progress Summary</label>
+                          <p className="help-text">Get a weekly summary of your learning progress</p>
+                        </div>
+                        <label className="toggle-switch">
+                          <input
+                            type="checkbox"
                             checked={formData.notifications.weeklySummary}
                             onChange={() => handleToggleChange('weeklySummary')}
                           />
                           <span></span>
-                        </ToggleSwitch>
-                      </SwitchContainer>
-                      
-                      {/* Other notification toggles with similar onChange handlers */}
-                    </FormSection>
-                  </CardContent>
-                  <CardFooter>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card-footer">
                     <Button variant="secondary" type="button" onClick={() => setActiveTab('account')}>Back to Account</Button>
                     <Button variant="primary" type="submit" disabled={isSaving}>
                       {isSaving ? 'Saving...' : 'Save Preferences'}
                     </Button>
-                  </CardFooter>
-                </Card>
+                  </div>
+                </div>
               </form>
-            </TabContent>
-          
-          </TabsContainer>
+            </div>
+
+            {/* Subscription tab */}
+            <div className={`tab-content ${activeTab === 'subscription' ? 'active' : ''}`}>
+              <div className="card">
+                <div className="card-header">
+                  <h2 className="card-title">Subscription Plan</h2>
+                  <p className="card-description">Manage your subscription and billing information</p>
+                </div>
+                <div className="card-content">
+                  <div className="form-section">
+                    <h3 className="section-title">Current Plan</h3>
+
+                    <div style={{
+                      padding: '1.5rem',
+                      borderRadius: 'var(--radius-lg)',
+                      backgroundColor: 'rgba(var(--primary-rgb), 0.1)',
+                      border: '1px solid rgba(var(--primary-rgb), 0.2)',
+                      marginBottom: '1.5rem'
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <h4 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '0.5rem' }}>Pro Plan</h4>
+                          <p style={{ color: 'var(--dark-gray)' }}>Billed monthly · Renews on May 15, 2025</p>
+                        </div>
+                        <div style={{
+                          backgroundColor: 'var(--primary)',
+                          color: 'white',
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: 'var(--radius-full)',
+                          fontSize: '0.875rem',
+                          fontWeight: '600'
+                        }}>
+                          Active
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                      <Button variant="secondary" size="small">Change Plan</Button>
+                      <Button variant="secondary" size="small">Billing History</Button>
+                      <Button variant="secondary" size="small">Update Payment</Button>
+                    </div>
+                  </div>
+
+                  <hr className="separator" />
+
+                  <div className="form-section">
+                    <h3 className="section-title">Available Plans</h3>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
+                      <div style={{
+                        padding: '1.5rem',
+                        borderRadius: 'var(--radius-lg)',
+                        border: '1px solid var(--light-gray)',
+                        cursor: 'pointer',
+                        transition: 'var(--transition-standard)'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div>
+                            <h4 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '0.5rem' }}>Basic Plan</h4>
+                            <p style={{ color: 'var(--dark-gray)', marginBottom: '0.5rem' }}>For individual learners</p>
+                            <ul style={{ paddingLeft: '1.5rem', marginBottom: '1rem' }}>
+                              <li>Access to basic courses</li>
+                              <li>Standard support</li>
+                              <li>1 device</li>
+                            </ul>
+                            <p style={{ fontWeight: '600' }}>$9.99/month</p>
+                          </div>
+                          <div>
+                            <input type="radio" name="plan" id="basic" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{
+                        padding: '1.5rem',
+                        borderRadius: 'var(--radius-lg)',
+                        border: '2px solid var(--primary)',
+                        background: 'rgba(var(--primary-rgb), 0.05)',
+                        cursor: 'pointer',
+                        transition: 'var(--transition-standard)'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div>
+                            <div style={{
+                              display: 'inline-block',
+                              backgroundColor: 'var(--primary)',
+                              color: 'white',
+                              padding: '0.25rem 0.75rem',
+                              borderRadius: 'var(--radius-full)',
+                              fontSize: '0.75rem',
+                              fontWeight: '600',
+                              marginBottom: '0.5rem'
+                            }}>
+                              MOST POPULAR
+                            </div>
+                            <h4 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '0.5rem' }}>Pro Plan</h4>
+                            <p style={{ color: 'var(--dark-gray)', marginBottom: '0.5rem' }}>For serious learners</p>
+                            <ul style={{ paddingLeft: '1.5rem', marginBottom: '1rem' }}>
+                              <li>Access to all courses</li>
+                              <li>Priority support</li>
+                              <li>Up to 3 devices</li>
+                              <li>Offline downloads</li>
+                            </ul>
+                            <p style={{ fontWeight: '600' }}>$19.99/month</p>
+                          </div>
+                          <div>
+                            <input type="radio" name="plan" id="pro" checked={true} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-footer">
+                  <Button variant="primary" disabled={isSaving}>
+                    {isSaving ? 'Updating...' : 'Update Subscription'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Privacy tab */}
+            <div className={`tab-content ${activeTab === 'privacy' ? 'active' : ''}`}>
+              <div className="card">
+                <div className="card-header">
+                  <h2 className="card-title">Privacy Settings</h2>
+                  <p className="card-description">Control your data and privacy preferences</p>
+                </div>
+                <div className="card-content">
+                  <div className="form-section">
+                    <h3 className="section-title">Profile Visibility</h3>
+
+                    <div className="switch-container">
+                      <div className="switch-label">
+                        <label className="form-label" style={{ margin: 0 }}>Public Profile</label>
+                        <p className="help-text">Allow other users to see your profile and progress</p>
+                      </div>
+                      <label className="toggle-switch">
+                        <input type="checkbox" checked={true} />
+                        <span></span>
+                      </label>
+                    </div>
+
+                    <div className="switch-container">
+                      <div className="switch-label">
+                        <label className="form-label" style={{ margin: 0 }}>Show Learning Activity</label>
+                        <p className="help-text">Share your learning activity on your profile</p>
+                      </div>
+                      <label className="toggle-switch">
+                        <input type="checkbox" checked={true} />
+                        <span></span>
+                      </label>
+                    </div>
+
+                    <div className="switch-container">
+                      <div className="switch-label">
+                        <label className="form-label" style={{ margin: 0 }}>Show Achievements</label>
+                        <p className="help-text">Display your badges and certificates on your profile</p>
+                      </div>
+                      <label className="toggle-switch">
+                        <input type="checkbox" checked={true} />
+                        <span></span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <hr className="separator" />
+
+                  <div className="form-section">
+                    <h3 className="section-title">Data Usage</h3>
+
+                    <div className="switch-container">
+                      <div className="switch-label">
+                        <label className="form-label" style={{ margin: 0 }}>Learning Analytics</label>
+                        <p className="help-text">Allow us to analyze your learning patterns to improve recommendations</p>
+                      </div>
+                      <label className="toggle-switch">
+                        <input type="checkbox" checked={true} />
+                        <span></span>
+                      </label>
+                    </div>
+
+                    <div className="switch-container">
+                      <div className="switch-label">
+                        <label className="form-label" style={{ margin: 0 }}>Personalized Content</label>
+                        <p className="help-text">Receive content recommendations based on your learning history</p>
+                      </div>
+                      <label className="toggle-switch">
+                        <input type="checkbox" checked={true} />
+                        <span></span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <hr className="separator" />
+
+                  <div className="form-section">
+                    <h3 className="section-title">Data Management</h3>
+
+                    <Button variant="secondary" size="small" style={{ marginBottom: '1rem' }}>Download My Data</Button>
+
+                    <div style={{
+                      padding: '1.5rem',
+                      borderRadius: 'var(--radius-lg)',
+                      backgroundColor: 'rgba(var(--error-rgb), 0.1)',
+                      border: '1px solid rgba(var(--error-rgb), 0.3)'
+                    }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem', color: 'var(--error)' }}>Danger Zone</h4>
+                      <p style={{ marginBottom: '1rem' }}>Once you delete your account, there is no going back. Please be certain.</p>
+                      <Button variant="danger" size="small">Delete My Account</Button>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-footer">
+                  <Button variant="primary" type="submit" disabled={isSaving}>
+                    {isSaving ? 'Saving...' : 'Save Privacy Settings'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
-      </SettingsContainer>
+      </div>
     </div>
   );
 };
