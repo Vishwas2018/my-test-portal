@@ -88,7 +88,6 @@ const Header = ({ darkMode, toggleDarkMode }) => {
                 <>
                   <li><Link to="/dashboard" className={location.pathname === '/dashboard' ? 'active' : ''}>Dashboard</Link></li>
                   <li><Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''}>Profile</Link></li>
-                  <li><Link to="/settings" className={location.pathname === '/settings' ? 'active' : ''}>Settings</Link></li>
                   </>
               )}
             </ul>

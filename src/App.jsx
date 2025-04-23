@@ -4,22 +4,23 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Footer, Header } from './components/layout';
 
-import ActivitiesPage from './pages/ActivitiesPage/ActivitiesPage';
+import AboutPage from './pages/AboutPage'; // Import the About page
 import { AuthProvider } from './contexts/AuthContext';
 import DashboardPage from './pages/DashboardPage';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import ExamPage from './pages/ExamPage';
 import { ExamProvider } from './contexts/ExamContext';
+import ExamSelection from './pages/ExamSelection';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
-import ProfilePage from './pages/ProfilePage';
+import PricingPage from './pages/PricingPage'; // Import the Pricing page
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import React from 'react';
 import ResultsPage from './pages/ResultsPage';
-import SettingsPage from './pages/SettingsPage/SettingsPage'; // Add this import
 import SignupPage from './pages/SignupPage';
 import TrialSignup from './pages/TrialSignup';
+import UserProfilePage from './pages/UserProfilePage';
 import { useDarkMode } from './hooks';
 
 /**
@@ -42,9 +43,9 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />
+                    <Route path="/about" element={<AboutPage />} /> {/* About page route */}
+                    <Route path="/pricing" element={<PricingPage />} /> {/* Pricing page route */}
                     <Route path="/features" element={<div className="container page-content">Features Page (Coming Soon)</div>} />
-                    <Route path="/pricing" element={<div className="container page-content">Pricing Page (Coming Soon)</div>} />
-                    <Route path="/about" element={<div className="container page-content">About Page (Coming Soon)</div>} />
                     <Route
                       path="/dashboard"
                       element={
@@ -57,18 +58,10 @@ function App() {
                       path="/profile"
                       element={
                         <ProtectedRoute>
-                          <ProfilePage />
+                          <UserProfilePage />
                         </ProtectedRoute>
                       }
-                    />
-                    <Route
-                      path="/settings"
-                      element={
-                        <ProtectedRoute>
-                          <SettingsPage />
-                        </ProtectedRoute>
-                      }
-                    />
+                    />                    
                     <Route
                       path="/exam/:subjectId"
                       element={
@@ -88,12 +81,23 @@ function App() {
                     <Route path="/trial-signup" element={<TrialSignup />} />
                     <Route path="/demo" element={<div className="container page-content">Demo Page (Coming Soon)</div>} />
                     <Route path="*" element={<NotFoundPage />} />
-                    <Route path="/activities" element={<ActivitiesPage />} />
+                    
+                    {/* Contact Page for subscription inquiries */}
+                    <Route path="/contact" element={<div className="container page-content">Contact Page (Coming Soon)</div>} />
+                    
+                    {/* Sample Test Routes */}
+                    <Route path="/sample-test/:examType" element={<ExamSelection isSampleTest={true} />} />
+                    <Route path="/sample-test/:examType/year-:grade" element={<ExamSelection isSampleTest={true} />} />
+                    <Route path="/sample-test/:examType/year-:grade/:subject" element={<ExamSelection isSampleTest={true} />} />
+                    
+                    {/* Exam Selection Routes */}
+                    <Route path="/exam-selection" element={<ExamSelection />} />
+                    <Route path="/activities" element={<ExamSelection />} />
                   </Routes>
                 </ErrorBoundary>
               </main>
               <Footer />
-            </div>
+            </div>          
           </BrowserRouter>
         </ExamProvider>
       </AuthProvider>

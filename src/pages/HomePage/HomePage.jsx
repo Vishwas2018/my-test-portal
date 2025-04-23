@@ -41,7 +41,7 @@ const HomePage = () => {
           <div className="hero-image">
             <div className="abstract-shape shape-1"></div>
             <div className="abstract-shape shape-2"></div>
-            <div className="abstract-shape shape-3"></div>
+            <div className="abstract-shape shape-3"></div>           
             <div className="placeholder-image">
               <div className="dashboard-preview">
                 <div className="preview-header">
@@ -50,11 +50,64 @@ const HomePage = () => {
                   <div className="preview-circle"></div>
                 </div>
                 <div className="preview-content">
-                  <div className="preview-item"></div>
-                  <div className="preview-item"></div>
-                  <div className="preview-item"></div>
+                  {/* Subject cards */}
+                  <div className="preview-subject-row">
+                    <div className="preview-subject-card">
+                      <div className="preview-subject-icon">🧮</div>
+                      <div className="preview-subject-text">Math</div>
+                    </div>
+                    <div className="preview-subject-card">
+                      <div className="preview-subject-icon">🔬</div>
+                      <div className="preview-subject-text">Science</div>
+                    </div>
+                    <div className="preview-subject-card">
+                      <div className="preview-subject-icon">📚</div>
+                      <div className="preview-subject-text">English</div>
+                    </div>
+                  </div>
+
+                  {/* Progress bar section */}
+                  <div className="preview-progress-section">
+                    <div className="preview-section-title">Your Progress</div>
+                    <div className="preview-progress-bar">
+                      <div className="preview-progress-fill"></div>
+                    </div>
+                    <div className="preview-progress-stats">
+                      <div className="preview-stat">
+                        <div className="preview-stat-number">12</div>
+                        <div className="preview-stat-label">Activities</div>
+                      </div>
+                      <div className="preview-stat">
+                        <div className="preview-stat-number">85%</div>
+                        <div className="preview-stat-label">Avg. Score</div>
+                      </div>
+                      <div className="preview-stat">
+                        <div className="preview-stat-number">4</div>
+                        <div className="preview-stat-label">Day Streak</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Recent activity section */}
+                  <div className="preview-recent-section">
+                    <div className="preview-section-title">Recent Exams</div>
+                    <div className="preview-activity-item">
+                      <div className="preview-activity-icon">🧪</div>
+                      <div className="preview-activity-info">
+                        <div className="preview-activity-name">Science Quiz</div>
+                        <div className="preview-activity-score">Score: 92%</div>
+                      </div>
+                    </div>
+                    <div className="preview-activity-item">
+                      <div className="preview-activity-icon">📝</div>
+                      <div className="preview-activity-info">
+                        <div className="preview-activity-name">Math Test</div>
+                        <div className="preview-activity-score">Score: 88%</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="preview-label">Fun Dashboard Preview!</div>
+                <div className="preview-label">Your Learning Dashboard</div>
               </div>
             </div>
           </div>
@@ -66,7 +119,7 @@ const HomePage = () => {
         <div className="container features-container">
           <h2 className="section-title">Why Choose WonderLearn?</h2>
           <p className="section-subtitle">Our platform is designed to make learning an exciting adventure</p>
-          
+
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon lightning">
@@ -75,7 +128,7 @@ const HomePage = () => {
               <h3>Lightning Fast</h3>
               <p>Experience unparalleled speed with our optimized learning platform that responds instantly to your child's needs</p>
             </div>
-            
+
             <div className="feature-card">
               <div className="feature-icon secure">
                 <i className="fas fa-shield-alt"></i>
@@ -83,7 +136,7 @@ const HomePage = () => {
               <h3>Highly Secure</h3>
               <p>Kid-friendly security systems protect young learners' data with enterprise-grade protection</p>
             </div>
-            
+
             <div className="feature-card">
               <div className="feature-icon customize">
                 <i className="fas fa-sliders-h"></i>
@@ -91,7 +144,7 @@ const HomePage = () => {
               <h3>Customizable</h3>
               <p>Tailor the learning experience to match your child's specific needs, interests, and learning pace</p>
             </div>
-            
+
             <div className="feature-card">
               <div className="feature-icon tracking">
                 <i className="fas fa-chart-line"></i>
@@ -108,7 +161,7 @@ const HomePage = () => {
         <div className="container">
           <h2 className="section-title">Learning Categories</h2>
           <p className="section-subtitle">Explore our range of subject areas tailored for comprehensive education</p>
-          
+
           <div className="categories-grid">
             <div className="category-card math">
               <div className="category-icon">
@@ -118,7 +171,7 @@ const HomePage = () => {
               <p>Develop problem-solving skills and numerical fluency through engaging math activities</p>
               <Link to="/categories/math" className="btn-outline">Explore Math</Link>
             </div>
-            
+
             <div className="category-card science">
               <div className="category-icon">
                 <i className="fas fa-flask"></i>
@@ -127,7 +180,7 @@ const HomePage = () => {
               <p>Discover scientific concepts through interactive experiments and engaging content</p>
               <Link to="/categories/science" className="btn-outline">Explore Science</Link>
             </div>
-            
+
             <div className="category-card english">
               <div className="category-icon">
                 <i className="fas fa-book"></i>
@@ -136,7 +189,7 @@ const HomePage = () => {
               <p>Build reading comprehension, writing, and communication skills through language activities</p>
               <Link to="/categories/english" className="btn-outline">Explore English</Link>
             </div>
-            
+
             <div className="category-card reasoning">
               <div className="category-icon">
                 <i className="fas fa-brain"></i>
@@ -145,7 +198,7 @@ const HomePage = () => {
               <p>Enhance critical thinking and logical reasoning abilities with stimulating challenges</p>
               <Link to="/categories/reasoning" className="btn-outline">Explore Reasoning</Link>
             </div>
-            
+
             <div className="category-card digital">
               <div className="category-icon">
                 <i className="fas fa-laptop-code"></i>

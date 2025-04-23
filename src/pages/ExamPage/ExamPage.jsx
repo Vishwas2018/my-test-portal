@@ -1,7 +1,7 @@
 // src/pages/ExamPage.jsx
 import React, { useEffect, useState } from 'react';
 import { getQuestions, getSubjects, saveExamResult } from '../../utils/examUtils';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import ConfettiEffect from '../../components/ExamInterface/ConfettiEffect/ConfettiEffect';
 import ExamTimer from '../../components/ExamInterface/ExamTimer/ExamTimer';
@@ -190,6 +190,13 @@ const CompletionEmoji = styled.div`
 const ExamPage = () => {
   const { subjectId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Extract query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const examType = queryParams.get('type');
+  const year = queryParams.get('year');
+  const examId = queryParams.get('examId');
   
   // State for exam info
   const [examInfo, setExamInfo] = useState(null);
@@ -218,15 +225,19 @@ const ExamPage = () => {
           return;
         }
         
+        // Set exam info with additional metadata
         setExamInfo({
           id: subject.id,
           name: subject.name,
           timeLimit: subject.timeLimit,
-          icon: subject.icon
+          icon: subject.icon,
+          type: examType,
+          year: year,
+          examId: examId
         });
         
-        // Load questions for this subject
-        const subjectQuestions = getQuestions(subjectId);
+        // Load questions for this subject with all metadata
+        const subjectQuestions = getQuestions(subjectId, examType, year, examId);
         setQuestions(subjectQuestions);
         
       } catch (err) {
@@ -243,7 +254,7 @@ const ExamPage = () => {
     return () => {
       // Any cleanup needed
     };
-  }, [subjectId]);
+  }, [subjectId, examType, year, examId]);
   
   const handleAnswerChange = (answer) => {
     setUserAnswers(prev => ({
@@ -291,10 +302,13 @@ const ExamPage = () => {
     // Show completion dialog with confetti
     setShowCompletionDialog(true);
     
-    // Save result
+    // Save result with metadata
     saveExamResult({
       subject: examInfo.id,
       subjectName: examInfo.name,
+      examType: examInfo.type,
+      year: examInfo.year,
+      examId: examInfo.examId,
       score,
       correctCount,
       totalQuestions,
@@ -358,6 +372,13 @@ const ExamPage = () => {
   const answeredCount = Object.keys(userAnswers).length;
   const isQuestionFlagged = flaggedQuestions.includes(currentIndex);
   
+  // Display exam metadata
+  const examMetadata = examType && year ? (
+    <span>
+      {examType.toUpperCase()} - Year {year}
+    </span>
+  ) : null;
+  
   return (
     <PageContainer>
       {/* Exam Header */}
@@ -366,6 +387,8 @@ const ExamPage = () => {
           <span>{examInfo.icon}</span> {examInfo.name} Exam
         </ExamTitle>
         <ExamDescription>
+          {examMetadata}
+          {examMetadata && <br />}
           Answer all questions to complete the exam. You can flag questions to review later.
         </ExamDescription>
         
@@ -397,7 +420,7 @@ const ExamPage = () => {
         {/* Navigation Controls */}
         <NavigationBar>
           <ActionButton 
-            warning={isQuestionFlagged}
+            $warning={isQuestionFlagged}
             onClick={toggleFlag}
           >
             {isQuestionFlagged ? "Unflag Question" : "Flag for Review"}
@@ -413,14 +436,14 @@ const ExamPage = () => {
             
             {currentIndex === questions.length - 1 ? (
               <ActionButton
-                success
+                $success
                 onClick={() => setShowConfirmSubmit(true)}
               >
                 Finish Exam
               </ActionButton>
             ) : (
               <NavButton
-                primary
+                $primary
                 onClick={() => handleNavigateQuestion('next')}
               >
                 Next
@@ -437,7 +460,7 @@ const ExamPage = () => {
         </ProgressText>
         
         <ActionButton 
-          success
+          $success
           onClick={() => setShowConfirmSubmit(true)}
         >
           Submit Exam
@@ -465,7 +488,7 @@ const ExamPage = () => {
                 Continue Exam
               </NavButton>
               <ActionButton 
-                success
+                $success
                 onClick={handleSubmit}
               >
                 Submit Now
@@ -488,7 +511,7 @@ const ExamPage = () => {
               </p>
               <ModalButtons>
                 <ActionButton 
-                  success
+                  $success
                   onClick={handleViewResults}
                 >
                   See My Results

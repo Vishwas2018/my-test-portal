@@ -217,7 +217,7 @@
 /* Fun image container with dashboard preview */
 .placeholder-image {
   width: 100%;
-  height: 350px;
+  height: 450px; /* Increased from 350px */
   background: var(--white);
   border-radius: var(--radius-xl);
   display: flex;
@@ -272,7 +272,8 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px; /* Increased from 15px */
+  overflow-y: auto;
 }
 
 .preview-item {
@@ -281,6 +282,33 @@
   border-radius: 5px;
   width: 90%;
   animation: pulse-light 2s infinite alternate;
+}
+
+/* Increase spacing in sections */
+.preview-activity-item {
+  margin-bottom: 12px; /* Increased from 8px */
+  padding: 10px; /* Increased from 8px */
+}
+
+.preview-subject-row {
+  margin-bottom: 25px; /* Increased from 20px */
+}
+
+.preview-progress-section {
+  margin-bottom: 25px; /* Increased from 20px */
+}
+
+/* If needed, adjust font sizes for better visibility */
+.preview-section-title {
+  font-size: 15px; /* Increased from 14px */
+}
+
+.preview-activity-name {
+  font-size: 13px; /* Increased from 12px */
+}
+
+.preview-activity-score {
+  font-size: 11px; /* Increased from 10px */
 }
 
 .preview-item:nth-child(2) {
@@ -1163,4 +1191,164 @@
     width: 100%;
     justify-content: center;
   }
+}
+
+/* Additional styles for the dashboard preview */
+
+/* Subject card row */
+.preview-subject-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.preview-subject-card {
+  flex: 1;
+  background: var(--light-gray);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  animation: pulse-light 2s infinite alternate;
+}
+
+.preview-subject-card:hover {
+  transform: translateY(-3px);
+}
+
+.preview-subject-card:nth-child(1) {
+  background: rgba(110, 207, 255, 0.2);
+  animation-delay: 0s;
+}
+
+.preview-subject-card:nth-child(2) {
+  background: rgba(126, 217, 87, 0.2);
+  animation-delay: 0.3s;
+}
+
+.preview-subject-card:nth-child(3) {
+  background: rgba(255, 158, 128, 0.2);
+  animation-delay: 0.6s;
+}
+
+.preview-subject-icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.preview-subject-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+/* Progress section */
+.preview-progress-section {
+  margin-bottom: 20px;
+  animation: fadeInUp 0.8s ease-out both;
+  animation-delay: 0.3s;
+}
+
+.preview-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--primary-dark);
+}
+
+.preview-progress-bar {
+  height: 10px;
+  background: var(--light-gray);
+  border-radius: 5px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.preview-progress-fill {
+  height: 100%;
+  width: 75%;
+  background: var(--gradient-primary);
+  border-radius: 5px;
+  animation: progress-animation 2s ease-out;
+}
+
+@keyframes progress-animation {
+  from { width: 0%; }
+  to { width: 75%; }
+}
+
+.preview-progress-stats {
+  display: flex;
+  justify-content: space-between;
+}
+
+.preview-stat {
+  text-align: center;
+}
+
+.preview-stat-number {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.preview-stat-label {
+  font-size: 10px;
+  color: var(--dark-gray);
+}
+
+/* Recent activity section */
+.preview-recent-section {
+  animation: fadeInUp 0.8s ease-out both;
+  animation-delay: 0.6s;
+}
+
+.preview-activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  background: var(--light-gray);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.preview-activity-item:nth-child(2) {
+  background: rgba(126, 217, 87, 0.1);
+}
+
+.preview-activity-item:nth-child(3) {
+  background: rgba(110, 207, 255, 0.1);
+}
+
+.preview-activity-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.preview-activity-info {
+  flex: 1;
+}
+
+.preview-activity-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.preview-activity-score {
+  font-size: 10px;
+  color: var(--accent);
+  font-weight: 600;
 }

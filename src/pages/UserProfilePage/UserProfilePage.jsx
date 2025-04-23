@@ -1,12 +1,13 @@
-import './SettingsPage.css';
+import './UserProfilePage.css';
 
 import React, { useEffect, useState } from 'react';
 
 import { Button } from '../../components/common';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
-const SettingsPage = () => {
-  const { currentUser } = useAuth();
+const UserProfilePage = () => {
+  const { currentUser, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
   const [formData, setFormData] = useState({
     firstName: '',
@@ -28,17 +29,38 @@ const SettingsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState({ type: '', text: '' });
+  const [trialInfo, setTrialInfo] = useState(null);
 
-  // Load user data when component mounts or currentUser changes
+  // Load user data and trial info when component mounts
   useEffect(() => {
     if (currentUser) {
       setIsLoading(true);
+
+      // Get trial information
+      const storedTrialInfo = localStorage.getItem('trial_info');
+      if (storedTrialInfo) {
+        try {
+          const { startDate, trialDays } = JSON.parse(storedTrialInfo);
+          const trialStartDate = new Date(startDate);
+          const currentDate = new Date();
+          const daysPassed = Math.floor((currentDate - trialStartDate) / (1000 * 60 * 60 * 24));
+          const daysRemaining = trialDays - daysPassed;
+          
+          setTrialInfo({
+            isActive: daysRemaining > 0,
+            daysRemaining: Math.max(0, daysRemaining),
+            startDate: formatDate(startDate),
+            endDate: formatDate(new Date(trialStartDate.getTime() + trialDays * 24 * 60 * 60 * 1000))
+          });
+        } catch (error) {
+          console.error('Error parsing trial info:', error);
+        }
+      }
 
       // Simulate API call to fetch user settings
       setTimeout(() => {
         const names = currentUser.fullName?.split(' ') || ['', ''];
 
-        // Use functional update pattern to avoid dependency on formData
         setFormData(prevData => ({
           ...prevData,
           firstName: names[0] || '',
@@ -65,7 +87,7 @@ const SettingsPage = () => {
     }
   }, [saveMessage]);
 
-  // Handle URL hash for direct tab access - runs only once on mount
+  // Handle URL hash for direct tab access
   useEffect(() => {
     const hash = window.location.hash.replace('#', '');
     const validTabs = ['profile', 'account', 'notifications', 'subscription', 'privacy'];
@@ -83,6 +105,27 @@ const SettingsPage = () => {
       `${window.location.pathname}#${activeTab}`
     );
   }, [activeTab]);
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Unknown';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  // Get user initials for avatar
+  const getInitials = () => {
+    if (!currentUser?.fullName) return '?';
+
+    const names = currentUser.fullName.split(' ');
+    if (names.length >= 2) {
+      return `${names[0][0]}${names[1][0]}`.toUpperCase();
+    }
+    return currentUser.fullName[0].toUpperCase();
+  };
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -122,38 +165,64 @@ const SettingsPage = () => {
     }, 800);
   };
 
-  // Get user initials for avatar
-  const getInitials = () => {
-    if (!currentUser?.fullName) return '?';
-
-    const names = currentUser.fullName.split(' ');
-    if (names.length >= 2) {
-      return `${names[0][0]}${names[1][0]}`.toUpperCase();
+  // Handle logout with confirmation
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to log out?')) {
+      logout();
     }
-    return currentUser.fullName[0].toUpperCase();
   };
 
-  return (
-    <div className="settings-page">
-      <div className="settings-container">
-        <div className="settings-header">
-          <h1 className="title">Settings</h1>
-          <p className="subtitle">
-            Manage your account preferences, profile information, and notification settings
-          </p>
-
-          {saveMessage.text && (
-            <div className={`alert-message ${saveMessage.type}`}>
-              {saveMessage.text}
+  // Profile summary component
+  const ProfileSummaryCard = () => (
+    <div className="profile-card">
+      <div className="profile-header">
+        <div className="avatar">{getInitials()}</div>
+        <div className="profile-info">
+          <h1 className="profile-name">{currentUser?.fullName || 'User'}</h1>
+          <p className="profile-username">@{currentUser?.username}</p>
+          <p className="profile-email">{currentUser?.email}</p>
+          
+          {trialInfo && trialInfo.isActive && (
+            <div className="trial-status">
+              <i className="fas fa-clock"></i>
+              <span>{trialInfo.daysRemaining} days left in trial</span>
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
 
-        {isLoading ? (
+  if (isLoading) {
+    return (
+      <div className="page-container">
+        <div className="content-wrapper">
           <div style={{ textAlign: 'center', padding: '3rem 0' }}>
-            <p>Loading your settings...</p>
+            <p>Loading user information...</p>
           </div>
-        ) : (
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="user-profile-page">
+      <div className="page-container">
+        <div className="content-wrapper">
+          {/* Header with Save Message */}
+          <div className="page-header">
+            <h1 className="page-title">User Profile & Settings</h1>
+            {saveMessage.text && (
+              <div className={`alert-message ${saveMessage.type}`}>
+                {saveMessage.text}
+              </div>
+            )}
+          </div>
+
+          {/* Profile Summary Card - Always visible */}
+          <ProfileSummaryCard />
+
+          {/* Tabs Navigation */}
           <div className="tabs-container">
             <div className="tabs-list">
               <button
@@ -188,6 +257,7 @@ const SettingsPage = () => {
               </button>
             </div>
 
+            {/* Profile Tab Content */}
             <div className={`tab-content ${activeTab === 'profile' ? 'active' : ''}`}>
               <form onSubmit={handleSaveChanges}>
                 <div className="card">
@@ -198,57 +268,48 @@ const SettingsPage = () => {
                   <div className="card-content">
                     <div className="form-section">
                       <div className="form-row">
-                        <div className="avatar-container">
-                          <div className="avatar">{getInitials()}</div>
-                          <Button variant="secondary" size="small" type="button">Change Photo</Button>
+                        <div className="form-group">
+                          <label className="form-label" htmlFor="firstName">First Name</label>
+                          <input
+                            className="form-input"
+                            id="firstName"
+                            type="text"
+                            value={formData.firstName}
+                            onChange={handleInputChange}
+                          />
                         </div>
-
-                        <div>
-                          <div className="form-row">
-                            <div className="form-group">
-                              <label className="form-label" htmlFor="firstName">First Name</label>
-                              <input
-                                className="form-input"
-                                id="firstName"
-                                type="text"
-                                value={formData.firstName}
-                                onChange={handleInputChange}
-                              />
-                            </div>
-                            <div className="form-group">
-                              <label className="form-label" htmlFor="lastName">Last Name</label>
-                              <input
-                                className="form-input"
-                                id="lastName"
-                                type="text"
-                                value={formData.lastName}
-                                onChange={handleInputChange}
-                              />
-                            </div>
-                          </div>
-
-                          <div className="form-group">
-                            <label className="form-label" htmlFor="email">Email Address</label>
-                            <input
-                              className="form-input"
-                              id="email"
-                              type="email"
-                              value={formData.email}
-                              onChange={handleInputChange}
-                            />
-                          </div>
-
-                          <div className="form-group">
-                            <label className="form-label" htmlFor="username">Username</label>
-                            <input
-                              className="form-input"
-                              id="username"
-                              type="text"
-                              value={formData.username}
-                              onChange={handleInputChange}
-                            />
-                          </div>
+                        <div className="form-group">
+                          <label className="form-label" htmlFor="lastName">Last Name</label>
+                          <input
+                            className="form-input"
+                            id="lastName"
+                            type="text"
+                            value={formData.lastName}
+                            onChange={handleInputChange}
+                          />
                         </div>
+                      </div>
+
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="email">Email Address</label>
+                        <input
+                          className="form-input"
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label className="form-label" htmlFor="username">Username</label>
+                        <input
+                          className="form-input"
+                          id="username"
+                          type="text"
+                          value={formData.username}
+                          onChange={handleInputChange}
+                        />
                       </div>
                     </div>
 
@@ -283,7 +344,6 @@ const SettingsPage = () => {
                     </div>
                   </div>
                   <div className="card-footer">
-                    <Button variant="secondary" type="button" onClick={() => setActiveTab('account')}>Next: Account Settings</Button>
                     <Button variant="primary" type="submit" disabled={isSaving}>
                       {isSaving ? 'Saving...' : 'Save Changes'}
                     </Button>
@@ -292,6 +352,7 @@ const SettingsPage = () => {
               </form>
             </div>
             
+            {/* Account Tab Content */}
             <div className={`tab-content ${activeTab === 'account' ? 'active' : ''}`}>
               <form onSubmit={handleSaveChanges}>
                 <div className="card">
@@ -338,19 +399,59 @@ const SettingsPage = () => {
                     <hr className="separator" />
 
                     <div className="form-section">
-                      <h3 className="section-title">Two-Factor Authentication</h3>
-
-                      <div className="switch-container">
-                        <div className="switch-label">
-                          <label className="form-label" style={{ margin: 0 }}>Enable 2FA</label>
-                          <p className="help-text">Add an extra layer of security to your account</p>
+                      <h3 className="section-title">Account Information</h3>
+                      <div className="info-card">
+                        <div className="info-item">
+                          <div className="info-label">Username:</div>
+                          <div className="info-value">{currentUser?.username}</div>
                         </div>
-                        <label className="toggle-switch">
-                          <input type="checkbox" />
-                          <span></span>
-                        </label>
+                        <div className="info-item">
+                          <div className="info-label">Email:</div>
+                          <div className="info-value">{currentUser?.email}</div>
+                        </div>
+                        <div className="info-item">
+                          <div className="info-label">Account Created:</div>
+                          <div className="info-value">
+                            {formatDate(currentUser?.createdAt)}
+                          </div>
+                        </div>
                       </div>
                     </div>
+
+                    {trialInfo && (
+                      <>
+                        <hr className="separator" />
+                        <div className="form-section">
+                          <h3 className="section-title">Trial Status</h3>
+                          <div className="info-card">
+                            <div className="info-item">
+                              <div className="info-label">Status:</div>
+                              <div className="info-value">
+                                {trialInfo.isActive
+                                  ? <span className="status-active">Active</span>
+                                  : <span className="status-expired">Expired</span>}
+                              </div>
+                            </div>
+                            {trialInfo.isActive && (
+                              <div className="info-item">
+                                <div className="info-label">Days Remaining:</div>
+                                <div className="info-value">
+                                  <strong>{trialInfo.daysRemaining}</strong> days
+                                </div>
+                              </div>
+                            )}
+                            <div className="info-item">
+                              <div className="info-label">Start Date:</div>
+                              <div className="info-value">{trialInfo.startDate}</div>
+                            </div>
+                            <div className="info-item">
+                              <div className="info-label">End Date:</div>
+                              <div className="info-value">{trialInfo.endDate}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
 
                     <hr className="separator" />
 
@@ -368,6 +469,17 @@ const SettingsPage = () => {
                         </select>
                       </div>
                     </div>
+
+                    <hr className="separator" />
+
+                    <div className="button-group">
+                      <Button variant="secondary" size="medium" onClick={() => alert('Functionality coming soon!')}>
+                        Change Email
+                      </Button>
+                      <Button variant="secondary" size="medium" onClick={handleLogout}>
+                        Logout
+                      </Button>
+                    </div>
                   </div>
                   <div className="card-footer">
                     <Button variant="primary" type="submit" disabled={isSaving}>
@@ -378,6 +490,7 @@ const SettingsPage = () => {
               </form>
             </div>
 
+            {/* Notifications Tab Content */}
             <div className={`tab-content ${activeTab === 'notifications' ? 'active' : ''}`}>
               <form onSubmit={handleSaveChanges}>
                 <div className="card">
@@ -418,10 +531,54 @@ const SettingsPage = () => {
                           <span></span>
                         </label>
                       </div>
+
+                      <div className="switch-container">
+                        <div className="switch-label">
+                          <label className="form-label" style={{ margin: 0 }}>New Content Alerts</label>
+                          <p className="help-text">Get notified when new courses or materials are added</p>
+                        </div>
+                        <label className="toggle-switch">
+                          <input
+                            type="checkbox"
+                            checked={formData.notifications.newContent}
+                            onChange={() => handleToggleChange('newContent')}
+                          />
+                          <span></span>
+                        </label>
+                      </div>
+
+                      <div className="switch-container">
+                        <div className="switch-label">
+                          <label className="form-label" style={{ margin: 0 }}>Account Updates</label>
+                          <p className="help-text">Receive notifications about account changes</p>
+                        </div>
+                        <label className="toggle-switch">
+                          <input
+                            type="checkbox"
+                            checked={formData.notifications.accountUpdates}
+                            onChange={() => handleToggleChange('accountUpdates')}
+                          />
+                          <span></span>
+                        </label>
+                      </div>
+
+                      <div className="switch-container">
+                        <div className="switch-label">
+                          <label className="form-label" style={{ margin: 0 }}>Trial Status Updates</label>
+                          <p className="help-text">Get reminders about your trial expiration</p>
+                        </div>
+                        <label className="toggle-switch">
+                          <input
+                            type="checkbox"
+                            checked={formData.notifications.trialStatus}
+                            onChange={() => handleToggleChange('trialStatus')}
+                          />
+                          <span></span>
+                        </label>
+                      </div>
                     </div>
                   </div>
                   <div className="card-footer">
-                    <Button variant="secondary" type="button" onClick={() => setActiveTab('account')}>Back to Account</Button>
                     <Button variant="primary" type="submit" disabled={isSaving}>
                       {isSaving ? 'Saving...' : 'Save Preferences'}
                     </Button>
@@ -430,7 +587,7 @@ const SettingsPage = () => {
               </form>
             </div>
 
-            {/* Subscription tab */}
+            {/* Subscription tab content - kept same as original */}
             <div className={`tab-content ${activeTab === 'subscription' ? 'active' : ''}`}>
               <div className="card">
                 <div className="card-header">
@@ -441,32 +598,17 @@ const SettingsPage = () => {
                   <div className="form-section">
                     <h3 className="section-title">Current Plan</h3>
 
-                    <div style={{
-                      padding: '1.5rem',
-                      borderRadius: 'var(--radius-lg)',
-                      backgroundColor: 'rgba(var(--primary-rgb), 0.1)',
-                      border: '1px solid rgba(var(--primary-rgb), 0.2)',
-                      marginBottom: '1.5rem'
-                    }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="plan-card active-plan">
+                      <div className="plan-header">
                         <div>
-                          <h4 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '0.5rem' }}>Pro Plan</h4>
-                          <p style={{ color: 'var(--dark-gray)' }}>Billed monthly · Renews on May 15, 2025</p>
+                          <h4 className="plan-title">Pro Plan</h4>
+                          <p className="plan-subtitle">Billed monthly · Renews on May 15, 2025</p>
                         </div>
-                        <div style={{
-                          backgroundColor: 'var(--primary)',
-                          color: 'white',
-                          padding: '0.25rem 0.75rem',
-                          borderRadius: 'var(--radius-full)',
-                          fontSize: '0.875rem',
-                          fontWeight: '600'
-                        }}>
-                          Active
-                        </div>
+                        <div className="plan-badge">Active</div>
                       </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+                    <div className="button-group">
                       <Button variant="secondary" size="small">Change Plan</Button>
                       <Button variant="secondary" size="small">Billing History</Button>
                       <Button variant="secondary" size="small">Update Payment</Button>
@@ -478,24 +620,18 @@ const SettingsPage = () => {
                   <div className="form-section">
                     <h3 className="section-title">Available Plans</h3>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
-                      <div style={{
-                        padding: '1.5rem',
-                        borderRadius: 'var(--radius-lg)',
-                        border: '1px solid var(--light-gray)',
-                        cursor: 'pointer',
-                        transition: 'var(--transition-standard)'
-                      }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="plans-container">
+                      <div className="plan-option">
+                        <div className="plan-option-content">
                           <div>
-                            <h4 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '0.5rem' }}>Basic Plan</h4>
-                            <p style={{ color: 'var(--dark-gray)', marginBottom: '0.5rem' }}>For individual learners</p>
-                            <ul style={{ paddingLeft: '1.5rem', marginBottom: '1rem' }}>
+                            <h4 className="plan-title">Basic Plan</h4>
+                            <p className="plan-subtitle">For individual learners</p>
+                            <ul className="plan-features">
                               <li>Access to basic courses</li>
                               <li>Standard support</li>
                               <li>1 device</li>
                             </ul>
-                            <p style={{ fontWeight: '600' }}>$9.99/month</p>
+                            <p className="plan-price">$9.99/month</p>
                           </div>
                           <div>
                             <input type="radio" name="plan" id="basic" />
@@ -503,40 +639,22 @@ const SettingsPage = () => {
                         </div>
                       </div>
 
-                      <div style={{
-                        padding: '1.5rem',
-                        borderRadius: 'var(--radius-lg)',
-                        border: '2px solid var(--primary)',
-                        background: 'rgba(var(--primary-rgb), 0.05)',
-                        cursor: 'pointer',
-                        transition: 'var(--transition-standard)'
-                      }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div className="plan-option recommended">
+                        <div className="plan-option-content">
                           <div>
-                            <div style={{
-                              display: 'inline-block',
-                              backgroundColor: 'var(--primary)',
-                              color: 'white',
-                              padding: '0.25rem 0.75rem',
-                              borderRadius: 'var(--radius-full)',
-                              fontSize: '0.75rem',
-                              fontWeight: '600',
-                              marginBottom: '0.5rem'
-                            }}>
-                              MOST POPULAR
-                            </div>
-                            <h4 style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '0.5rem' }}>Pro Plan</h4>
-                            <p style={{ color: 'var(--dark-gray)', marginBottom: '0.5rem' }}>For serious learners</p>
-                            <ul style={{ paddingLeft: '1.5rem', marginBottom: '1rem' }}>
+                            <div className="plan-tag">MOST POPULAR</div>
+                            <h4 className="plan-title">Pro Plan</h4>
+                            <p className="plan-subtitle">For serious learners</p>
+                            <ul className="plan-features">
                               <li>Access to all courses</li>
                               <li>Priority support</li>
                               <li>Up to 3 devices</li>
                               <li>Offline downloads</li>
                             </ul>
-                            <p style={{ fontWeight: '600' }}>$19.99/month</p>
+                            <p className="plan-price">$19.99/month</p>
                           </div>
                           <div>
-                            <input type="radio" name="plan" id="pro" checked={true} />
+                            <input type="radio" name="plan" id="pro" checked={true} readOnly />
                           </div>
                         </div>
                       </div>
@@ -551,7 +669,7 @@ const SettingsPage = () => {
               </div>
             </div>
 
-            {/* Privacy tab */}
+            {/* Privacy tab content - kept same as original */}
             <div className={`tab-content ${activeTab === 'privacy' ? 'active' : ''}`}>
               <div className="card">
                 <div className="card-header">
@@ -568,7 +686,7 @@ const SettingsPage = () => {
                         <p className="help-text">Allow other users to see your profile and progress</p>
                       </div>
                       <label className="toggle-switch">
-                        <input type="checkbox" checked={true} />
+                        <input type="checkbox" checked={true} readOnly />
                         <span></span>
                       </label>
                     </div>
@@ -579,7 +697,7 @@ const SettingsPage = () => {
                         <p className="help-text">Share your learning activity on your profile</p>
                       </div>
                       <label className="toggle-switch">
-                        <input type="checkbox" checked={true} />
+                        <input type="checkbox" checked={true} readOnly />
                         <span></span>
                       </label>
                     </div>
@@ -590,35 +708,7 @@ const SettingsPage = () => {
                         <p className="help-text">Display your badges and certificates on your profile</p>
                       </div>
                       <label className="toggle-switch">
-                        <input type="checkbox" checked={true} />
-                        <span></span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <hr className="separator" />
-
-                  <div className="form-section">
-                    <h3 className="section-title">Data Usage</h3>
-
-                    <div className="switch-container">
-                      <div className="switch-label">
-                        <label className="form-label" style={{ margin: 0 }}>Learning Analytics</label>
-                        <p className="help-text">Allow us to analyze your learning patterns to improve recommendations</p>
-                      </div>
-                      <label className="toggle-switch">
-                        <input type="checkbox" checked={true} />
-                        <span></span>
-                      </label>
-                    </div>
-
-                    <div className="switch-container">
-                      <div className="switch-label">
-                        <label className="form-label" style={{ margin: 0 }}>Personalized Content</label>
-                        <p className="help-text">Receive content recommendations based on your learning history</p>
-                      </div>
-                      <label className="toggle-switch">
-                        <input type="checkbox" checked={true} />
+                        <input type="checkbox" checked={true} readOnly />
                         <span></span>
                       </label>
                     </div>
@@ -631,15 +721,16 @@ const SettingsPage = () => {
 
                     <Button variant="secondary" size="small" style={{ marginBottom: '1rem' }}>Download My Data</Button>
 
-                    <div style={{
-                      padding: '1.5rem',
-                      borderRadius: 'var(--radius-lg)',
-                      backgroundColor: 'rgba(var(--error-rgb), 0.1)',
-                      border: '1px solid rgba(var(--error-rgb), 0.3)'
-                    }}>
-                      <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem', color: 'var(--error)' }}>Danger Zone</h4>
-                      <p style={{ marginBottom: '1rem' }}>Once you delete your account, there is no going back. Please be certain.</p>
-                      <Button variant="danger" size="small">Delete My Account</Button>
+                    <div className="danger-zone">
+                      <h4 className="danger-title">Danger Zone</h4>
+                      <p>Once you delete your account, there is no going back. Please be certain.</p>
+                      <Button 
+                        variant="secondary" 
+                        size="small" 
+                        style={{ backgroundColor: 'rgba(var(--error-rgb), 0.1)', color: 'var(--error)', borderColor: 'var(--error)' }}
+                      >
+                        Delete My Account
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -651,10 +742,10 @@ const SettingsPage = () => {
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
 };
 
-export default SettingsPage;
+export default UserProfilePage;
