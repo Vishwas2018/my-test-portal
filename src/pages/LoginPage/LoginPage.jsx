@@ -78,7 +78,7 @@ const FormInput = styled.input`
   border-radius: var(--radius-md);
   font-size: 1rem;
   transition: var(--transition-normal);
-  background-color: ${props => props.dark ? 'rgba(36, 40, 46, 0.1)' : 'rgba(255, 255, 255, 0.8)'};
+  background-color: ${props => props.$dark ? 'rgba(36, 40, 46, 0.1)' : 'rgba(255, 255, 255, 0.8)'};
   
   &:focus {
     border-color: ${props => props.$hasError ? 'var(--error)' : 'var(--primary)'};

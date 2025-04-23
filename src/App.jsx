@@ -34,7 +34,10 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <ExamProvider>
-          <BrowserRouter>
+          <BrowserRouter future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true
+          }}>
             <div className="app">
               <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
               <main className="main-content">
@@ -61,7 +64,7 @@ function App() {
                           <UserProfilePage />
                         </ProtectedRoute>
                       }
-                    />                    
+                    />
                     <Route
                       path="/exam/:subjectId"
                       element={
@@ -81,15 +84,15 @@ function App() {
                     <Route path="/trial-signup" element={<TrialSignup />} />
                     <Route path="/demo" element={<div className="container page-content">Demo Page (Coming Soon)</div>} />
                     <Route path="*" element={<NotFoundPage />} />
-                    
+
                     {/* Contact Page for subscription inquiries */}
                     <Route path="/contact" element={<div className="container page-content">Contact Page (Coming Soon)</div>} />
-                    
+
                     {/* Sample Test Routes */}
                     <Route path="/sample-test/:examType" element={<ExamSelection isSampleTest={true} />} />
                     <Route path="/sample-test/:examType/year-:grade" element={<ExamSelection isSampleTest={true} />} />
                     <Route path="/sample-test/:examType/year-:grade/:subject" element={<ExamSelection isSampleTest={true} />} />
-                    
+
                     {/* Exam Selection Routes */}
                     <Route path="/exam-selection" element={<ExamSelection />} />
                     <Route path="/activities" element={<ExamSelection />} />
@@ -97,7 +100,7 @@ function App() {
                 </ErrorBoundary>
               </main>
               <Footer />
-            </div>          
+            </div>            
           </BrowserRouter>
         </ExamProvider>
       </AuthProvider>

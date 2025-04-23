@@ -33,7 +33,7 @@ const HomePage = () => {
                   <i className="fas fa-star"></i> START PRACTICING NOW
                 </Link>
               )}
-              <Link to="/exam-selection" className="hero-btn secondary">
+              <Link to="/activities" className="hero-btn secondary">
                 <i className="fas fa-book"></i> EXPLORE EXAMS
               </Link>
             </div>
@@ -169,7 +169,7 @@ const HomePage = () => {
               </div>
               <h3>NAPLAN</h3>
               <p>Australian National Assessment Program exams for literacy and numeracy skills</p>
-              <Link to="/exam-selection" className="btn-outline">Explore NAPLAN</Link>
+              <Link to="/activities" className="btn-outline">Explore NAPLAN</Link>
             </div>
 
             <div className="category-card science">
@@ -178,7 +178,7 @@ const HomePage = () => {
               </div>
               <h3>ICAS</h3>
               <p>International Competitions and Assessments for Schools across multiple subjects</p>
-              <Link to="/exam-selection" className="btn-outline">Explore ICAS</Link>
+              <Link to="/activities" className="btn-outline">Explore ICAS</Link>
             </div>
 
             <div className="category-card english">
@@ -187,7 +187,7 @@ const HomePage = () => {
               </div>
               <h3>ICAS All Stars</h3>
               <p>Advanced ICAS exams for high-achieving students looking for an extra challenge</p>
-              <Link to="/exam-selection" className="btn-outline">Explore All Stars</Link>
+              <Link to="/activities" className="btn-outline">Explore All Stars</Link>
             </div>
           </div>
         </div>
@@ -196,10 +196,10 @@ const HomePage = () => {
       {/* Testimonials Section */}
       <Testimonials />
 
-      {/* Sample Exam Section */}
+      {/* Sample Exam Section - Updated to connect to free sample exams */}
       <section id="sample-activity" className="sample-activity">
         <div className="container">
-          <h2 className="section-title">Try a Free Sample Exam</h2>
+          <h2 className="section-title">Try Free Sample Exams</h2>
           <p className="section-description">Experience the quality of our practice exams with no registration required</p>
           <div className="sample-activity-container">
             <div className="sample-activity-info">
@@ -207,14 +207,58 @@ const HomePage = () => {
               <ul className="feature-list">
                 <li><i className="fas fa-check"></i> Authentic exam format and questions</li>
                 <li><i className="fas fa-check"></i> Immediate results and feedback</li>
-                <li><i className="fas fa-check"></i> Available for all year levels</li>
+                <li><i className="fas fa-check"></i> Science, Math and Digital Technologies</li>
+                <li><i className="fas fa-check"></i> No time limit - practice at your own pace</li>
                 <li><i className="fas fa-check"></i> No registration required</li>
               </ul>
-              <Link to="/sample-test/naplan" className="hero-btn primary">Try Free Sample</Link>
+              <Link to="/activities" className="hero-btn primary">Try Free Samples</Link>
             </div>
             <div className="sample-activity-image">
-              <div className="placeholder-image activity-preview">
-                Sample Exam Preview
+              <div className="placeholder-image">
+                <div className="dashboard-preview">
+                  <div className="preview-header">
+                    <div className="preview-circle"></div>
+                    <div className="preview-circle"></div>
+                    <div className="preview-circle"></div>
+                  </div>
+                  <div className="preview-content">
+                    {/* Sample exam preview content */}
+                    <div className="preview-section-title">Sample Science Exam</div>
+                    
+                    <div className="preview-activity-item" style={{background: 'rgba(110, 207, 255, 0.1)', padding: '12px', borderRadius: '8px', marginBottom: '12px'}}>
+                      <div className="preview-activity-info">
+                        <div className="preview-activity-name" style={{fontSize: '14px', fontWeight: '600'}}>
+                          Which of these is a living thing?
+                        </div>
+                        <div style={{marginTop: '8px'}}>
+                          <div style={{display: 'flex', alignItems: 'center', marginBottom: '6px'}}>
+                            <div style={{width: '16px', height: '16px', borderRadius: '50%', border: '2px solid #ddd', marginRight: '8px'}}></div>
+                            <span>Rock</span>
+                          </div>
+                          <div style={{display: 'flex', alignItems: 'center', marginBottom: '6px'}}>
+                            <div style={{width: '16px', height: '16px', borderRadius: '50%', border: '2px solid #ddd', marginRight: '8px'}}></div>
+                            <span>Water</span>
+                          </div>
+                          <div style={{display: 'flex', alignItems: 'center', marginBottom: '6px'}}>
+                            <div style={{width: '16px', height: '16px', borderRadius: '50%', border: '2px solid var(--primary)', backgroundColor: 'var(--primary-light)', marginRight: '8px'}}></div>
+                            <span style={{fontWeight: '600'}}>Tree</span>
+                          </div>
+                          <div style={{display: 'flex', alignItems: 'center'}}>
+                            <div style={{width: '16px', height: '16px', borderRadius: '50%', border: '2px solid #ddd', marginRight: '8px'}}></div>
+                            <span>Sun</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="preview-section-title" style={{marginTop: '15px'}}>Navigation</div>
+                    <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '8px'}}>
+                      <div style={{padding: '8px 16px', backgroundColor: '#eee', borderRadius: '5px', fontSize: '14px'}}>Previous</div>
+                      <div style={{padding: '8px 16px', backgroundColor: 'var(--primary)', color: 'white', borderRadius: '5px', fontSize: '14px'}}>Next</div>
+                    </div>
+                  </div>
+                  <div className="preview-label">Sample Exam Preview</div>
+                </div>
               </div>
             </div>
           </div>

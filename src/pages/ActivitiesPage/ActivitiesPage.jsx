@@ -128,7 +128,7 @@ const ExamTypeIcon = styled.div`
 
 const QuickAccessGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
   margin-top: 1.5rem;
 `;
@@ -177,19 +177,119 @@ const SubjectDetails = styled.div`
   color: var(--dark-gray);
 `;
 
+// New styled component for featured sample exams
+const SampleExamSection = styled.div`
+  margin-top: 3rem;
+  padding: 2rem;
+  background-color: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 2px dashed var(--accent-light);
+`;
+
+const SampleExamHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+`;
+
+const FreeBadge = styled.span`
+  background-color: var(--accent);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+`;
+
+// Components for the premium features section
+const PremiumFeaturesContainer = styled.div`
+  background-color: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-top: 2rem;
+  box-shadow: var(--shadow-md);
+  border-left: 4px solid var(--primary);
+`;
+
+const PremiumTitle = styled.h3`
+  font-size: 1.4rem;
+  color: var(--dark);
+  margin-bottom: 1rem;
+`;
+
+const PremiumFeaturesList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+const PremiumFeatureItem = styled.li`
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  color: var(--dark-gray);
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const FeatureIcon = styled.span`
+  color: var(--accent);
+  margin-right: 0.75rem;
+  font-weight: bold;
+`;
+
+const YearButtonsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+`;
+
+const YearButton = styled.button`
+  background-color: var(--white);
+  border: 2px solid var(--primary-light);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  &:active {
+    transform: translateY(-1px);
+  }
+`;
+
 /**
  * Activities page that displays available subject categories and exam types
  * 
  * @returns {JSX.Element} Activities component
  */
 const ActivitiesPage = () => {
+  console.log("This is a test comment")
   // Get available subjects for display
   const [subjects, setSubjects] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const allSubjects = getSubjects();
-    setSubjects(allSubjects);
+    try {
+      const allSubjects = getSubjects();
+      console.log("Loaded subjects:", allSubjects);
+      setSubjects(allSubjects);
+    } catch (error) {
+      console.error("Error loading subjects:", error);
+    }
   }, []);
 
   // Define exam types
@@ -203,7 +303,7 @@ const ActivitiesPage = () => {
     { 
       id: 'icas', 
       name: 'ICAS',
-      description: 'International Competitions and Assessments for Schools',
+      description: 'testing',
       icon: '🎓'
     },
     { 
@@ -211,6 +311,31 @@ const ActivitiesPage = () => {
       name: 'ICAS All Stars',
       description: 'Advanced ICAS with comprehensive topics',
       icon: '⭐'
+    }
+  ];
+
+  // Sample exam subjects with 5 questions and no time limit
+  const sampleExamSubjects = [
+    {
+      id: 'mathematics',
+      name: 'Mathematics',
+      questionCount: 5,
+      icon: '🔢',
+      description: 'Practice solving mathematical problems and equations'
+    },
+    {
+      id: 'science',
+      name: 'Science',
+      questionCount: 5,
+      icon: '🧪',
+      description: 'Test your knowledge of scientific concepts and theories'
+    },
+    {
+      id: 'digital',
+      name: 'Digital Technologies',
+      questionCount: 5,
+      icon: '💻',
+      description: 'Explore digital concepts and computational thinking'
     }
   ];
 
@@ -224,8 +349,35 @@ const ActivitiesPage = () => {
           </Subtitle>
         </ActivitiesHeader>
         
+        {/* Separate Sample Exams Section */}
+        <SampleExamSection>
+          <SampleExamHeader>
+            <SectionTitle style={{ margin: 0 }}>Sample Exams</SectionTitle>
+            <FreeBadge>FREE</FreeBadge>
+          </SampleExamHeader>
+          <p>Try these free sample exams with 5 questions each and no time limit - no account required</p>
+          
+          <QuickAccessGrid>
+            {sampleExamSubjects.map(subject => (
+              <SubjectItem 
+                to={`/exam/${subject.id}`} 
+                key={subject.id}
+              >
+                <SubjectIcon>{subject.icon}</SubjectIcon>
+                <SubjectInfo>
+                  <SubjectName>{subject.name}</SubjectName>
+                  <SubjectDetails>
+                    {subject.questionCount} questions • No time limit
+                  </SubjectDetails>
+                </SubjectInfo>
+              </SubjectItem>
+            ))}
+          </QuickAccessGrid>
+        </SampleExamSection>
+        
         {/* Exam Types Section */}
         <SectionTitle>Exam Types</SectionTitle>
+        <p>Choose from our comprehensive collection of standard exam formats</p>
         <ExamTypeGrid>
           {examTypes.map(examType => (
             <ExamTypeCard 
@@ -239,42 +391,39 @@ const ActivitiesPage = () => {
           ))}
         </ExamTypeGrid>
         
-        {/* Quick Access Section */}
-        <SectionTitle>Quick Exam Access</SectionTitle>
-        <p>Start practicing immediately with these subjects</p>
-        <QuickAccessGrid>
-          {subjects.map(subject => (
-            <SubjectItem 
-              to={`/exam/${subject.id}`} 
-              key={subject.id}
-            >
-              <SubjectIcon>{subject.icon}</SubjectIcon>
-              <SubjectInfo>
-                <SubjectName>{subject.name}</SubjectName>
-                <SubjectDetails>
-                  {subject.questionCount} questions • {subject.timeLimit} min
-                </SubjectDetails>
-              </SubjectInfo>
-            </SubjectItem>
-          ))}
-        </QuickAccessGrid>
+        {/* Full Exams Section */}
+        <SectionTitle>Full Practice Exams</SectionTitle>
+        <p>Access our complete collection with a premium account</p>
         
-        {/* Sample Tests Section */}
-        <SectionTitle>Free Sample Tests</SectionTitle>
-        <p>Try these free sample tests to get familiar with our platform</p>
-        <ExamTypeGrid>
-          {examTypes.map(examType => (
-            <ExamTypeCard 
-              key={`sample-${examType.id}`}
-              onClick={() => navigate(`/sample-test/${examType.id}`)}
-            >
-              <ExamTypeIcon>{examType.icon}</ExamTypeIcon>
-              <h3>{examType.name} Sample</h3>
-              <p>Free practice test - no account required</p>
-              <div className="free-badge">Free</div>
-            </ExamTypeCard>
-          ))}
-        </ExamTypeGrid>
+        <PremiumFeaturesContainer>
+          <PremiumTitle>Premium Features</PremiumTitle>
+          <PremiumFeaturesList>
+            <PremiumFeatureItem>
+              <FeatureIcon>✓</FeatureIcon>
+              Access over 1000+ practice questions across all subjects
+            </PremiumFeatureItem>
+            <PremiumFeatureItem>
+              <FeatureIcon>✓</FeatureIcon>
+              Detailed performance analytics and progress tracking
+            </PremiumFeatureItem>
+            <PremiumFeatureItem>
+              <FeatureIcon>✓</FeatureIcon>
+              Personalized study plans based on your performance
+            </PremiumFeatureItem>
+            <PremiumFeatureItem>
+              <FeatureIcon>✓</FeatureIcon>
+              Timed exams that mirror real test conditions
+            </PremiumFeatureItem>
+          </PremiumFeaturesList>
+          
+          <YearButtonsContainer>
+            <YearButton onClick={() => navigate('/signup')}>Year 2</YearButton>
+            <YearButton onClick={() => navigate('/signup')}>Year 3</YearButton>
+            <YearButton onClick={() => navigate('/signup')}>Year 4</YearButton>
+            <YearButton onClick={() => navigate('/signup')}>Year 5</YearButton>
+            <YearButton onClick={() => navigate('/signup')}>Year 6</YearButton>
+          </YearButtonsContainer>
+        </PremiumFeaturesContainer>
       </ActivitiesContainer>
     </div>
   );

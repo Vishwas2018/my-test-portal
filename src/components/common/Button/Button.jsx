@@ -26,30 +26,30 @@ const baseButtonStyles = css`
   text-transform: uppercase;
   
   /* Size variants */
-  ${({ size }) => {
-    switch (size) {
+${({ $size }) => {
+    switch ($size) {
       case 'small':
         return css`
-          padding: 0.6rem 1.5rem;
-          font-size: 0.9rem;
-        `;
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+      `;
       case 'large':
         return css`
-          padding: 1.2rem 2.5rem;
-          font-size: 1.25rem;
-        `;
+        padding: 1.2rem 2.5rem;
+        font-size: 1.25rem;
+      `;
       case 'medium':
       default:
         return css`
-          padding: 0.9rem 2rem;
-          font-size: 1.1rem;
-        `;
+        padding: 0.9rem 2rem;
+        font-size: 1.1rem;
+      `;
     }
   }}
-  
-  /* Button variants */
-  ${({ variant }) => {
-    switch (variant) {
+
+/* Button variants */
+${({ $variant }) => {
+    switch ($variant) {
       case 'primary':
         return css`
           background: var(--primary);
@@ -218,16 +218,16 @@ const Button = ({
 }) => {
   // Check if button has icon children
   const hasIcon = React.Children.toArray(children).some(
-    child => React.isValidElement(child) && 
-    (child.type === 'svg' || child.type === 'i' || 
-     (typeof child.type === 'function' && child.type.name && 
-      (child.type.name.includes('Icon') || child.type.name.includes('SVG'))))
+    child => React.isValidElement(child) &&
+      (child.type === 'svg' || child.type === 'i' ||
+        (typeof child.type === 'function' && child.type.name &&
+          (child.type.name.includes('Icon') || child.type.name.includes('SVG'))))
   );
 
   // Common props for all button types
   const buttonProps = {
-    variant,
-    size,
+    $variant: variant,
+    $size: size,
     disabled,
     className,
     $hasIcon: hasIcon,

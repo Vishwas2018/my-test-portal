@@ -31,6 +31,21 @@ export const getQuestions = (subjectId, examType, year, examId) => {
       }
     }
     
+    // For sample exams with just a subject ID (no exam type)
+    if (subjectId && !examType) {
+      // Check if subject exists in any exam type
+      for (const type in examsData) {
+        if (examsData[type][subjectId]) {
+          // Find the first available questions for this subject
+          const firstExam = examsData[type][subjectId][0];
+          if (firstExam && firstExam.questions) {
+            // Limit to 5 questions for sample exams
+            return firstExam.questions.slice(0, 5);
+          }
+        }
+      }
+    }
+    
     // For backward compatibility or fallback
     return getDefaultQuestions(subjectId);
   } catch (error) {
@@ -105,6 +120,208 @@ const findExams = (examType, subjectId, year) => {
  * @returns {Array} Array of default questions
  */
 const getDefaultQuestions = (subjectId) => {
+  // For science samples
+  if (subjectId === 'science') {
+    return [
+      {
+        id: `${subjectId}1`,
+        type: 'multipleChoice',
+        text: 'Which of these is a living thing?',
+        options: [
+          { id: 'a', text: 'Rock' },
+          { id: 'b', text: 'Sun' },
+          { id: 'c', text: 'Water' },
+          { id: 'd', text: 'Tree' }
+        ],
+        correctAnswer: 'd',
+        explanation: 'A tree is a living thing because it grows, reproduces, and responds to its environment.'
+      },
+      {
+        id: `${subjectId}2`,
+        type: 'multipleChoice',
+        text: 'What is the function of roots in a plant?',
+        options: [
+          { id: 'a', text: 'To make food using sunlight' },
+          { id: 'b', text: 'To absorb water and nutrients from soil' },
+          { id: 'c', text: 'To produce flowers and fruits' },
+          { id: 'd', text: 'To release oxygen into the air' }
+        ],
+        correctAnswer: 'b',
+        explanation: 'Roots absorb water and nutrients from the soil, which are essential for the plant\'s growth and survival.'
+      },
+      {
+        id: `${subjectId}3`,
+        type: 'multipleChoice',
+        text: 'Which state of matter takes the shape of its container but has a fixed volume?',
+        options: [
+          { id: 'a', text: 'Solid' },
+          { id: 'b', text: 'Liquid' },
+          { id: 'c', text: 'Gas' },
+          { id: 'd', text: 'Plasma' }
+        ],
+        correctAnswer: 'b',
+        explanation: 'Liquids have a fixed volume but take the shape of their container.'
+      },
+      {
+        id: `${subjectId}4`,
+        type: 'trueFalse',
+        text: 'The moon produces its own light.',
+        correctAnswer: false,
+        explanation: 'The moon reflects light from the sun; it does not produce its own light.'
+      },
+      {
+        id: `${subjectId}5`,
+        type: 'multipleChoice',
+        text: 'Which of these objects would sink in water?',
+        options: [
+          { id: 'a', text: 'A wooden block' },
+          { id: 'b', text: 'A plastic bottle with the cap on' },
+          { id: 'c', text: 'A metal coin' },
+          { id: 'd', text: 'A rubber duck' }
+        ],
+        correctAnswer: 'c',
+        explanation: 'A metal coin would sink in water because it has a higher density than water.'
+      }
+    ];
+  }
+  
+  // For mathematics samples
+  if (subjectId === 'mathematics') {
+    return [
+      {
+        id: `${subjectId}1`,
+        type: 'multipleChoice',
+        text: 'Calculate: 37 × 5',
+        options: [
+          { id: 'a', text: '175' },
+          { id: 'b', text: '185' },
+          { id: 'c', text: '195' },
+          { id: 'd', text: '205' }
+        ],
+        correctAnswer: 'b',
+        explanation: '37 × 5 = (30 × 5) + (7 × 5) = 150 + 35 = 185'
+      },
+      {
+        id: `${subjectId}2`,
+        type: 'multipleChoice',
+        text: 'A rectangle has a length of 12 cm and a width of 7 cm. What is its perimeter?',
+        options: [
+          { id: 'a', text: '19 cm' },
+          { id: 'b', text: '38 cm' },
+          { id: 'c', text: '48 cm' },
+          { id: 'd', text: '84 cm' }
+        ],
+        correctAnswer: 'b',
+        explanation: 'Perimeter = 2 × (length + width) = 2 × (12 + 7) = 2 × 19 = 38 cm'
+      },
+      {
+        id: `${subjectId}3`,
+        type: 'multipleChoice',
+        text: 'What is 25 + 37?',
+        options: [
+          { id: 'a', text: '52' },
+          { id: 'b', text: '62' },
+          { id: 'c', text: '72' },
+          { id: 'd', text: '42' }
+        ],
+        correctAnswer: 'b',
+        explanation: '25 + 37 = (20 + 5) + (30 + 7) = (20 + 30) + (5 + 7) = 50 + 12 = 62'
+      },
+      {
+        id: `${subjectId}4`,
+        type: 'multipleChoice',
+        text: 'Sarah had $45. She spent $18 on a book and $12 on lunch. How much money does she have left?',
+        options: [
+          { id: 'a', text: '$10' },
+          { id: 'b', text: '$15' },
+          { id: 'c', text: '$20' },
+          { id: 'd', text: '$25' }
+        ],
+        correctAnswer: 'b',
+        explanation: 'Sarah spent a total of $18 + $12 = $30. She had $45, so she has $45 - $30 = $15 left.'
+      },
+      {
+        id: `${subjectId}5`,
+        type: 'multipleChoice',
+        text: 'Which number comes next in this pattern: 2, 4, 6, 8, __?',
+        options: [
+          { id: 'a', text: '9' },
+          { id: 'b', text: '10' },
+          { id: 'c', text: '12' },
+          { id: 'd', text: '16' }
+        ],
+        correctAnswer: 'b',
+        explanation: 'This is a pattern of counting by 2s (even numbers): 2, 4, 6, 8, 10.'
+      }
+    ];
+  }
+  
+  // For digital technology samples
+  if (subjectId === 'digital') {
+    return [
+      {
+        id: `${subjectId}1`,
+        type: 'multipleChoice',
+        text: 'Which of these is an input device?',
+        options: [
+          { id: 'a', text: 'Printer' },
+          { id: 'b', text: 'Monitor' },
+          { id: 'c', text: 'Speaker' },
+          { id: 'd', text: 'Keyboard' }
+        ],
+        correctAnswer: 'd',
+        explanation: 'A keyboard is an input device because it allows users to input data into a computer.'
+      },
+      {
+        id: `${subjectId}2`,
+        type: 'multipleChoice',
+        text: 'What does "URL" stand for?',
+        options: [
+          { id: 'a', text: 'Universal Resource Locator' },
+          { id: 'b', text: 'Uniform Resource Locator' },
+          { id: 'c', text: 'United Resource Link' },
+          { id: 'd', text: 'Universal Reference Link' }
+        ],
+        correctAnswer: 'b',
+        explanation: 'URL stands for Uniform Resource Locator, which is the address used to access websites on the internet.'
+      },
+      {
+        id: `${subjectId}3`,
+        type: 'trueFalse',
+        text: 'Saving a file means storing it permanently on a computer.',
+        correctAnswer: true,
+        explanation: 'Saving a file means storing it on a storage device (like a hard drive) so it can be accessed later, even after the computer is turned off.'
+      },
+      {
+        id: `${subjectId}4`,
+        type: 'multipleChoice',
+        text: 'Which of these is NOT a way to stay safe online?',
+        options: [
+          { id: 'a', text: 'Use strong passwords' },
+          { id: 'b', text: 'Share personal information with everyone' },
+          { id: 'c', text: 'Only visit trusted websites' },
+          { id: 'd', text: 'Ask an adult before downloading files' }
+        ],
+        correctAnswer: 'b',
+        explanation: 'Sharing personal information with everyone online is not safe. Personal information should be kept private to protect your identity and safety.'
+      },
+      {
+        id: `${subjectId}5`,
+        type: 'multipleChoice',
+        text: 'What is an algorithm?',
+        options: [
+          { id: 'a', text: 'A type of computer virus' },
+          { id: 'b', text: 'A set of step-by-step instructions to complete a task' },
+          { id: 'c', text: 'A special type of keyboard' },
+          { id: 'd', text: 'A computer game' }
+        ],
+        correctAnswer: 'b',
+        explanation: 'An algorithm is a set of step-by-step instructions designed to perform a specific task or solve a problem.'
+      }
+    ];
+  }
+  
+  // Generic default questions
   return [
     {
       id: `${subjectId}1`,
@@ -145,6 +362,19 @@ const getDefaultQuestions = (subjectId) => {
       ],
       correctAnswer: 'c',
       explanation: 'WebFlow is a web design tool, not a programming language.'
+    },
+    {
+      id: `${subjectId}5`,
+      type: 'multipleChoice',
+      text: 'Which gas do plants absorb from the atmosphere?',
+      options: [
+        { id: 'a', text: 'Oxygen' },
+        { id: 'b', text: 'Carbon Dioxide' },
+        { id: 'c', text: 'Nitrogen' },
+        { id: 'd', text: 'Hydrogen' }
+      ],
+      correctAnswer: 'b',
+      explanation: 'Plants absorb carbon dioxide from the atmosphere during photosynthesis.'
     }
   ];
 };
@@ -201,35 +431,35 @@ export const getSubjects = (examType = null) => {
       });
     }
     
-    // If no exam type provided, return default subjects
+    // Default subjects for sample exams
     return [
-      {
-        id: 'math',
-        name: 'Mathematics',
-        questionCount: 20,
-        timeLimit: 30,
-        icon: '🧮'
-      },
       {
         id: 'science',
         name: 'Science',
-        questionCount: 25,
-        timeLimit: 40,
-        icon: '🔬'
+        questionCount: 5,
+        timeLimit: 0, // No time limit
+        icon: '🧪'
+      },
+      {
+        id: 'mathematics',
+        name: 'Mathematics',
+        questionCount: 5,
+        timeLimit: 0, // No time limit
+        icon: '🔢'
+      },
+      {
+        id: 'digital',
+        name: 'Digital Technologies',
+        questionCount: 5,
+        timeLimit: 0, // No time limit
+        icon: '💻'
       },
       {
         id: 'english',
         name: 'English',
-        questionCount: 30,
-        timeLimit: 45,
+        questionCount: 5,
+        timeLimit: 0, // No time limit
         icon: '📚'
-      },
-      {
-        id: 'coding',
-        name: 'Coding',
-        questionCount: 15,
-        timeLimit: 30,
-        icon: '💻'
       }
     ];
   } catch (error) {

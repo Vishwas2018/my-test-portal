@@ -76,30 +76,30 @@ const DashboardPage = () => {
       // Get all exam results
       const results = getExamResults();
       setExamResults(results);
-      
+
       // Get all subjects
       const allSubjects = getSubjects();
       setSubjects(allSubjects);
-      
+
       // Process recent activity (last 5 exams)
-      const sortedResults = [...results].sort((a, b) => 
+      const sortedResults = [...results].sort((a, b) =>
         new Date(b.date) - new Date(a.date)
       );
       setRecentActivity(sortedResults.slice(0, 5));
-      
+
       // Calculate user statistics
       if (results.length > 0) {
         // Calculate average score
         const totalScore = results.reduce((sum, result) => sum + result.score, 0);
         const avgScore = totalScore / results.length;
-        
+
         // Calculate total questions and correct answers
         const totalQuestions = results.reduce((sum, result) => sum + result.totalQuestions, 0);
         const correctAnswers = results.reduce((sum, result) => sum + result.correctCount, 0);
-        
+
         // Count unique subjects completed
         const uniqueSubjects = new Set(results.map(result => result.subject)).size;
-        
+
         setUserStats({
           totalExams: results.length,
           avgScore: avgScore.toFixed(1),
@@ -108,7 +108,7 @@ const DashboardPage = () => {
           correctAnswers
         });
       }
-      
+
       // Get streak data from localStorage
       try {
         const streakDataStr = localStorage.getItem('streak_data');
@@ -123,14 +123,14 @@ const DashboardPage = () => {
         console.error('Error loading streak data:', error);
       }
     };
-    
+
     loadUserData();
   }, []);
 
   // Calculate progress percentage for overall completion
   const calculateProgress = () => {
     if (subjects.length === 0) return 0;
-    
+
     // Define what "progress" means - here we'll use percentage of subjects tried
     const subjectsTried = new Set(examResults.map(result => result.subject)).size;
     return Math.min(Math.round((subjectsTried / subjects.length) * 100), 100);
@@ -163,7 +163,7 @@ const DashboardPage = () => {
             Track your exam performance and continue your preparation journey
           </Subtitle>
         </DashboardHeader>
-        
+
         {/* Main Dashboard Content */}
         <div className="dashboard-grid">
           {/* Progress Overview Card */}
@@ -219,7 +219,7 @@ const DashboardPage = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Streak Card */}
           <div className="dashboard-card streak-card">
             <div className="card-header">
@@ -249,7 +249,7 @@ const DashboardPage = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Recent Activity Card */}
           <div className="dashboard-card activity-card">
             <div className="card-header">
@@ -271,7 +271,7 @@ const DashboardPage = () => {
                           {formatDate(activity.date)} • Score: {activity.score}%
                         </div>
                       </div>
-                      <Link 
+                      <Link
                         to={`/results/${activity.subject}/${new Date(activity.date).getTime()}`}
                         className="activity-action"
                       >
@@ -289,7 +289,7 @@ const DashboardPage = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Simplified Exam Selection Section */}
         <div className="section-title">Ready to Practice?</div>
         <p className="section-description">

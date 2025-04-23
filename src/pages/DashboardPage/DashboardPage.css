@@ -399,23 +399,26 @@
   margin-right: auto;
 }
 
-/* Exam Selection Section */
+/* Adjust exam selection container */
 .exam-selection-container {
-  background-color: var(--white);
-  border-radius: var(--radius-xl);
-  padding: 2rem;
-  box-shadow: 
-    0 15px 0 -8px var(--light-gray),
-    0 20px 30px rgba(0, 0, 0, 0.1);
-  border: 6px solid var(--white);
-  margin-top: 3rem; /* Add top margin for spacing */
-  margin-bottom: 3rem; /* Add bottom margin for spacing */
-  overflow: visible; /* Allow content to be visible */
+  padding: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-/* Fix exam selection content */
-.exam-selection {
-  padding: 0; /* Remove padding that might be causing overflow */
+/* Reduce empty space in placeholder selection */
+.placeholder-selection {
+  margin: 1rem 0;
+}
+
+/* Tweak button appearance */
+.btn-primary {
+  background-color: #74ceff;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  background-color: #5abef7;
 }
 
 /* Placeholder styling for exam selection */

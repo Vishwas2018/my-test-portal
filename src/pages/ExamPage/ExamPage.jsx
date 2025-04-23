@@ -1,4 +1,4 @@
-// src/pages/ExamPage.jsx
+// src/pages/ExamPage/ExamPage.jsx
 import React, { useEffect, useState } from 'react';
 import { getQuestions, getSubjects, saveExamResult } from '../../utils/examUtils';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -79,14 +79,14 @@ const NavButton = styled.button`
 
 const ActionButton = styled(NavButton)`
   background-color: ${props => {
-    if (props.success) return 'var(--accent)';
-    if (props.warning) return 'var(--secondary)';
+    if (props.$success) return 'var(--accent)';
+    if (props.$warning) return 'var(--secondary)';
     return 'var(--primary)';
   }};
   color: white;
   border-color: ${props => {
-    if (props.success) return 'var(--accent-dark)';
-    if (props.warning) return 'var(--secondary-dark)';
+    if (props.$success) return 'var(--accent-dark)';
+    if (props.$warning) return 'var(--secondary-dark)';
     return 'var(--primary-dark)';
   }};
 `;
@@ -187,6 +187,10 @@ const CompletionEmoji = styled.div`
   margin-bottom: 1rem;
 `;
 
+const TimerContainer = styled.div`
+  display: ${props => props.show ? 'block' : 'none'};
+`;
+
 const ExamPage = () => {
   const { subjectId } = useParams();
   const navigate = useNavigate();
@@ -229,7 +233,7 @@ const ExamPage = () => {
         setExamInfo({
           id: subject.id,
           name: subject.name,
-          timeLimit: subject.timeLimit,
+          timeLimit: subject.timeLimit || 0, // Handle sample exams with no time limit
           icon: subject.icon,
           type: examType,
           year: year,
@@ -306,9 +310,9 @@ const ExamPage = () => {
     saveExamResult({
       subject: examInfo.id,
       subjectName: examInfo.name,
-      examType: examInfo.type,
-      year: examInfo.year,
-      examId: examInfo.examId,
+      examType: examInfo.type || 'sample',
+      year: examInfo.year || 'n/a',
+      examId: examInfo.examId || 'sample',
       score,
       correctCount,
       totalQuestions,
@@ -371,13 +375,18 @@ const ExamPage = () => {
   const currentQuestion = questions[currentIndex];
   const answeredCount = Object.keys(userAnswers).length;
   const isQuestionFlagged = flaggedQuestions.includes(currentIndex);
+  const showTimer = examInfo.timeLimit > 0;
   
   // Display exam metadata
   const examMetadata = examType && year ? (
     <span>
       {examType.toUpperCase()} - Year {year}
     </span>
-  ) : null;
+  ) : (
+    <span>
+      Sample Exam - No Time Limit
+    </span>
+  );
   
   return (
     <PageContainer>
@@ -392,10 +401,12 @@ const ExamPage = () => {
           Answer all questions to complete the exam. You can flag questions to review later.
         </ExamDescription>
         
-        <ExamTimer 
-          duration={examInfo.timeLimit} 
-          onTimeUp={handleTimeUp}
-        />
+        <TimerContainer show={showTimer}>
+          <ExamTimer 
+            duration={examInfo.timeLimit} 
+            onTimeUp={handleTimeUp}
+          />
+        </TimerContainer>
       </ExamHeader>
       
       {/* Progress Tracker */}
@@ -443,7 +454,7 @@ const ExamPage = () => {
               </ActionButton>
             ) : (
               <NavButton
-                $primary
+                primary="true"
                 onClick={() => handleNavigateQuestion('next')}
               >
                 Next
