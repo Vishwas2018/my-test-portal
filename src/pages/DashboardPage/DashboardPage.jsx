@@ -160,7 +160,7 @@ const DashboardPage = () => {
             Welcome to your Dashboard, <HighlightedName>{firstName}</HighlightedName>
           </Title>
           <Subtitle>
-            Track your learning progress and continue your educational journey
+            Track your exam performance and continue your preparation journey
           </Subtitle>
         </DashboardHeader>
         
@@ -169,7 +169,7 @@ const DashboardPage = () => {
           {/* Progress Overview Card */}
           <div className="dashboard-card progress-card">
             <div className="card-header">
-              <h2>Your Learning Progress</h2>
+              <h2>Your Progress</h2>
             </div>
             <div className="card-content">
               <div className="progress-circle">
@@ -242,36 +242,10 @@ const DashboardPage = () => {
               </div>
               <div className="streak-message">
                 {streakData.currentStreak > 0 ? (
-                  <p>Great job! You've been learning for {streakData.currentStreak} day{streakData.currentStreak !== 1 ? 's' : ''} in a row!</p>
+                  <p>Great job! You've been practicing for {streakData.currentStreak} day{streakData.currentStreak !== 1 ? 's' : ''} in a row!</p>
                 ) : (
-                  <p>Complete an exam today to start your learning streak!</p>
+                  <p>Complete an exam today to start your practice streak!</p>
                 )}
-              </div>
-            </div>
-          </div>
-          
-          {/* Subject Cards */}
-          <div className="dashboard-card subjects-card">
-            <div className="card-header">
-              <h2>Learning Subjects</h2>
-            </div>
-            <div className="card-content">
-              <div className="subjects-grid">
-                {subjects.map(subject => (
-                  <Link 
-                    to={`/exam/${subject.id}`} 
-                    className="subject-item" 
-                    key={subject.id}
-                  >
-                    <div className="subject-icon">{subject.icon}</div>
-                    <div className="subject-info">
-                      <div className="subject-name">{subject.name}</div>
-                      <div className="subject-details">
-                        {subject.questionCount} questions • {subject.timeLimit} min
-                      </div>
-                    </div>
-                  </Link>
-                ))}
               </div>
             </div>
           </div>
@@ -279,7 +253,7 @@ const DashboardPage = () => {
           {/* Recent Activity Card */}
           <div className="dashboard-card activity-card">
             <div className="card-header">
-              <h2>Recent Activity</h2>
+              <h2>Recent Exams</h2>
             </div>
             <div className="card-content">
               {recentActivity.length > 0 ? (
@@ -309,26 +283,23 @@ const DashboardPage = () => {
               ) : (
                 <div className="empty-state">
                   <div className="empty-icon">📝</div>
-                  <p>No activity yet. Start your learning journey by taking an exam!</p>
+                  <p>No exams completed yet. Start your preparation by taking an exam!</p>
                 </div>
               )}
             </div>
           </div>
         </div>
         
-        {/* Exam Selection Section */}
-        <div className="section-title">Take a New Exam</div>
+        {/* Simplified Exam Selection Section */}
+        <div className="section-title">Ready to Practice?</div>
         <p className="section-description">
-          Choose from the available exams below to continue your learning
+          Take a new exam to continue improving your skills
         </p>
         <div className="exam-selection-container">
           <div className="exam-selection">
-            <p>Give your child the best chance of success with our exam preparation tools.</p>
-            <p>Try free sample tests for NAPLAN, ICAS, and ICAS All Stars.</p>
-            
             <div className="placeholder-selection">
-              <Link to="/exam-selection" className="btn-primary">
-                Go to Exam Selection
+              <Link to="/activities" className="btn-primary">
+                Browse Available Exams
               </Link>
             </div>
           </div>

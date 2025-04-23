@@ -18,10 +18,10 @@ const HomePage = () => {
         <div className="container hero-container">
           <div className="hero-content">
             <h1 className="hero-title">
-              Discover the <span className="highlight">Joy of Learning</span> with WonderLearn!
+              Prepare for Success with <span className="highlight">Complete Exam Practice</span>
             </h1>
             <p className="hero-subtitle">
-              Unleash your child's potential through interactive, engaging, and fun educational adventures!
+              Comprehensive practice tests for NAPLAN, ICAS, and ICAS All Stars to help your child excel
             </p>
             <div className="hero-buttons">
               {isAuthenticated ? (
@@ -30,11 +30,11 @@ const HomePage = () => {
                 </Link>
               ) : (
                 <Link to="/signup" className="hero-btn primary">
-                  <i className="fas fa-star"></i> JOIN THE FUN!
+                  <i className="fas fa-star"></i> START PRACTICING NOW
                 </Link>
               )}
-              <Link to="/demo" className="hero-btn secondary">
-                <i className="fas fa-play-circle"></i> WATCH DEMO
+              <Link to="/exam-selection" className="hero-btn secondary">
+                <i className="fas fa-book"></i> EXPLORE EXAMS
               </Link>
             </div>
           </div>
@@ -53,16 +53,16 @@ const HomePage = () => {
                   {/* Subject cards */}
                   <div className="preview-subject-row">
                     <div className="preview-subject-card">
-                      <div className="preview-subject-icon">🧮</div>
-                      <div className="preview-subject-text">Math</div>
+                      <div className="preview-subject-icon">📝</div>
+                      <div className="preview-subject-text">NAPLAN</div>
                     </div>
                     <div className="preview-subject-card">
-                      <div className="preview-subject-icon">🔬</div>
-                      <div className="preview-subject-text">Science</div>
+                      <div className="preview-subject-icon">🎓</div>
+                      <div className="preview-subject-text">ICAS</div>
                     </div>
                     <div className="preview-subject-card">
-                      <div className="preview-subject-icon">📚</div>
-                      <div className="preview-subject-text">English</div>
+                      <div className="preview-subject-icon">⭐</div>
+                      <div className="preview-subject-text">All Stars</div>
                     </div>
                   </div>
 
@@ -75,7 +75,7 @@ const HomePage = () => {
                     <div className="preview-progress-stats">
                       <div className="preview-stat">
                         <div className="preview-stat-number">12</div>
-                        <div className="preview-stat-label">Activities</div>
+                        <div className="preview-stat-label">Exams</div>
                       </div>
                       <div className="preview-stat">
                         <div className="preview-stat-number">85%</div>
@@ -107,7 +107,7 @@ const HomePage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="preview-label">Your Learning Dashboard</div>
+                <div className="preview-label">Your Exam Dashboard</div>
               </div>
             </div>
           </div>
@@ -117,95 +117,77 @@ const HomePage = () => {
       {/* Features Section */}
       <section id="features" className="features">
         <div className="container features-container">
-          <h2 className="section-title">Why Choose WonderLearn?</h2>
-          <p className="section-subtitle">Our platform is designed to make learning an exciting adventure</p>
+          <h2 className="section-title">Why Choose Our Platform?</h2>
+          <p className="section-subtitle">Our exam preparation platform is designed to ensure student success</p>
 
           <div className="features-grid">
             <div className="feature-card">
               <div className="feature-icon lightning">
                 <i className="fas fa-bolt"></i>
               </div>
-              <h3>Lightning Fast</h3>
-              <p>Experience unparalleled speed with our optimized learning platform that responds instantly to your child's needs</p>
+              <h3>Authentic Exams</h3>
+              <p>Practice with tests that mirror the format, content, and difficulty of actual NAPLAN and ICAS exams</p>
             </div>
 
             <div className="feature-card">
               <div className="feature-icon secure">
-                <i className="fas fa-shield-alt"></i>
+                <i className="fas fa-chart-line"></i>
               </div>
-              <h3>Highly Secure</h3>
-              <p>Kid-friendly security systems protect young learners' data with enterprise-grade protection</p>
+              <h3>Detailed Analysis</h3>
+              <p>Receive comprehensive feedback and performance analytics to identify strengths and areas for improvement</p>
             </div>
 
             <div className="feature-card">
               <div className="feature-icon customize">
                 <i className="fas fa-sliders-h"></i>
               </div>
-              <h3>Customizable</h3>
-              <p>Tailor the learning experience to match your child's specific needs, interests, and learning pace</p>
+              <h3>Flexible Practice</h3>
+              <p>Study at your own pace with exams for different year levels, subjects, and difficulty levels</p>
             </div>
 
             <div className="feature-card">
               <div className="feature-icon tracking">
-                <i className="fas fa-chart-line"></i>
+                <i className="fas fa-check-circle"></i>
               </div>
               <h3>Progress Tracking</h3>
-              <p>Gain valuable insights with comprehensive learning reports that highlight strengths and growth areas</p>
+              <p>Monitor improvement over time with our intuitive dashboard and progress reports</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Learning Categories Section */}
+      {/* Exam Categories Section */}
       <section id="categories" className="categories-section">
         <div className="container">
-          <h2 className="section-title">Learning Categories</h2>
-          <p className="section-subtitle">Explore our range of subject areas tailored for comprehensive education</p>
+          <h2 className="section-title">Exam Categories</h2>
+          <p className="section-subtitle">Explore our comprehensive collection of practice exams</p>
 
           <div className="categories-grid">
             <div className="category-card math">
               <div className="category-icon">
-                <i className="fas fa-calculator"></i>
+                <i className="fas fa-landmark"></i>
               </div>
-              <h3>Mathematics</h3>
-              <p>Develop problem-solving skills and numerical fluency through engaging math activities</p>
-              <Link to="/categories/math" className="btn-outline">Explore Math</Link>
+              <h3>NAPLAN</h3>
+              <p>Australian National Assessment Program exams for literacy and numeracy skills</p>
+              <Link to="/exam-selection" className="btn-outline">Explore NAPLAN</Link>
             </div>
 
             <div className="category-card science">
               <div className="category-icon">
-                <i className="fas fa-flask"></i>
+                <i className="fas fa-graduation-cap"></i>
               </div>
-              <h3>Science</h3>
-              <p>Discover scientific concepts through interactive experiments and engaging content</p>
-              <Link to="/categories/science" className="btn-outline">Explore Science</Link>
+              <h3>ICAS</h3>
+              <p>International Competitions and Assessments for Schools across multiple subjects</p>
+              <Link to="/exam-selection" className="btn-outline">Explore ICAS</Link>
             </div>
 
             <div className="category-card english">
               <div className="category-icon">
-                <i className="fas fa-book"></i>
+                <i className="fas fa-star"></i>
               </div>
-              <h3>English</h3>
-              <p>Build reading comprehension, writing, and communication skills through language activities</p>
-              <Link to="/categories/english" className="btn-outline">Explore English</Link>
-            </div>
-
-            <div className="category-card reasoning">
-              <div className="category-icon">
-                <i className="fas fa-brain"></i>
-              </div>
-              <h3>Reasoning</h3>
-              <p>Enhance critical thinking and logical reasoning abilities with stimulating challenges</p>
-              <Link to="/categories/reasoning" className="btn-outline">Explore Reasoning</Link>
-            </div>
-
-            <div className="category-card digital">
-              <div className="category-icon">
-                <i className="fas fa-laptop-code"></i>
-              </div>
-              <h3>Digital Technologies</h3>
-              <p>Master digital literacy and computational thinking skills essential for the future</p>
-              <Link to="/categories/digital" className="btn-outline">Explore Digital</Link>
+              <h3>ICAS All Stars</h3>
+              <p>Advanced ICAS exams for high-achieving students looking for an extra challenge</p>
+              <Link to="/exam-selection" className="btn-outline">Explore All Stars</Link>
             </div>
           </div>
         </div>
@@ -214,25 +196,25 @@ const HomePage = () => {
       {/* Testimonials Section */}
       <Testimonials />
 
-      {/* Sample Activity Section */}
+      {/* Sample Exam Section */}
       <section id="sample-activity" className="sample-activity">
         <div className="container">
-          <h2 className="section-title">Try a Free Activity</h2>
-          <p className="section-description">Experience the magic of WonderLearn with a free sample activity. No sign-up required!</p>
+          <h2 className="section-title">Try a Free Sample Exam</h2>
+          <p className="section-description">Experience the quality of our practice exams with no registration required</p>
           <div className="sample-activity-container">
             <div className="sample-activity-info">
-              <h3>Sample Activity Features:</h3>
+              <h3>Sample Exam Features:</h3>
               <ul className="feature-list">
-                <li><i className="fas fa-check"></i> Interactive learning modules</li>
-                <li><i className="fas fa-check"></i> Fun animated characters</li>
-                <li><i className="fas fa-check"></i> Instant feedback and rewards</li>
-                <li><i className="fas fa-check"></i> Full access to learning tools</li>
+                <li><i className="fas fa-check"></i> Authentic exam format and questions</li>
+                <li><i className="fas fa-check"></i> Immediate results and feedback</li>
+                <li><i className="fas fa-check"></i> Available for all year levels</li>
+                <li><i className="fas fa-check"></i> No registration required</li>
               </ul>
-              <Link to="/sample-activity" className="hero-btn primary">Try Free Activity</Link>
+              <Link to="/sample-test/naplan" className="hero-btn primary">Try Free Sample</Link>
             </div>
             <div className="sample-activity-image">
               <div className="placeholder-image activity-preview">
-                Activity Preview
+                Sample Exam Preview
               </div>
             </div>
           </div>
@@ -244,7 +226,7 @@ const HomePage = () => {
         <div className="container">
           <div className="newsletter-content">
             <h2>Stay Updated</h2>
-            <p>Subscribe to our newsletter for the latest updates and learning tips</p>
+            <p>Subscribe to our newsletter for exam tips and updates</p>
             <form className="newsletter-form">
               <input type="email" placeholder="Enter your email" required />
               <button type="submit" className="hero-btn primary">Subscribe</button>
@@ -257,13 +239,13 @@ const HomePage = () => {
       <section id="free-trial" className="cta-section">
         <div className="container cta-container">
           <div className="cta-content">
-            <h2>Try WonderLearn Free for 7 Days!</h2>
-            <p>Get full access to all our learning adventures.</p>
+            <h2>Start Preparing for Success Today!</h2>
+            <p>Get full access to our comprehensive exam preparation platform.</p>
             <ul className="cta-features">
-              <li><i className="fas fa-check"></i> Full access to all learning modules</li>
-              <li><i className="fas fa-check"></i> Progress tracking for parents</li>
-              <li><i className="fas fa-check"></i> Unlimited activities and games</li>
-              <li><i className="fas fa-check"></i> No credit card required</li>
+              <li><i className="fas fa-check"></i> Complete library of NAPLAN, ICAS, and ICAS All Stars exams</li>
+              <li><i className="fas fa-check"></i> Detailed analytics and progress tracking</li>
+              <li><i className="fas fa-check"></i> Custom study plans based on performance</li>
+              <li><i className="fas fa-check"></i> 7-day free trial available</li>
             </ul>
             <Link to="/trial-signup" className="hero-btn cta">Start Your Free Trial!</Link>
             <p className="cta-note">No payment details needed. Trial automatically ends after 7 days.</p>

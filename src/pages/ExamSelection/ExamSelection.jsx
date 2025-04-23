@@ -2,14 +2,18 @@ import './ExamSelection.css';
 
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
+import { getAvailableExams, getSubjects } from '../../utils/examUtils';
 
 import { Button } from '../../components/common';
+import { useAuth } from '../../contexts/AuthContext';
 
 const ExamSelection = ({ isSampleTest = false }) => {
   const [selectedExamType, setSelectedExamType] = useState(null);
   const [selectedGrade, setSelectedGrade] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [availableExams, setAvailableExams] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const params = useParams();
   
@@ -19,21 +23,29 @@ const ExamSelection = ({ isSampleTest = false }) => {
       setSelectedExamType(params.examType);
       
       if (params.grade) {
-        setSelectedGrade(parseInt(params.grade));
+        const gradeNum = parseInt(params.grade.replace('year-', ''));
+        setSelectedGrade(gradeNum);
+        
+        // Load subjects for this exam type
+        const subjectsList = getSubjects(params.examType);
+        setSubjects(subjectsList);
         
         if (params.subject) {
           setSelectedSubject(params.subject);
           
-          // Generate sample exam
+          // Generate or get available sample exams
+          const exams = getAvailableExams(params.examType, params.subject, gradeNum);
+          
+          // For sample test, show only the first exam
           const sampleExam = {
-            id: `sample-${params.examType}-${params.grade}-${params.subject}-1`,
+            id: `sample-${params.examType}-${gradeNum}-${params.subject}-1`,
             name: `Sample Exam`,
-            grade: parseInt(params.grade),
+            grade: gradeNum,
             type: params.examType,
             subject: params.subject
           };
           
-          setAvailableExams([sampleExam]);
+          setAvailableExams(exams.length > 0 ? [exams[0]] : [sampleExam]);
         }
       }
     }
@@ -41,47 +53,39 @@ const ExamSelection = ({ isSampleTest = false }) => {
 
   // Define exam types
   const examTypes = [
-    { id: 'naplan', name: 'NAPLAN' },
-    { id: 'icas', name: 'ICAS' },
-    { id: 'icas_all_stars', name: 'ICAS All Stars' }
+    { 
+      id: 'naplan', 
+      name: 'NAPLAN',
+      description: 'Australian National Assessment Program',
+      icon: '🏫'
+    },
+    { 
+      id: 'icas', 
+      name: 'ICAS',
+      description: 'International Competitions and Assessments for Schools',
+      icon: '🎓'
+    },
+    { 
+      id: 'icas_all_stars', 
+      name: 'ICAS All Stars',
+      description: 'Advanced ICAS with comprehensive topics',
+      icon: '⭐'
+    }
   ];
 
   // Define grades
   const grades = [2, 3, 4, 5, 6];
   
-  // Define subjects with their details
-  const subjects = {
-    naplan: [
-      { id: 'reading', name: 'Reading', questions: 45, duration: 45, icon: '📚' },
-      { id: 'writing', name: 'Writing', questions: 1, duration: 30, icon: '✏️' },
-      { id: 'numeracy', name: 'Numeracy', questions: 35, duration: 40, icon: '🔢' },
-      { id: 'language', name: 'Language Conventions', questions: 30, duration: 30, icon: '📝' }
-    ],
-    icas: [
-      { id: 'science', name: 'Science', questions: 30, duration: 45, icon: '🧪' },
-      { id: 'spelling', name: 'Spelling Bee', questions: 40, duration: 25, icon: '🐝' },
-      { id: 'reading', name: 'English (Reading)', questions: 45, duration: 45, icon: '📚' },
-      { id: 'writing', name: 'English (Writing)', questions: 1, duration: 30, icon: '✏️' },
-      { id: 'grammar', name: 'Grammar', questions: 30, duration: 30, icon: '📝' },
-      { id: 'mathematics', name: 'Mathematics', questions: 35, duration: 40, icon: '🔢' },
-      { id: 'digital', name: 'Digital Technologies', questions: 30, duration: 30, icon: '💻' }
-    ],
-    icas_all_stars: [
-      { id: 'english', name: 'English', questions: 60, duration: 60, icon: '📚' },
-      { id: 'mathematics', name: 'Mathematics', questions: 60, duration: 60, icon: '🔢' },
-      { id: 'science', name: 'Science', questions: 60, duration: 60, icon: '🧪' },
-      { id: 'reasoning', name: 'Reasoning', questions: 60, duration: 60, icon: '🧠' },
-      { id: 'general_knowledge', name: 'General Knowledge', questions: 60, duration: 60, icon: '🌍' },
-      { id: 'digital_literacy', name: 'Digital Literacy', questions: 60, duration: 60, icon: '💻' }
-    ]
-  };
-
   // Handle exam type selection
   const handleExamTypeSelect = (examTypeId) => {
     setSelectedExamType(examTypeId);
     setSelectedGrade(null);
     setSelectedSubject(null);
     setAvailableExams([]);
+    
+    // Load subjects for this exam type
+    const subjectsList = getSubjects(examTypeId);
+    setSubjects(subjectsList);
   };
 
   // Handle grade selection
@@ -95,18 +99,8 @@ const ExamSelection = ({ isSampleTest = false }) => {
   const handleSubjectSelect = (subjectId) => {
     setSelectedSubject(subjectId);
     
-    // Generate exams for the selected subject - typically we would fetch this from an API
-    const exams = [];
-    for (let i = 1; i <= 5; i++) {
-      exams.push({
-        id: `${selectedExamType}-${selectedGrade}-${subjectId}-${i}`,
-        name: `Exam ${i}`,
-        grade: selectedGrade,
-        type: selectedExamType,
-        subject: subjectId
-      });
-    }
-    
+    // Get available exams for this subject, exam type, and year
+    const exams = getAvailableExams(selectedExamType, subjectId, selectedGrade);
     setAvailableExams(exams);
   };
 
@@ -117,333 +111,259 @@ const ExamSelection = ({ isSampleTest = false }) => {
     navigate(url);
   };
 
-  return (
-    <div className="exam-selection">
-      <div className="exam-selection-container">
-        <div className="exam-selection-header">
-          <h1 className="title">{isSampleTest ? "Sample Test" : "Select an Exam"}</h1>
-          <p className="subtitle">
-            <strong>Give your child the best chance of success for ICAS</strong><br />
-            Our preparation tools allow your child to practise for ICAS in the most authentic way possible.
-          </p>
-        </div>
-        
-        {/* Sample Tests Section (only displayed in non-sample mode) */}
-        {!isSampleTest && (
-          <div className="sample-tests-section">
-            <h2 className="section-title">Try Free Sample Tests</h2>
-            <p>Experience our exam format with these free sample tests.</p>
-            
-            <div className="sample-tests-grid">
-              <div className="sample-test-card" onClick={() => navigate('/sample-test/naplan')}>
-                <div className="sample-test-icon">🏫</div>
-                <h3>NAPLAN</h3>
-                <p>Australian National Assessment Program</p>
-                <div className="free-badge">Free</div>
-              </div>
-              
-              <div className="sample-test-card" onClick={() => navigate('/sample-test/icas')}>
-                <div className="sample-test-icon">🎓</div>
-                <h3>ICAS</h3>
-                <p>International Competitions and Assessments for Schools</p>
-                <div className="free-badge">Free</div>
-              </div>
-              
-              <div className="sample-test-card" onClick={() => navigate('/sample-test/icas_all_stars')}>
-                <div className="sample-test-icon">⭐</div>
-                <h3>ICAS All Stars</h3>
-                <p>Advanced ICAS with comprehensive topics</p>
-                <div className="free-badge">Free</div>
-              </div>
-            </div>
-            
-            <div className="section-divider"></div>
+  // Render initial exam type selection screen
+  if (!selectedExamType) {
+    return (
+      <div className="exam-selection">
+        <div className="exam-selection-container">
+          <div className="exam-selection-header">
+            <h1 className="title">Select an Exam Type</h1>
+            <p className="subtitle">
+              <strong>Give your child the best chance of success</strong><br />
+              Choose an exam type to begin exploring available practice tests
+            </p>
           </div>
-        )}
-        
-        <div className="exam-selection-content">
-          {/* Sample Test Flow */}
-          {isSampleTest && selectedExamType && !selectedGrade && (
-            <div className="selection-section">
-              <div className="breadcrumb-trail">
-                <Button 
-                  variant="secondary" 
-                  size="small" 
-                  onClick={() => navigate('/exam-selection')}
-                  className="back-button"
-                >
-                  ← Back to Exam Selection
-                </Button>
-                <span>Sample Test: {examTypes.find(type => type.id === selectedExamType)?.name}</span>
+          
+          <div className="exam-types-grid">
+            {examTypes.map(examType => (
+              <div 
+                key={examType.id}
+                className="exam-type-card"
+                onClick={() => handleExamTypeSelect(examType.id)}
+              >
+                <div className="exam-type-icon">
+                  {examType.icon}
+                </div>
+                <h3>{examType.name}</h3>
+                <p>{examType.description}</p>
               </div>
-              
-              <h2 className="section-title">Select Year Level for Sample Test</h2>
-              <div className="selection-options">
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // After selecting exam type, show options for free samples vs full exams
+  if (selectedExamType && !selectedGrade) {
+    return (
+      <div className="exam-selection">
+        <div className="exam-selection-container">
+          <div className="breadcrumb-trail">
+            <Button 
+              variant="secondary" 
+              size="small" 
+              onClick={() => setSelectedExamType(null)}
+              className="back-button"
+            >
+              ← Back to Exam Types
+            </Button>
+            <span>
+              {examTypes.find(type => type.id === selectedExamType)?.name}
+            </span>
+          </div>
+          
+          <div className="exam-options-container">
+            {/* Sample Tests Section */}
+            <div className="exam-option-card">
+              <h2>Free Sample Tests</h2>
+              <p>Try our sample tests to get familiar with the exam format. No account required.</p>
+              <div className="year-buttons">
                 {grades.map(grade => (
-                  <div 
+                  <Button 
                     key={grade}
-                    className="selection-card"
+                    variant="primary" 
+                    size="medium"
                     onClick={() => navigate(`/sample-test/${selectedExamType}/year-${grade}`)}
                   >
-                    <h3>Year {grade}</h3>
-                    <p className="card-description">
-                      Content specifically designed for Year {grade} students
-                    </p>
-                    <div className="free-badge">Free Sample</div>
-                  </div>
+                    Year {grade}
+                  </Button>
                 ))}
               </div>
-            </div>
-          )}
-          
-          {isSampleTest && selectedExamType && selectedGrade && !selectedSubject && (
-            <div className="selection-section">
-              <div className="breadcrumb-trail">
-                <Button 
-                  variant="secondary" 
-                  size="small" 
-                  onClick={() => navigate(`/sample-test/${selectedExamType}`)}
-                  className="back-button"
-                >
-                  ← Back to Year Levels
-                </Button>
-                <span>
-                  Sample Test: {examTypes.find(type => type.id === selectedExamType)?.name} &gt; 
-                  Year {selectedGrade}
-                </span>
-              </div>
-              
-              <h2 className="section-title">Select Subject for Sample Test</h2>
-              <div className="exams-grid">
-                {subjects[selectedExamType]?.map(subject => (
-                  <div 
-                    key={subject.id}
-                    className="exam-card"
-                    onClick={() => navigate(`/sample-test/${selectedExamType}/year-${selectedGrade}/${subject.id}`)}
-                  >
-                    <div className="exam-card-content">
-                      <div className="exam-card-header">
-                        <span className="subject-icon">{subject.icon}</span>
-                        <h3>{subject.name}</h3>
-                      </div>
-                      <p>
-                        {subject.questions} question{subject.questions !== 1 ? 's' : ''}<br />
-                        {subject.duration} minutes
-                      </p>
-                      <div className="free-badge">Free Sample</div>
-                    </div>
-                    <Button variant="primary" size="small">Select Sample Test</Button>
-                  </div>
-                ))}
+              <div className="sample-badges">
+                <span className="badge">Free</span>
+                <span className="badge">No Registration Required</span>
               </div>
             </div>
-          )}
-          
-          {isSampleTest && selectedExamType && selectedGrade && selectedSubject && (
-            <div className="selection-section">
-              <div className="breadcrumb-trail">
-                <Button 
-                  variant="secondary" 
-                  size="small" 
-                  onClick={() => navigate(`/sample-test/${selectedExamType}/year-${selectedGrade}`)}
-                  className="back-button"
-                >
-                  ← Back to Subjects
-                </Button>
-                <span>
-                  Sample Test: {examTypes.find(type => type.id === selectedExamType)?.name} &gt; 
-                  Year {selectedGrade} &gt; 
-                  {subjects[selectedExamType]?.find(sub => sub.id === selectedSubject)?.name}
-                </span>
-              </div>
-              
-              <h2 className="section-title">Start Sample Test</h2>
-              <div className="exams-grid">
-                {availableExams.map(exam => (
-                  <div 
-                    key={exam.id}
-                    className="exam-card sample-test-final"
-                  >
-                    <div className="exam-card-content">
-                      <h3>{examTypes.find(type => type.id === exam.type)?.name} Sample Test</h3>
-                      <p>
-                        Year {exam.grade}<br />
-                        {subjects[selectedExamType]?.find(s => s.id === selectedSubject)?.name}<br />
-                        {subjects[selectedExamType]?.find(s => s.id === selectedSubject)?.questions} question{subjects[selectedExamType]?.find(s => s.id === selectedSubject)?.questions !== 1 ? 's' : ''}<br />
-                        {subjects[selectedExamType]?.find(s => s.id === selectedSubject)?.duration} minutes
-                      </p>
-                      <div className="free-badge">Free Sample</div>
-                    </div>
+            
+            {/* Full Exams Section - requires login */}
+            <div className="exam-option-card">
+              <h2>Full Practice Exams</h2>
+              <p>Access our complete collection of practice exams with detailed results and progress tracking.</p>
+              <div className="year-buttons">
+                {isAuthenticated ? (
+                  grades.map(grade => (
                     <Button 
-                      variant="primary" 
-                      size="large"
-                      onClick={() => handleExamSelect(exam.id)}
+                      key={grade}
+                      variant="secondary" 
+                      size="medium"
+                      onClick={() => handleGradeSelect(grade)}
                     >
-                      Start Sample Test
+                      Year {grade}
                     </Button>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="subscription-info">
-                <p>Want full access to all exams? <Link to="/pricing">View our subscription plans</Link> or <Link to="/login">login</Link> to your account.</p>
-              </div>
-            </div>
-          )}
-          
-          {/* Regular Exam Selection Flow (non-sample) */}
-          {!isSampleTest && !selectedExamType && (
-            <div className="selection-section">
-              <h2 className="section-title">Select Exam Type</h2>
-              <div className="selection-options">
-                {examTypes.map(examType => (
-                  <div 
-                    key={examType.id}
-                    className={`selection-card ${selectedExamType === examType.id ? 'active' : ''}`}
-                    onClick={() => handleExamTypeSelect(examType.id)}
-                  >
-                    <h3>{examType.name}</h3>
-                    <p className="card-description">
-                      {examType.id === 'naplan' && 'Australian National Assessment Program'}
-                      {examType.id === 'icas' && 'International Competitions and Assessments for Schools'}
-                      {examType.id === 'icas_all_stars' && 'Advanced ICAS with comprehensive topics'}
-                    </p>
-                    {selectedExamType === examType.id && (
-                      <div className="selection-check">✓</div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div className="subscription-info">
-                <p>Need full access? <Link to="/pricing">View our subscription plans</Link> or <Link to="/login">login</Link> to your account.</p>
-              </div>
-            </div>
-          )}
-          
-          {!isSampleTest && selectedExamType && !selectedGrade && (
-            <div className="selection-section">
-              <div className="breadcrumb-trail">
-                <Button 
-                  variant="secondary" 
-                  size="small" 
-                  onClick={() => setSelectedExamType(null)}
-                  className="back-button"
-                >
-                  ← Back to Exam Types
-                </Button>
-                <span>
-                  {examTypes.find(type => type.id === selectedExamType)?.name}
-                </span>
-              </div>
-              
-              <h2 className="section-title">Select Year Level</h2>
-              <div className="selection-options">
-                {grades.map(grade => (
-                  <div 
-                    key={grade}
-                    className={`selection-card ${selectedGrade === grade ? 'active' : ''}`}
-                    onClick={() => handleGradeSelect(grade)}
-                  >
-                    <h3>Year {grade}</h3>
-                    <p className="card-description">
-                      Content specifically designed for Year {grade} students
-                    </p>
-                    {selectedGrade === grade && (
-                      <div className="selection-check">✓</div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {!isSampleTest && selectedExamType && selectedGrade && !selectedSubject && (
-            <div className="selection-section">
-              <div className="breadcrumb-trail">
-                <Button 
-                  variant="secondary" 
-                  size="small" 
-                  onClick={() => setSelectedGrade(null)}
-                  className="back-button"
-                >
-                  ← Back to Year Levels
-                </Button>
-                <span>
-                  {examTypes.find(type => type.id === selectedExamType)?.name} &gt; 
-                  Year {selectedGrade}
-                </span>
-              </div>
-              
-              <h2 className="section-title">Select Subject</h2>
-              <div className="exams-grid">
-                {subjects[selectedExamType]?.map(subject => (
-                  <div 
-                    key={subject.id}
-                    className="exam-card"
-                    onClick={() => handleSubjectSelect(subject.id)}
-                  >
-                    <div className="exam-card-content">
-                      <div className="exam-card-header">
-                        <span className="subject-icon">{subject.icon}</span>
-                        <h3>{subject.name}</h3>
-                      </div>
-                      <p>
-                        {subject.questions} question{subject.questions !== 1 ? 's' : ''}<br />
-                        {subject.duration} minutes
-                      </p>
+                  ))
+                ) : (
+                  <div className="login-required">
+                    <p>You need to be logged in to access full practice exams</p>
+                    <div className="login-buttons">
+                      <Button 
+                        variant="primary" 
+                        size="medium"
+                        onClick={() => navigate('/login')}
+                      >
+                        Log In
+                      </Button>
+                      <Button 
+                        variant="secondary" 
+                        size="medium"
+                        onClick={() => navigate('/signup')}
+                      >
+                        Sign Up
+                      </Button>
                     </div>
-                    <Button variant="primary" size="small">Select</Button>
                   </div>
-                ))}
+                )}
+              </div>
+              <div className="premium-features">
+                <div className="feature-item">
+                  <span className="feature-icon">✓</span>
+                  <span>Detailed Analytics</span>
+                </div>
+                <div className="feature-item">
+                  <span className="feature-icon">✓</span>
+                  <span>Progress Tracking</span>
+                </div>
+                <div className="feature-item">
+                  <span className="feature-icon">✓</span>
+                  <span>Personalized Feedback</span>
+                </div>
               </div>
             </div>
-          )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If a grade has been selected, show the subjects
+  if (selectedExamType && selectedGrade && !selectedSubject) {
+    return (
+      <div className="exam-selection">
+        <div className="exam-selection-container">
+          <div className="breadcrumb-trail">
+            <Button 
+              variant="secondary" 
+              size="small" 
+              onClick={() => setSelectedGrade(null)}
+              className="back-button"
+            >
+              ← Back to Options
+            </Button>
+            <span>
+              {examTypes.find(type => type.id === selectedExamType)?.name} &gt; 
+              Year {selectedGrade} &gt; 
+              {isSampleTest ? 'Sample Test' : 'Full Practice Exams'}
+            </span>
+          </div>
           
-          {!isSampleTest && selectedExamType && selectedGrade && selectedSubject && (
-            <div className="selection-section">
-              <div className="breadcrumb-trail">
-                <Button 
-                  variant="secondary" 
-                  size="small" 
-                  onClick={() => setSelectedSubject(null)}
-                  className="back-button"
-                >
-                  ← Back to Subjects
-                </Button>
-                <span>
-                  {examTypes.find(type => type.id === selectedExamType)?.name} &gt; 
-                  Year {selectedGrade} &gt; 
-                  {subjects[selectedExamType]?.find(sub => sub.id === selectedSubject)?.name}
-                </span>
-              </div>
-              
-              <h2 className="section-title">Available Exams</h2>
-              <div className="exams-grid">
-                {availableExams.map(exam => (
-                  <div 
-                    key={exam.id}
-                    className="exam-card"
-                    onClick={() => handleExamSelect(exam.id)}
-                  >
-                    <div className="exam-card-content">
-                      <h3>{exam.name}</h3>
-                      <p>
-                        {examTypes.find(type => type.id === exam.type)?.name} - Year {exam.grade}<br />
-                        {subjects[selectedExamType]?.find(s => s.id === selectedSubject)?.name}<br />
-                        {subjects[selectedExamType]?.find(s => s.id === selectedSubject)?.questions} question{subjects[selectedExamType]?.find(s => s.id === selectedSubject)?.questions !== 1 ? 's' : ''}<br />
-                        {subjects[selectedExamType]?.find(s => s.id === selectedSubject)?.duration} minutes
-                      </p>
-                    </div>
-                    <Button variant="primary" size="small">Start Exam</Button>
+          <h2 className="section-title">Select Subject</h2>
+          <div className="exams-grid">
+            {subjects.map(subject => (
+              <div 
+                key={subject.id}
+                className="exam-card"
+                onClick={() => isSampleTest 
+                  ? navigate(`/sample-test/${selectedExamType}/year-${selectedGrade}/${subject.id}`)
+                  : handleSubjectSelect(subject.id)
+                }
+              >
+                <div className="exam-card-content">
+                  <div className="exam-card-header">
+                    <span className="subject-icon">{subject.icon}</span>
+                    <h3>{subject.name}</h3>
                   </div>
-                ))}
+                  <p>
+                    {subject.questionCount} question{subject.questionCount !== 1 ? 's' : ''}<br />
+                    {subject.timeLimit} minutes
+                  </p>
+                  {isSampleTest && <div className="free-badge">Free Sample</div>}
+                </div>
+                <Button variant="primary" size="small">
+                  {isSampleTest ? 'Select Sample Test' : 'Select'}
+                </Button>
               </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If a subject has been selected, show available exams
+  if (selectedExamType && selectedGrade && selectedSubject) {
+    return (
+      <div className="exam-selection">
+        <div className="exam-selection-container">
+          <div className="breadcrumb-trail">
+            <Button 
+              variant="secondary" 
+              size="small" 
+              onClick={() => setSelectedSubject(null)}
+              className="back-button"
+            >
+              ← Back to Subjects
+            </Button>
+            <span>
+              {examTypes.find(type => type.id === selectedExamType)?.name} &gt; 
+              Year {selectedGrade} &gt; 
+              {subjects.find(sub => sub.id === selectedSubject)?.name}
+            </span>
+          </div>
+          
+          <h2 className="section-title">
+            {isSampleTest ? 'Sample Test' : 'Available Exams'}
+          </h2>
+          <div className="exams-grid">
+            {availableExams.length > 0 ? (
+              availableExams.map(exam => (
+                <div 
+                  key={exam.id}
+                  className="exam-card"
+                  onClick={() => handleExamSelect(exam.id)}
+                >
+                  <div className="exam-card-content">
+                    <h3>{isSampleTest ? 'Sample Test' : exam.name}</h3>
+                    <p>
+                      {examTypes.find(type => type.id === exam.type)?.name} - Year {exam.grade}<br />
+                      {subjects.find(s => s.id === selectedSubject)?.name}<br />
+                      {subjects.find(s => s.id === selectedSubject)?.questionCount} question{subjects.find(s => s.id === selectedSubject)?.questionCount !== 1 ? 's' : ''}<br />
+                      {subjects.find(s => s.id === selectedSubject)?.timeLimit} minutes
+                    </p>
+                    {isSampleTest && <div className="free-badge">Free Sample</div>}
+                  </div>
+                  <Button variant="primary" size="small">
+                    {isSampleTest ? 'Start Sample Test' : 'Start Exam'}
+                  </Button>
+                </div>
+              ))
+            ) : (
+              <div className="no-exams-message">
+                <p>No exams available for this selection. Please try another subject or year level.</p>
+              </div>
+            )}
+          </div>
+          
+          {isSampleTest && (
+            <div className="subscription-info">
+              <p>Want full access to all exams? <Link to="/pricing">View our subscription plans</Link> or <Link to="/login">login</Link> to your account.</p>
             </div>
           )}
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return null;
 };
 
 export default ExamSelection;

@@ -1,0 +1,1247 @@
+{
+    "naplan": {
+      "reading": [
+        {
+          "examId": "naplan-reading-year3-1",
+          "title": "NAPLAN Reading - Year 3",
+          "year": 3,
+          "timeLimit": 45,
+          "questions": [
+            {
+              "id": "nr3-q1",
+              "type": "multipleChoice",
+              "text": "Read the passage below and answer the question:\n\nMax walked to school every day. On Monday, he saw a small puppy following him. The puppy had no collar. Max picked up the puppy and carried it to school. His teacher called the animal shelter.\n\nWhy did Max pick up the puppy?",
+              "options": [
+                { "id": "nr3-q1-a", "text": "Because he wanted a pet" },
+                { "id": "nr3-q1-b", "text": "Because the puppy had no collar" },
+                { "id": "nr3-q1-c", "text": "Because the puppy was injured" },
+                { "id": "nr3-q1-d", "text": "Because the puppy was hungry" }
+              ],
+              "correctAnswer": "nr3-q1-b",
+              "explanation": "The passage states 'The puppy had no collar.' This suggests the puppy might be lost or a stray, which is why Max picked it up."
+            },
+            {
+              "id": "nr3-q2",
+              "type": "multipleChoice",
+              "text": "What happened after Max brought the puppy to school?",
+              "options": [
+                { "id": "nr3-q2-a", "text": "The puppy ran away" },
+                { "id": "nr3-q2-b", "text": "Max took the puppy home" },
+                { "id": "nr3-q2-c", "text": "The teacher called the animal shelter" },
+                { "id": "nr3-q2-d", "text": "The puppy found its owner" }
+              ],
+              "correctAnswer": "nr3-q2-c",
+              "explanation": "The passage states 'His teacher called the animal shelter' after Max brought the puppy to school."
+            },
+            {
+              "id": "nr3-q3",
+              "type": "multipleChoice",
+              "text": "Which word best describes Max in this story?",
+              "options": [
+                { "id": "nr3-q3-a", "text": "Selfish" },
+                { "id": "nr3-q3-b", "text": "Angry" },
+                { "id": "nr3-q3-c", "text": "Kind" },
+                { "id": "nr3-q3-d", "text": "Worried" }
+              ],
+              "correctAnswer": "nr3-q3-c",
+              "explanation": "Max's actions of picking up the stray puppy and bringing it to school for help show that he is kind and caring."
+            },
+            {
+              "id": "nr3-q4",
+              "type": "trueFalse",
+              "text": "According to the passage, the puppy followed Max to school every day.",
+              "correctAnswer": false,
+              "explanation": "The passage only states that the puppy followed Max on Monday, not every day: 'On Monday, he saw a small puppy following him.'"
+            },
+            {
+              "id": "nr3-q5",
+              "type": "multipleChoice",
+              "text": "What was the FIRST thing that happened in the story?",
+              "options": [
+                { "id": "nr3-q5-a", "text": "Max picked up the puppy" },
+                { "id": "nr3-q5-b", "text": "Max walked to school" },
+                { "id": "nr3-q5-c", "text": "The teacher called the animal shelter" },
+                { "id": "nr3-q5-d", "text": "The puppy lost its collar" }
+              ],
+              "correctAnswer": "nr3-q5-b",
+              "explanation": "The first event mentioned in the passage is 'Max walked to school every day.'"
+            }
+          ]
+        }
+      ],
+      "writing": [
+        {
+          "examId": "naplan-writing-year3-1",
+          "title": "NAPLAN Writing - Year 3",
+          "year": 3,
+          "timeLimit": 40,
+          "questions": [
+            {
+              "id": "nw3-q1",
+              "type": "multipleChoice",
+              "text": "Which sentence has the correct punctuation?",
+              "options": [
+                { "id": "nw3-q1-a", "text": "We went to the park and played on the swings?" },
+                { "id": "nw3-q1-b", "text": "We went to the park and played on the swings." },
+                { "id": "nw3-q1-c", "text": "We went to the park and played on the swings!" },
+                { "id": "nw3-q1-d", "text": "We went to the park and played, on the swings." }
+              ],
+              "correctAnswer": "nw3-q1-b",
+              "explanation": "This is a simple statement that should end with a period/full stop."
+            },
+            {
+              "id": "nw3-q2",
+              "type": "multipleChoice",
+              "text": "Which word is spelled incorrectly?",
+              "options": [
+                { "id": "nw3-q2-a", "text": "because" },
+                { "id": "nw3-q2-b", "text": "freind" },
+                { "id": "nw3-q2-c", "text": "school" },
+                { "id": "nw3-q2-d", "text": "people" }
+              ],
+              "correctAnswer": "nw3-q2-b",
+              "explanation": "The correct spelling is 'friend' (i before e except after c)."
+            },
+            {
+              "id": "nw3-q3",
+              "type": "multipleChoice",
+              "text": "Which sentence uses capital letters correctly?",
+              "options": [
+                { "id": "nw3-q3-a", "text": "my teacher, mrs. Green, lives in Sydney." },
+                { "id": "nw3-q3-b", "text": "My Teacher, Mrs. green, Lives in sydney." },
+                { "id": "nw3-q3-c", "text": "My teacher, Mrs. Green, lives in Sydney." },
+                { "id": "nw3-q3-d", "text": "my Teacher, mrs. Green, lives in sydney." }
+              ],
+              "correctAnswer": "nw3-q3-c",
+              "explanation": "Capital letters are correctly used for the start of the sentence, the title and surname of a person (Mrs. Green), and the name of a place (Sydney)."
+            },
+            {
+              "id": "nw3-q4",
+              "type": "multipleChoice",
+              "text": "Choose the best word to complete this sentence:\n\nThe cat was _____ tired that it fell asleep right away.",
+              "options": [
+                { "id": "nw3-q4-a", "text": "much" },
+                { "id": "nw3-q4-b", "text": "very" },
+                { "id": "nw3-q4-c", "text": "so" },
+                { "id": "nw3-q4-d", "text": "too" }
+              ],
+              "correctAnswer": "nw3-q4-c",
+              "explanation": "'So' is the correct intensifier for this construction: 'so [adjective] that [result]'."
+            },
+            {
+              "id": "nw3-q5",
+              "type": "multipleChoice",
+              "text": "Which of these is a complete sentence?",
+              "options": [
+                { "id": "nw3-q5-a", "text": "Running to the store." },
+                { "id": "nw3-q5-b", "text": "Because it was raining." },
+                { "id": "nw3-q5-c", "text": "The big, furry dog." },
+                { "id": "nw3-q5-d", "text": "She walked to school." }
+              ],
+              "correctAnswer": "nw3-q5-d",
+              "explanation": "Only 'She walked to school' is a complete sentence with a subject (She) and a verb (walked)."
+            }
+          ]
+        }
+      ],
+      "numeracy": [
+        {
+          "examId": "naplan-numeracy-year3-1",
+          "title": "NAPLAN Numeracy - Year 3",
+          "year": 3,
+          "timeLimit": 45,
+          "questions": [
+            {
+              "id": "nn3-q1",
+              "type": "multipleChoice",
+              "text": "What is 25 + 37?",
+              "options": [
+                { "id": "nn3-q1-a", "text": "52" },
+                { "id": "nn3-q1-b", "text": "62" },
+                { "id": "nn3-q1-c", "text": "72" },
+                { "id": "nn3-q1-d", "text": "42" }
+              ],
+              "correctAnswer": "nn3-q1-b",
+              "explanation": "25 + 37 = (20 + 5) + (30 + 7) = (20 + 30) + (5 + 7) = 50 + 12 = 62"
+            },
+            {
+              "id": "nn3-q2",
+              "type": "multipleChoice",
+              "text": "Which shape has 4 equal sides?",
+              "options": [
+                { "id": "nn3-q2-a", "text": "Rectangle" },
+                { "id": "nn3-q2-b", "text": "Triangle" },
+                { "id": "nn3-q2-c", "text": "Square" },
+                { "id": "nn3-q2-d", "text": "Circle" }
+              ],
+              "correctAnswer": "nn3-q2-c",
+              "explanation": "A square has 4 sides of equal length."
+            },
+            {
+              "id": "nn3-q3",
+              "type": "multipleChoice",
+              "text": "Jack had 23 marbles. He gave 8 marbles to his friend. How many marbles does Jack have now?",
+              "options": [
+                { "id": "nn3-q3-a", "text": "31" },
+                { "id": "nn3-q3-b", "text": "15" },
+                { "id": "nn3-q3-c", "text": "16" },
+                { "id": "nn3-q3-d", "text": "14" }
+              ],
+              "correctAnswer": "nn3-q3-b",
+              "explanation": "23 - 8 = 15, so Jack has 15 marbles left."
+            },
+            {
+              "id": "nn3-q4",
+              "type": "multipleChoice",
+              "text": "What time does this clock show?",
+              "options": [
+                { "id": "nn3-q4-a", "text": "3:15" },
+                { "id": "nn3-q4-b", "text": "3:45" },
+                { "id": "nn3-q4-c", "text": "9:15" },
+                { "id": "nn3-q4-d", "text": "9:45" }
+              ],
+              "correctAnswer": "nn3-q4-a",
+              "explanation": "The clock shows 3:15 - the hour hand is just past 3, and the minute hand is pointing to 3, which represents 15 minutes."
+            },
+            {
+              "id": "nn3-q5",
+              "type": "multipleChoice",
+              "text": "Which number comes next in this pattern: 2, 4, 6, 8, __?",
+              "options": [
+                { "id": "nn3-q5-a", "text": "9" },
+                { "id": "nn3-q5-b", "text": "10" },
+                { "id": "nn3-q5-c", "text": "12" },
+                { "id": "nn3-q5-d", "text": "16" }
+              ],
+              "correctAnswer": "nn3-q5-b",
+              "explanation": "This is a pattern of counting by 2s (even numbers): 2, 4, 6, 8, 10."
+            }
+          ]
+        }
+      ],
+      "language": [
+        {
+          "examId": "naplan-language-year3-1",
+          "title": "NAPLAN Language Conventions - Year 3",
+          "year": 3,
+          "timeLimit": 45,
+          "questions": [
+            {
+              "id": "nl3-q1",
+              "type": "multipleChoice",
+              "text": "Which word is spelled correctly?",
+              "options": [
+                { "id": "nl3-q1-a", "text": "becos" },
+                { "id": "nl3-q1-b", "text": "becoz" },
+                { "id": "nl3-q1-c", "text": "because" },
+                { "id": "nl3-q1-d", "text": "becaus" }
+              ],
+              "correctAnswer": "nl3-q1-c",
+              "explanation": "'Because' is the correct spelling of the word."
+            },
+            {
+              "id": "nl3-q2",
+              "type": "multipleChoice",
+              "text": "Which punctuation mark is missing from this sentence?\n\nWhere did you put my book_",
+              "options": [
+                { "id": "nl3-q2-a", "text": "." },
+                { "id": "nl3-q2-b", "text": "," },
+                { "id": "nl3-q2-c", "text": "!" },
+                { "id": "nl3-q2-d", "text": "?" }
+              ],
+              "correctAnswer": "nl3-q2-d",
+              "explanation": "The sentence is a question (asking where something is), so it needs a question mark at the end."
+            },
+            {
+              "id": "nl3-q3",
+              "type": "multipleChoice",
+              "text": "Which word completes this sentence correctly?\n\nThe children _____ playing in the park yesterday.",
+              "options": [
+                { "id": "nl3-q3-a", "text": "is" },
+                { "id": "nl3-q3-b", "text": "are" },
+                { "id": "nl3-q3-c", "text": "was" },
+                { "id": "nl3-q3-d", "text": "were" }
+              ],
+              "correctAnswer": "nl3-q3-d",
+              "explanation": "'Were' is the correct past tense form of 'to be' for the plural subject 'children'."
+            },
+            {
+              "id": "nl3-q4",
+              "type": "multipleChoice",
+              "text": "Which of these is a noun?",
+              "options": [
+                { "id": "nl3-q4-a", "text": "jump" },
+                { "id": "nl3-q4-b", "text": "quickly" },
+                { "id": "nl3-q4-c", "text": "happy" },
+                { "id": "nl3-q4-d", "text": "teacher" }
+              ],
+              "correctAnswer": "nl3-q4-d",
+              "explanation": "'Teacher' is a noun - a person. 'Jump' is a verb, 'quickly' is an adverb, and 'happy' is an adjective."
+            },
+            {
+              "id": "nl3-q5",
+              "type": "multipleChoice",
+              "text": "Which sentence uses capital letters correctly?",
+              "options": [
+                { "id": "nl3-q5-a", "text": "we went to perth on tuesday." },
+                { "id": "nl3-q5-b", "text": "We went to perth on tuesday." },
+                { "id": "nl3-q5-c", "text": "We went to Perth on Tuesday." },
+                { "id": "nl3-q5-d", "text": "we went to Perth on Tuesday." }
+              ],
+              "correctAnswer": "nl3-q5-c",
+              "explanation": "Capital letters are needed for the first word of a sentence (We), names of places (Perth), and days of the week (Tuesday)."
+            }
+          ]
+        }
+      ]
+    },
+    "icas": {
+      "science": [
+        {
+          "examId": "icas-science-year4-1",
+          "title": "ICAS Science - Year 4",
+          "year": 4,
+          "timeLimit": 45,
+          "questions": [
+            {
+              "id": "is4-q1",
+              "type": "multipleChoice",
+              "text": "Which of these is a living thing?",
+              "options": [
+                { "id": "is4-q1-a", "text": "Rock" },
+                { "id": "is4-q1-b", "text": "Sun" },
+                { "id": "is4-q1-c", "text": "Water" },
+                { "id": "is4-q1-d", "text": "Tree" }
+              ],
+              "correctAnswer": "is4-q1-d",
+              "explanation": "A tree is a living thing because it grows, reproduces, and responds to its environment."
+            },
+            {
+              "id": "is4-q2",
+              "type": "multipleChoice",
+              "text": "What is the function of roots in a plant?",
+              "options": [
+                { "id": "is4-q2-a", "text": "To make food using sunlight" },
+                { "id": "is4-q2-b", "text": "To absorb water and nutrients from soil" },
+                { "id": "is4-q2-c", "text": "To produce flowers and fruits" },
+                { "id": "is4-q2-d", "text": "To release oxygen into the air" }
+              ],
+              "correctAnswer": "is4-q2-b",
+              "explanation": "Roots absorb water and nutrients from the soil, which are essential for the plant's growth and survival."
+            },
+            {
+              "id": "is4-q3",
+              "type": "multipleChoice",
+              "text": "Which state of matter takes the shape of its container but has a fixed volume?",
+              "options": [
+                { "id": "is4-q3-a", "text": "Solid" },
+                { "id": "is4-q3-b", "text": "Liquid" },
+                { "id": "is4-q3-c", "text": "Gas" },
+                { "id": "is4-q3-d", "text": "Plasma" }
+              ],
+              "correctAnswer": "is4-q3-b",
+              "explanation": "Liquids have a fixed volume but take the shape of their container."
+            },
+            {
+              "id": "is4-q4",
+              "type": "trueFalse",
+              "text": "The moon produces its own light.",
+              "correctAnswer": false,
+              "explanation": "The moon reflects light from the sun; it does not produce its own light."
+            },
+            {
+              "id": "is4-q5",
+              "type": "multipleChoice",
+              "text": "Which of these objects would sink in water?",
+              "options": [
+                { "id": "is4-q5-a", "text": "A wooden block" },
+                { "id": "is4-q5-b", "text": "A plastic bottle with the cap on" },
+                { "id": "is4-q5-c", "text": "A metal coin" },
+                { "id": "is4-q5-d", "text": "A rubber duck" }
+              ],
+              "correctAnswer": "is4-q5-c",
+              "explanation": "A metal coin would sink in water because it has a higher density than water."
+            }
+          ]
+        }
+      ],
+      "spelling": [
+        {
+          "examId": "icas-spelling-year4-1",
+          "title": "ICAS Spelling Bee - Year 4",
+          "year": 4,
+          "timeLimit": 30,
+          "questions": [
+            {
+              "id": "isp4-q1",
+              "type": "multipleChoice",
+              "text": "Which word is spelled correctly?",
+              "options": [
+                { "id": "isp4-q1-a", "text": "beleive" },
+                { "id": "isp4-q1-b", "text": "belive" },
+                { "id": "isp4-q1-c", "text": "believe" },
+                { "id": "isp4-q1-d", "text": "beleeve" }
+              ],
+              "correctAnswer": "isp4-q1-c",
+              "explanation": "'Believe' is the correct spelling."
+            },
+            {
+              "id": "isp4-q2",
+              "type": "multipleChoice",
+              "text": "Which word is NOT spelled correctly?",
+              "options": [
+                { "id": "isp4-q2-a", "text": "different" },
+                { "id": "isp4-q2-b", "text": "difficult" },
+                { "id": "isp4-q2-c", "text": "dissapear" },
+                { "id": "isp4-q2-d", "text": "direction" }
+              ],
+              "correctAnswer": "isp4-q2-c",
+              "explanation": "'Dissapear' is incorrect. The correct spelling is 'disappear' with two 'p's."
+            },
+            {
+              "id": "isp4-q3",
+              "type": "multipleChoice",
+              "text": "Which of these words has a prefix?",
+              "options": [
+                { "id": "isp4-q3-a", "text": "teacher" },
+                { "id": "isp4-q3-b", "text": "unhappy" },
+                { "id": "isp4-q3-c", "text": "jumping" },
+                { "id": "isp4-q3-d", "text": "quickly" }
+              ],
+              "correctAnswer": "isp4-q3-b",
+              "explanation": "'Unhappy' has the prefix 'un-' which means 'not', attached to the base word 'happy'."
+            },
+            {
+              "id": "isp4-q4",
+              "type": "multipleChoice",
+              "text": "Choose the correct homophone for this sentence:\n\nThe dog wagged its _____ when it saw its owner.",
+              "options": [
+                { "id": "isp4-q4-a", "text": "tale" },
+                { "id": "isp4-q4-b", "text": "tail" },
+                { "id": "isp4-q4-c", "text": "tael" },
+                { "id": "isp4-q4-d", "text": "tayl" }
+              ],
+              "correctAnswer": "isp4-q4-b",
+              "explanation": "'Tail' is correct - it refers to the appendage of an animal. 'Tale' means a story."
+            },
+            {
+              "id": "isp4-q5",
+              "type": "multipleChoice",
+              "text": "Which word has the correct plural form?",
+              "options": [
+                { "id": "isp4-q5-a", "text": "child → childs" },
+                { "id": "isp4-q5-b", "text": "mouse → mouses" },
+                { "id": "isp4-q5-c", "text": "foot → foots" },
+                { "id": "isp4-q5-d", "text": "tooth → teeth" }
+              ],
+              "correctAnswer": "isp4-q5-d",
+              "explanation": "'Tooth → teeth' is the correct irregular plural form. The others should be 'children', 'mice', and 'feet'."
+            }
+          ]
+        }
+      ],
+      "reading": [
+        {
+          "examId": "icas-reading-year4-1",
+          "title": "ICAS English (Reading) - Year 4",
+          "year": 4,
+          "timeLimit": 45,
+          "questions": [
+            {
+              "id": "ir4-q1",
+              "type": "multipleChoice",
+              "text": "Read the passage and answer the question:\n\nThe old lighthouse stood tall on the rocky cliff. For over a hundred years, it had guided ships safely to shore. Its bright beam could be seen for miles on dark, stormy nights. Now, modern technology has replaced many lighthouses, but this one remains as a historic monument.\n\nWhat is the main idea of this passage?",
+              "options": [
+                { "id": "ir4-q1-a", "text": "Lighthouses are no longer needed" },
+                { "id": "ir4-q1-b", "text": "A historic lighthouse still stands despite new technology" },
+                { "id": "ir4-q1-c", "text": "Ships rely on lighthouses during storms" },
+                { "id": "ir4-q1-d", "text": "The lighthouse is very old" }
+              ],
+              "correctAnswer": "ir4-q1-b",
+              "explanation": "The passage describes how the lighthouse has historical value even though new technology has made many lighthouses obsolete."
+            },
+            {
+              "id": "ir4-q2",
+              "type": "multipleChoice",
+              "text": "From the passage, we can infer that:",
+              "options": [
+                { "id": "ir4-q2-a", "text": "The lighthouse is still operational" },
+                { "id": "ir4-q2-b", "text": "The lighthouse was built less than 100 years ago" },
+                { "id": "ir4-q2-c", "text": "Modern ships don't need lighthouses anymore" },
+                { "id": "ir4-q2-d", "text": "The lighthouse will be torn down soon" }
+              ],
+              "correctAnswer": "ir4-q2-c",
+              "explanation": "The passage states 'modern technology has replaced many lighthouses', indicating that modern ships don't rely on lighthouses as they once did."
+            },
+            {
+              "id": "ir4-q3",
+              "type": "multipleChoice",
+              "text": "In the sentence 'Its bright beam could be seen for miles on dark, stormy nights', the word 'beam' refers to:",
+              "options": [
+                { "id": "ir4-q3-a", "text": "A wooden support" },
+                { "id": "ir4-q3-b", "text": "A ship" },
+                { "id": "ir4-q3-c", "text": "A ray of light" },
+                { "id": "ir4-q3-d", "text": "A radio signal" }
+              ],
+              "correctAnswer": "ir4-q3-c",
+              "explanation": "In this context, 'beam' refers to the ray of light that the lighthouse produces to guide ships."
+            },
+            {
+              "id": "ir4-q4",
+              "type": "trueFalse",
+              "text": "According to the passage, the lighthouse is still used to guide ships.",
+              "correctAnswer": false,
+              "explanation": "The passage states that the lighthouse 'remains as a historic monument' and that 'modern technology has replaced many lighthouses', suggesting this lighthouse is no longer used for its original purpose."
+            },
+            {
+              "id": "ir4-q5",
+              "type": "multipleChoice",
+              "text": "The author's attitude toward the lighthouse can best be described as:",
+              "options": [
+                { "id": "ir4-q5-a", "text": "Critical" },
+                { "id": "ir4-q5-b", "text": "Nostalgic" },
+                { "id": "ir4-q5-c", "text": "Fearful" },
+                { "id": "ir4-q5-d", "text": "Indifferent" }
+              ],
+              "correctAnswer": "ir4-q5-b",
+              "explanation": "The author's tone is nostalgic, appreciating the historical value and past importance of the lighthouse while acknowledging that times have changed."
+            }
+          ]
+        }
+      ],
+      "writing": [
+        {
+          "examId": "icas-writing-year4-1",
+          "title": "ICAS English (Writing) - Year 4",
+          "year": 4,
+          "timeLimit": 40,
+          "questions": [
+            {
+              "id": "iw4-q1",
+              "type": "multipleChoice",
+              "text": "Which of these sentences uses punctuation correctly?",
+              "options": [
+                { "id": "iw4-q1-a", "text": "\"I love ice cream!\" shouted Tim." },
+                { "id": "iw4-q1-b", "text": "\"I love ice cream! shouted Tim.\"" },
+                { "id": "iw4-q1-c", "text": "\"I love ice cream\" shouted Tim!" },
+                { "id": "iw4-q1-d", "text": "\"I love ice cream!,\" shouted Tim." }
+              ],
+              "correctAnswer": "iw4-q1-a",
+              "explanation": "The first option has correct placement of quotation marks, exclamation point, and period."
+            },
+            {
+              "id": "iw4-q2",
+              "type": "multipleChoice",
+              "text": "Which sentence uses an adjective?",
+              "options": [
+                { "id": "iw4-q2-a", "text": "She walks to school." },
+                { "id": "iw4-q2-b", "text": "The bird flew quickly." },
+                { "id": "iw4-q2-c", "text": "The red car stopped at the light." },
+                { "id": "iw4-q2-d", "text": "They arrived yesterday." }
+              ],
+              "correctAnswer": "iw4-q2-c",
+              "explanation": "'Red' is an adjective describing the car."
+            },
+            {
+              "id": "iw4-q3",
+              "type": "multipleChoice",
+              "text": "Choose the sentence with the correct verb tense:",
+              "options": [
+                { "id": "iw4-q3-a", "text": "Yesterday, they are going to the beach." },
+                { "id": "iw4-q3-b", "text": "Yesterday, they went to the beach." },
+                { "id": "iw4-q3-c", "text": "Yesterday, they goes to the beach." },
+                { "id": "iw4-q3-d", "text": "Yesterday, they will go to the beach." }
+              ],
+              "correctAnswer": "iw4-q3-b",
+              "explanation": "Since 'yesterday' indicates past time, the past tense 'went' is correct."
+            },
+            {
+              "id": "iw4-q4",
+              "type": "multipleChoice",
+              "text": "Which sentence contains a pronoun?",
+              "options": [
+                { "id": "iw4-q4-a", "text": "The cat chased the mouse." },
+                { "id": "iw4-q4-b", "text": "She walked to the store." },
+                { "id": "iw4-q4-c", "text": "Birds sing in the morning." },
+                { "id": "iw4-q4-d", "text": "The tree has green leaves." }
+              ],
+              "correctAnswer": "iw4-q4-b",
+              "explanation": "'She' is a pronoun that replaces a specific person's name."
+            },
+            {
+              "id": "iw4-q5",
+              "type": "multipleChoice",
+              "text": "Which of these shows the correct order for writing a paragraph?",
+              "options": [
+                { "id": "iw4-q5-a", "text": "Supporting details, topic sentence, conclusion" },
+                { "id": "iw4-q5-b", "text": "Conclusion, topic sentence, supporting details" },
+                { "id": "iw4-q5-c", "text": "Topic sentence, supporting details, conclusion" },
+                { "id": "iw4-q5-d", "text": "Supporting details, conclusion, topic sentence" }
+              ],
+              "correctAnswer": "iw4-q5-c",
+              "explanation": "A well-structured paragraph typically begins with a topic sentence, followed by supporting details, and ends with a concluding sentence."
+            }
+          ]
+        }
+      ],
+      "grammar": [
+        {
+          "examId": "icas-grammar-year4-1",
+          "title": "ICAS Grammar - Year 4",
+          "year": 4,
+          "timeLimit": 35,
+          "questions": [
+            {
+              "id": "ig4-q1",
+              "type": "multipleChoice",
+              "text": "Which sentence uses a verb in the past tense?",
+              "options": [
+                { "id": "ig4-q1-a", "text": "They walk to school every day." },
+                { "id": "ig4-q1-b", "text": "They will walk to school tomorrow." },
+                { "id": "ig4-q1-c", "text": "They walked to school yesterday." },
+                { "id": "ig4-q1-d", "text": "They are walking to school now." }
+              ],
+              "correctAnswer": "ig4-q1-c",
+              "explanation": "'Walked' is the past tense form of the verb 'walk'."
+            },
+            {
+              "id": "ig4-q2",
+              "type": "multipleChoice",
+              "text": "Which word in this sentence is a noun?\n\nThe happy dog chased the red ball quickly across the green park.",
+              "options": [
+                { "id": "ig4-q2-a", "text": "happy" },
+                { "id": "ig4-q2-b", "text": "chased" },
+                { "id": "ig4-q2-c", "text": "quickly" },
+                { "id": "ig4-q2-d", "text": "park" }
+              ],
+              "correctAnswer": "ig4-q2-d",
+              "explanation": "'Park' is a noun - it names a place. 'Happy' is an adjective, 'chased' is a verb, and 'quickly' is an adverb."
+            },
+            {
+              "id": "ig4-q3",
+              "type": "multipleChoice",
+              "text": "Which sentence has a subject and predicate in the correct order?",
+              "options": [
+                { "id": "ig4-q3-a", "text": "Ran to the store quickly John." },
+                { "id": "ig4-q3-b", "text": "To the store quickly ran John." },
+                { "id": "ig4-q3-c", "text": "John ran to the store quickly." },
+                { "id": "ig4-q3-d", "text": "Quickly John to the store ran." }
+              ],
+              "correctAnswer": "ig4-q3-c",
+              "explanation": "In English, sentences typically follow the subject-verb-object order. 'John' (subject) 'ran' (verb) 'to the store quickly' (predicate)."
+            },
+            {
+              "id": "ig4-q4",
+              "type": "multipleChoice",
+              "text": "Which sentence uses an adverb correctly?",
+              "options": [
+                { "id": "ig4-q4-a", "text": "She sang beautiful at the concert." },
+                { "id": "ig4-q4-b", "text": "She sang beautifully at the concert." },
+                { "id": "ig4-q4-c", "text": "She sang beautifuly at the concert." },
+                { "id": "ig4-q4-d", "text": "She sang beauty at the concert." }
+              ],
+              "correctAnswer": "ig4-q4-b",
+              "explanation": "'Beautifully' is the correct adverb form describing how she sang. Adverbs often end in '-ly'."
+            },
+            {
+              "id": "ig4-q5",
+              "type": "multipleChoice",
+              "text": "Which sentence uses a preposition correctly?",
+              "options": [
+                { "id": "ig4-q5-a", "text": "The cat jumped the table." },
+                { "id": "ig4-q5-b", "text": "The cat jumped on the table." },
+                { "id": "ig4-q5-c", "text": "The cat jumped between." },
+                { "id": "ig4-q5-d", "text": "The cat jumped over with the table." }
+              ],
+              "correctAnswer": "ig4-q5-b",
+              "explanation": "'On' is a preposition that correctly shows the relationship between the cat and the table."
+            }
+          ]
+        }
+      ],
+      "mathematics": [
+        {
+          "examId": "icas-mathematics-year4-1",
+          "title": "ICAS Mathematics - Year 4",
+          "year": 4,
+          "timeLimit": 45,
+          "questions": [
+            {
+              "id": "im4-q1",
+              "type": "multipleChoice",
+              "text": "Calculate: 37 × 5",
+              "options": [
+                { "id": "im4-q1-a", "text": "175" },
+                { "id": "im4-q1-b", "text": "185" },
+                { "id": "im4-q1-c", "text": "195" },
+                { "id": "im4-q1-d", "text": "205" }
+              ],
+              "correctAnswer": "im4-q1-b",
+              "explanation": "37 × 5 = (30 × 5) + (7 × 5) = 150 + 35 = 185"
+            },
+            {
+              "id": "im4-q2",
+              "type": "multipleChoice",
+              "text": "A rectangle has a length of 12 cm and a width of 7 cm. What is its perimeter?",
+              "options": [
+                { "id": "im4-q2-a", "text": "19 cm" },
+                { "id": "im4-q2-b", "text": "38 cm" },
+                { "id": "im4-q2-c", "text": "48 cm" },
+                { "id": "im4-q2-d", "text": "84 cm" }
+              ],
+              "correctAnswer": "im4-q2-b",
+              "explanation": "Perimeter = 2 × (length + width) = 2 × (12 + 7) = 2 × 19 = 38 cm"
+            },
+            {
+              "id": "im4-q3",
+              "type": "multipleChoice",
+              "text": "What is the value of the underlined digit in the number 5,278?",
+              "options": [
+                { "id": "im4-q3-a", "text": "200" },
+                { "id": "im4-q3-b", "text": "20" },
+                { "id": "im4-q3-c", "text": "2" },
+                { "id": "im4-q3-d", "text": "2,000" }
+              ],
+              "correctAnswer": "im4-q3-a",
+              "explanation": "In 5,278, the digit 2 is in the hundreds place, so its value is 2 × 100 = 200."
+            },
+            {
+              "id": "im4-q4",
+              "type": "multipleChoice",
+              "text": "Sarah had $45. She spent $18 on a book and $12 on lunch. How much money does she have left?",
+              "options": [
+                { "id": "im4-q4-a", "text": "$10" },
+                { "id": "im4-q4-b", "text": "$15" },
+                { "id": "im4-q4-c", "text": "$20" },
+                { "id": "im4-q4-d", "text": "$25" }
+              ],
+              "correctAnswer": "im4-q4-b",
+              "explanation": "Sarah spent a total of $18 + $12 = $30. She had $45, so she has $45 - $30 = $15 left."
+            },
+            {
+              "id": "im4-q5",
+              "type": "multipleChoice",
+              "text": "What fraction of the shape is shaded?",
+              "options": [
+                { "id": "im4-q5-a", "text": "1/2" },
+                { "id": "im4-q5-b", "text": "1/3" },
+                { "id": "im4-q5-c", "text": "2/3" },
+                { "id": "im4-q5-d", "text": "3/4" }
+              ],
+              "correctAnswer": "im4-q5-c",
+              "explanation": "The shape is divided into 3 equal parts, and 2 of those parts are shaded. So 2/3 of the shape is shaded."
+            }
+          ]
+        }
+      ],
+      "digital": [
+        {
+          "examId": "icas-digital-year4-1",
+          "title": "ICAS Digital Technologies - Year 4",
+          "year": 4,
+          "timeLimit": 35,
+          "questions": [
+            {
+              "id": "id4-q1",
+              "type": "multipleChoice",
+              "text": "Which of these is an input device?",
+              "options": [
+                { "id": "id4-q1-a", "text": "Printer" },
+                { "id": "id4-q1-b", "text": "Monitor" },
+                { "id": "id4-q1-c", "text": "Speaker" },
+                { "id": "id4-q1-d", "text": "Keyboard" }
+              ],
+              "correctAnswer": "id4-q1-d",
+              "explanation": "A keyboard is an input device because it allows users to input data into a computer."
+            },
+            {
+              "id": "id4-q2",
+              "type": "multipleChoice",
+              "text": "What does 'URL' stand for?",
+              "options": [
+                { "id": "id4-q2-a", "text": "Universal Resource Locator" },
+                { "id": "id4-q2-b", "text": "Uniform Resource Locator" },
+                { "id": "id4-q2-c", "text": "United Resource Link" },
+                { "id": "id4-q2-d", "text": "Universal Reference Link" }
+              ],
+              "correctAnswer": "id4-q2-b",
+              "explanation": "URL stands for Uniform Resource Locator, which is the address used to access websites on the internet."
+            },
+            {
+              "id": "id4-q3",
+              "type": "trueFalse",
+              "text": "Saving a file means storing it permanently on a computer.",
+              "correctAnswer": true,
+              "explanation": "Saving a file means storing it on a storage device (like a hard drive) so it can be accessed later, even after the computer is turned off."
+            },
+            {
+              "id": "id4-q4",
+              "type": "multipleChoice",
+              "text": "Which of these is NOT a way to stay safe online?",
+              "options": [
+                { "id": "id4-q4-a", "text": "Use strong passwords" },
+                { "id": "id4-q4-b", "text": "Share personal information with everyone" },
+                { "id": "id4-q4-c", "text": "Only visit trusted websites" },
+                { "id": "id4-q4-d", "text": "Ask an adult before downloading files" }
+              ],
+              "correctAnswer": "id4-q4-b",
+              "explanation": "Sharing personal information with everyone online is not safe. Personal information should be kept private to protect your identity and safety."
+            },
+            {
+              "id": "id4-q5",
+              "type": "multipleChoice",
+              "text": "What is an algorithm?",
+              "options": [
+                { "id": "id4-q5-a", "text": "A type of computer virus" },
+                { "id": "id4-q5-b", "text": "A set of step-by-step instructions to complete a task" },
+                { "id": "id4-q5-c", "text": "A special type of keyboard" },
+                { "id": "id4-q5-d", "text": "A computer game" }
+              ],
+              "correctAnswer": "id4-q5-b",
+              "explanation": "An algorithm is a set of step-by-step instructions designed to perform a specific task or solve a problem."
+            }
+          ]
+        }
+      ]
+    },
+    "icas_all_stars": {
+      "english": [
+        {
+          "examId": "icas-allstars-english-year5-1",
+          "title": "ICAS All Stars English - Year 5",
+          "year": 5,
+          "timeLimit": 60,
+          "questions": [
+            {
+              "id": "iae5-q1",
+              "type": "multipleChoice",
+              "text": "Read the passage and answer the question:\n\nThe ancient city of Pompeii was buried under ash when Mount Vesuvius erupted in 79 CE. For centuries, the city lay forgotten until its rediscovery in 1748. Today, archaeologists continue to excavate this remarkably preserved site, providing invaluable insights into daily life in the Roman Empire.\n\nWhich of these best describes the main purpose of this passage?",
+              "options": [
+                { "id": "iae5-q1-a", "text": "To explain how volcanoes erupt" },
+                { "id": "iae5-q1-b", "text": "To describe the history and significance of Pompeii" },
+                { "id": "iae5-q1-c", "text": "To argue for more funding for archaeological digs" },
+                { "id": "iae5-q1-d", "text": "To compare ancient and modern cities" }
+              ],
+              "correctAnswer": "iae5-q1-b",
+              "explanation": "The passage provides a brief history of Pompeii and explains its archaeological significance, making option B the best answer."
+            },
+            {
+              "id": "iae5-q2",
+              "type": "multipleChoice",
+              "text": "Which sentence contains a metaphor?",
+              "options": [
+                { "id": "iae5-q2-a", "text": "The rain fell heavily all afternoon." },
+                { "id": "iae5-q2-b", "text": "The mountain was covered with snow." },
+                { "id": "iae5-q2-c", "text": "Her voice was music to my ears." },
+                { "id": "iae5-q2-d", "text": "The cat is as quiet as a mouse." }
+              ],
+              "correctAnswer": "iae5-q2-c",
+              "explanation": "'Her voice was music to my ears' is a metaphor because it directly compares her voice to music without using 'like' or 'as'. Option D contains a simile, not a metaphor."
+            },
+            {
+              "id": "iae5-q3",
+              "type": "multipleChoice",
+              "text": "Identify the complex sentence:",
+              "options": [
+                { "id": "iae5-q3-a", "text": "I went to the store and bought some apples." },
+                { "id": "iae5-q3-b", "text": "The dog barked loudly." },
+                { "id": "iae5-q3-c", "text": "Although it was raining, we still went to the park." },
+                { "id": "iae5-q3-d", "text": "The weather was cold, dark, and miserable." }
+              ],
+              "correctAnswer": "iae5-q3-c",
+              "explanation": "A complex sentence contains an independent clause and at least one dependent clause. 'Although it was raining' is a dependent clause, and 'we still went to the park' is an independent clause."
+            },
+            {
+              "id": "iae5-q4",
+              "type": "multipleChoice",
+              "text": "Choose the sentence with correct subject-verb agreement:",
+              "options": [
+                { "id": "iae5-q4-a", "text": "Each of the students are working on their projects." },
+                { "id": "iae5-q4-b", "text": "The committee have decided to postpone the meeting." },
+                { "id": "iae5-q4-c", "text": "Neither of the options seem good to me." },
+                { "id": "iae5-q4-d", "text": "Everyone in the class has finished their homework." }
+              ],
+              "correctAnswer": "iae5-q4-d",
+              "explanation": "'Everyone' is singular and takes the singular verb 'has'. In the other sentences, 'each' requires 'is', 'committee' requires 'has', and 'neither' requires 'seems'."
+            },
+            {
+              "id": "iae5-q5",
+              "type": "multipleChoice",
+              "text": "Which word is most nearly opposite in meaning to 'benevolent'?",
+              "options": [
+                { "id": "iae5-q5-a", "text": "Helpful" },
+                { "id": "iae5-q5-b", "text": "Malicious" },
+                { "id": "iae5-q5-c", "text": "Generous" },
+                { "id": "iae5-q5-d", "text": "Cheerful" }
+              ],
+              "correctAnswer": "iae5-q5-b",
+              "explanation": "'Benevolent' means kind and well-meaning. 'Malicious' means intending to do harm, which is the opposite of benevolent."
+            }
+          ]
+        }
+      ],
+      "mathematics": [
+        {
+          "examId": "icas-allstars-mathematics-year5-1",
+          "title": "ICAS All Stars Mathematics - Year 5",
+          "year": 5,
+          "timeLimit": 60,
+          "questions": [
+            {
+              "id": "iam5-q1",
+              "type": "multipleChoice",
+              "text": "If 3x + 7 = 22, what is the value of x?",
+              "options": [
+                { "id": "iam5-q1-a", "text": "3" },
+                { "id": "iam5-q1-b", "text": "5" },
+                { "id": "iam5-q1-c", "text": "7" },
+                { "id": "iam5-q1-d", "text": "15" }
+              ],
+              "correctAnswer": "iam5-q1-b",
+              "explanation": "3x + 7 = 22\n3x = 22 - 7\n3x = 15\nx = 5"
+            },
+            {
+              "id": "iam5-q2",
+              "type": "multipleChoice",
+              "text": "A square has a perimeter of 36 cm. What is its area?",
+              "options": [
+                { "id": "iam5-q2-a", "text": "9 cm²" },
+                { "id": "iam5-q2-b", "text": "36 cm²" },
+                { "id": "iam5-q2-c", "text": "81 cm²" },
+                { "id": "iam5-q2-d", "text": "324 cm²" }
+              ],
+              "correctAnswer": "iam5-q2-c",
+              "explanation": "The perimeter is 36 cm, so each side is 36 ÷ 4 = 9 cm.\nThe area is 9 × 9 = 81 cm²."
+            },
+            {
+              "id": "iam5-q3",
+              "type": "multipleChoice",
+              "text": "Which of these fractions is equivalent to 0.75?",
+              "options": [
+                { "id": "iam5-q3-a", "text": "3/4" },
+                { "id": "iam5-q3-b", "text": "7/5" },
+                { "id": "iam5-q3-c", "text": "3/5" },
+                { "id": "iam5-q3-d", "text": "7/10" }
+              ],
+              "correctAnswer": "iam5-q3-a",
+              "explanation": "0.75 = 75/100 = 3/4 (when simplified)"
+            },
+            {
+              "id": "iam5-q4",
+              "type": "multipleChoice",
+              "text": "A recipe requires 3/4 cup of flour for 6 muffins. How much flour is needed for 15 muffins?",
+              "options": [
+                { "id": "iam5-q4-a", "text": "1 1/4 cups" },
+                { "id": "iam5-q4-b", "text": "1 7/8 cups" },
+                { "id": "iam5-q4-c", "text": "1 5/6 cups" },
+                { "id": "iam5-q4-d", "text": "2 1/4 cups" }
+              ],
+              "correctAnswer": "iam5-q4-b",
+              "explanation": "For 6 muffins, 3/4 cup is needed.\nFor 1 muffin, 3/4 ÷ 6 = 1/8 cup is needed.\nFor 15 muffins, 1/8 × 15 = 15/8 = 1 7/8 cups are needed."
+            },
+            {
+              "id": "iam5-q5",
+              "type": "multipleChoice",
+              "text": "If a car travels at 60 km/h, how far will it travel in 45 minutes?",
+              "options": [
+                { "id": "iam5-q5-a", "text": "27 km" },
+                { "id": "iam5-q5-b", "text": "30 km" },
+                { "id": "iam5-q5-c", "text": "45 km" },
+                { "id": "iam5-q5-d", "text": "60 km" }
+              ],
+              "correctAnswer": "iam5-q5-c",
+              "explanation": "45 minutes = 45/60 = 3/4 of an hour\nDistance = speed × time = 60 km/h × 3/4 h = 45 km"
+            }
+          ]
+        }
+      ],
+      "science": [
+        {
+          "examId": "icas-allstars-science-year5-1",
+          "title": "ICAS All Stars Science - Year 5",
+          "year": 5,
+          "timeLimit": 60,
+          "questions": [
+            {
+              "id": "ias5-q1",
+              "type": "multipleChoice",
+              "text": "Which process allows plants to make their own food using sunlight?",
+              "options": [
+                { "id": "ias5-q1-a", "text": "Respiration" },
+                { "id": "ias5-q1-b", "text": "Photosynthesis" },
+                { "id": "ias5-q1-c", "text": "Transpiration" },
+                { "id": "ias5-q1-d", "text": "Germination" }
+              ],
+              "correctAnswer": "ias5-q1-b",
+              "explanation": "Photosynthesis is the process by which plants use sunlight, water, and carbon dioxide to create oxygen and energy in the form of sugar."
+            },
+            {
+              "id": "ias5-q2",
+              "type": "multipleChoice",
+              "text": "Which of these is NOT a renewable energy source?",
+              "options": [
+                { "id": "ias5-q2-a", "text": "Solar power" },
+                { "id": "ias5-q2-b", "text": "Wind power" },
+                { "id": "ias5-q2-c", "text": "Coal" },
+                { "id": "ias5-q2-d", "text": "Hydroelectric power" }
+              ],
+              "correctAnswer": "ias5-q2-c",
+              "explanation": "Coal is a non-renewable fossil fuel that takes millions of years to form. The other options are renewable energy sources that can be naturally replenished."
+            },
+            {
+              "id": "ias5-q3",
+              "type": "multipleChoice",
+              "text": "Which organ system is responsible for removing waste products from the blood?",
+              "options": [
+                { "id": "ias5-q3-a", "text": "Digestive system" },
+                { "id": "ias5-q3-b", "text": "Respiratory system" },
+                { "id": "ias5-q3-c", "text": "Urinary system" },
+                { "id": "ias5-q3-d", "text": "Circulatory system" }
+              ],
+              "correctAnswer": "ias5-q3-c",
+              "explanation": "The urinary system, which includes the kidneys, filters and removes waste products from the blood and eliminates them as urine."
+            },
+            {
+              "id": "ias5-q4",
+              "type": "multipleChoice",
+              "text": "When ice melts into water, what type of physical change occurs?",
+              "options": [
+                { "id": "ias5-q4-a", "text": "Evaporation" },
+                { "id": "ias5-q4-b", "text": "Condensation" },
+                { "id": "ias5-q4-c", "text": "Sublimation" },
+                { "id": "ias5-q4-d", "text": "Melting" }
+              ],
+              "correctAnswer": "ias5-q4-d",
+              "explanation": "Melting is the physical change that occurs when a solid (ice) turns into a liquid (water) due to an increase in temperature."
+            },
+            {
+              "id": "ias5-q5",
+              "type": "trueFalse",
+              "text": "All metals are good conductors of electricity.",
+              "correctAnswer": true,
+              "explanation": "Metals have free electrons that can move and carry electric current, making them good conductors of electricity. However, some metals conduct electricity better than others."
+            }
+          ]
+        }
+      ],
+      "reasoning": [
+        {
+          "examId": "icas-allstars-reasoning-year5-1",
+          "title": "ICAS All Stars Reasoning - Year 5",
+          "year": 5,
+          "timeLimit": 60,
+          "questions": [
+            {
+              "id": "iar5-q1",
+              "type": "multipleChoice",
+              "text": "Which number comes next in this sequence? 2, 6, 18, 54, __",
+              "options": [
+                { "id": "iar5-q1-a", "text": "108" },
+                { "id": "iar5-q1-b", "text": "162" },
+                { "id": "iar5-q1-c", "text": "216" },
+                { "id": "iar5-q1-d", "text": "324" }
+              ],
+              "correctAnswer": "iar5-q1-b",
+              "explanation": "Each number in the sequence is multiplied by 3 to get the next number: 2 × 3 = 6, 6 × 3 = 18, 18 × 3 = 54, 54 × 3 = 162."
+            },
+            {
+              "id": "iar5-q2",
+              "type": "multipleChoice",
+              "text": "If APPLE is coded as 1 16 16 12 5, how would BANANA be coded using the same system?",
+              "options": [
+                { "id": "iar5-q2-a", "text": "2 1 14 1 14 1" },
+                { "id": "iar5-q2-b", "text": "2 1 13 1 13 1" },
+                { "id": "iar5-q2-c", "text": "3 4 5 6 7 8" },
+                { "id": "iar5-q2-d", "text": "1 2 3 4 5 6" }
+              ],
+              "correctAnswer": "iar5-q2-a",
+              "explanation": "The coding system uses the position of each letter in the alphabet: A=1, P=16, etc. For BANANA: B=2, A=1, N=14, A=1, N=14, A=1."
+            },
+            {
+              "id": "iar5-q3",
+              "type": "multipleChoice",
+              "text": "Which of these belongs with the group: Square, Rectangle, Triangle, Hexagon?",
+              "options": [
+                { "id": "iar5-q3-a", "text": "Circle" },
+                { "id": "iar5-q3-b", "text": "Cube" },
+                { "id": "iar5-q3-c", "text": "Pentagon" },
+                { "id": "iar5-q3-d", "text": "Sphere" }
+              ],
+              "correctAnswer": "iar5-q3-c",
+              "explanation": "The group consists of 2D shapes with straight edges (polygons). Pentagon is the only option that fits this pattern, as circles and spheres have curved edges and a cube is a 3D shape."
+            },
+            {
+              "id": "iar5-q4",
+              "type": "multipleChoice",
+              "text": "If all Zorks are Flips, and some Flips are Yorks, which of these statements must be true?",
+              "options": [
+                { "id": "iar5-q4-a", "text": "All Flips are Zorks" },
+                { "id": "iar5-q4-b", "text": "Some Zorks are Yorks" },
+                { "id": "iar5-q4-c", "text": "No Yorks are Zorks" },
+                { "id": "iar5-q4-d", "text": "All Yorks are Flips" }
+              ],
+              "correctAnswer": "iar5-q4-b",
+              "explanation": "If all Zorks are Flips and some Flips are Yorks, then some Zorks might also be Yorks. So, some Zorks are Yorks is a statement that could be true, but is not necessarily true."
+            },
+            {
+              "id": "iar5-q5",
+              "type": "multipleChoice",
+              "text": "A train leaves station A at 10:15 am and travels to station B at a speed of 80 km/h. If the distance between stations A and B is 200 km, at what time will the train arrive at station B?",
+              "options": [
+                { "id": "iar5-q5-a", "text": "12:15 pm" },
+                { "id": "iar5-q5-b", "text": "12:45 pm" },
+                { "id": "iar5-q5-c", "text": "1:15 pm" },
+                { "id": "iar5-q5-d", "text": "2:15 pm" }
+              ],
+              "correctAnswer": "iar5-q5-b",
+              "explanation": "Time = Distance ÷ Speed = 200 km ÷ 80 km/h = 2.5 hours = 2 hours and 30 minutes. Starting at 10:15 am and adding 2 hours and 30 minutes gives 12:45 pm."
+            }
+          ]
+        }
+      ],
+      "general_knowledge": [
+        {
+          "examId": "icas-allstars-gk-year5-1",
+          "title": "ICAS All Stars General Knowledge - Year 5",
+          "year": 5,
+          "timeLimit": 60,
+          "questions": [
+            {
+              "id": "iagk5-q1",
+              "type": "multipleChoice",
+              "text": "Which of these is NOT one of the seven continents?",
+              "options": [
+                { "id": "iagk5-q1-a", "text": "Antarctica" },
+                { "id": "iagk5-q1-b", "text": "Australia" },
+                { "id": "iagk5-q1-c", "text": "Atlantis" },
+                { "id": "iagk5-q1-d", "text": "Africa" }
+              ],
+              "correctAnswer": "iagk5-q1-c",
+              "explanation": "Atlantis is a mythical island, not a continent. The seven continents are Africa, Antarctica, Asia, Australia (Oceania), Europe, North America, and South America."
+            },
+            {
+              "id": "iagk5-q2",
+              "type": "multipleChoice",
+              "text": "Which famous scientist developed the theory of relativity?",
+              "options": [
+                { "id": "iagk5-q2-a", "text": "Isaac Newton" },
+                { "id": "iagk5-q2-b", "text": "Albert Einstein" },
+                { "id": "iagk5-q2-c", "text": "Charles Darwin" },
+                { "id": "iagk5-q2-d", "text": "Marie Curie" }
+              ],
+              "correctAnswer": "iagk5-q2-b",
+              "explanation": "Albert Einstein developed the theory of relativity in the early 20th century, which revolutionized our understanding of space, time, and gravity."
+            },
+            {
+              "id": "iagk5-q3",
+              "type": "multipleChoice",
+              "text": "Which of these animals is NOT a mammal?",
+              "options": [
+                { "id": "iagk5-q3-a", "text": "Dolphin" },
+                { "id": "iagk5-q3-b", "text": "Bat" },
+                { "id": "iagk5-q3-c", "text": "Platypus" },
+                { "id": "iagk5-q3-d", "text": "Penguin" }
+              ],
+              "correctAnswer": "iagk5-q3-d",
+              "explanation": "Penguins are birds, not mammals. Dolphins, bats, and even the unusual platypus (which lays eggs) are all classified as mammals because they have hair/fur and produce milk for their young."
+            },
+            {
+              "id": "iagk5-q4",
+              "type": "multipleChoice",
+              "text": "Which of these famous landmarks is located in Australia?",
+              "options": [
+                { "id": "iagk5-q4-a", "text": "The Eiffel Tower" },
+                { "id": "iagk5-q4-b", "text": "The Great Wall" },
+                { "id": "iagk5-q4-c", "text": "Uluru (Ayers Rock)" },
+                { "id": "iagk5-q4-d", "text": "The Statue of Liberty" }
+              ],
+              "correctAnswer": "iagk5-q4-c",
+              "explanation": "Uluru, also known as Ayers Rock, is a large sandstone formation located in the Northern Territory of Australia."
+            },
+            {
+              "id": "iagk5-q5",
+              "type": "multipleChoice",
+              "text": "Which instrument is used to measure air pressure?",
+              "options": [
+                { "id": "iagk5-q5-a", "text": "Thermometer" },
+                { "id": "iagk5-q5-b", "text": "Barometer" },
+                { "id": "iagk5-q5-c", "text": "Hygrometer" },
+                { "id": "iagk5-q5-d", "text": "Anemometer" }
+              ],
+              "correctAnswer": "iagk5-q5-b",
+              "explanation": "A barometer is used to measure atmospheric pressure. A thermometer measures temperature, a hygrometer measures humidity, and an anemometer measures wind speed."
+            }
+          ]
+        }
+      ],
+      "digital_literacy": [
+        {
+          "examId": "icas-allstars-dl-year5-1",
+          "title": "ICAS All Stars Digital Literacy - Year 5",
+          "year": 5,
+          "timeLimit": 60,
+          "questions": [
+            {
+              "id": "iadl5-q1",
+              "type": "multipleChoice",
+              "text": "What does 'cyberbullying' refer to?",
+              "options": [
+                { "id": "iadl5-q1-a", "text": "Using computers to solve math problems" },
+                { "id": "iadl5-q1-b", "text": "Teaching robots to perform tasks" },
+                { "id": "iadl5-q1-c", "text": "Bullying that occurs using digital devices and platforms" },
+                { "id": "iadl5-q1-d", "text": "Creating online puzzles for others to solve" }
+              ],
+              "correctAnswer": "iadl5-q1-c",
+              "explanation": "Cyberbullying refers to bullying behavior that takes place through digital devices like cell phones, computers, and tablets, on platforms such as social media, messaging apps, and gaming communities."
+            },
+            {
+              "id": "iadl5-q2",
+              "type": "multipleChoice",
+              "text": "Which of these is the best practice for creating secure passwords?",
+              "options": [
+                { "id": "iadl5-q2-a", "text": "Use the same password for all your accounts" },
+                { "id": "iadl5-q2-b", "text": "Use simple passwords that are easy to remember" },
+                { "id": "iadl5-q2-c", "text": "Include your name and birthdate in your passwords" },
+                { "id": "iadl5-q2-d", "text": "Use a mix of letters, numbers, and special characters" }
+              ],
+              "correctAnswer": "iadl5-q2-d",
+              "explanation": "Strong passwords should include a combination of uppercase and lowercase letters, numbers, and special characters to make them harder to guess or crack."
+            },
+            {
+              "id": "iadl5-q3",
+              "type": "multipleChoice",
+              "text": "What is 'phishing'?",
+              "options": [
+                { "id": "iadl5-q3-a", "text": "A type of computer virus" },
+                { "id": "iadl5-q3-b", "text": "A technique to catch large amounts of fish" },
+                { "id": "iadl5-q3-c", "text": "An attempt to trick people into revealing personal information" },
+                { "id": "iadl5-q3-d", "text": "A method for backing up computer files" }
+              ],
+              "correctAnswer": "iadl5-q3-c",
+              "explanation": "Phishing is a cybercrime where targets are contacted by someone posing as a legitimate institution to trick them into providing sensitive data such as passwords, banking information, or credit card details."
+            },
+            {
+              "id": "iadl5-q4",
+              "type": "multipleChoice",
+              "text": "What does HTML stand for in web development?",
+              "options": [
+                { "id": "iadl5-q4-a", "text": "Hyper Text Markup Language" },
+                { "id": "iadl5-q4-b", "text": "High Tech Modern Language" },
+                { "id": "iadl5-q4-c", "text": "Home Tool Management Language" },
+                { "id": "iadl5-q4-d", "text": "Hyperlink Text Management Language" }
+              ],
+              "correctAnswer": "iadl5-q4-a",
+              "explanation": "HTML stands for Hyper Text Markup Language, which is the standard language used to create web pages and web applications."
+            },
+            {
+              "id": "iadl5-q5",
+              "type": "trueFalse",
+              "text": "Everything you read on the internet is true and accurate.",
+              "correctAnswer": false,
+              "explanation": "Information on the internet comes from many different sources with varying levels of accuracy, bias, and reliability. It's important to critically evaluate information and check multiple reliable sources."
+            }
+          ]
+        }
+      ]
+    }
+  }

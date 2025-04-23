@@ -1,5 +1,6 @@
 // src/utils/examUtils.js
 import { STORAGE_KEYS } from './constants';
+import examsData from '../data/exam.json';
 
 /**
  * Get questions for a subject, filtered by exam type and year if provided
@@ -10,15 +11,100 @@ import { STORAGE_KEYS } from './constants';
  * @returns {Array} Array of questions
  */
 export const getQuestions = (subjectId, examType, year, examId) => {
-  // For a real app, this would fetch from an API or database based on all parameters
-  // For now, we'll return the same questions but could modify them based on the params
+  try {
+    console.log(`Loading questions for: Subject: ${subjectId}, Type: ${examType}, Year: ${year}, Exam: ${examId}`);
+    
+    // If we have a specific examId, return questions for that exam
+    if (examId) {
+      const exam = getExamById(examId);
+      return exam ? exam.questions : [];
+    }
+    
+    // If we have type, year, and subject, find matching exam
+    if (examType && year && subjectId) {
+      // Find exams matching the criteria
+      const matchingExams = findExams(examType, subjectId, year);
+      
+      // Return questions from first matching exam, if any
+      if (matchingExams.length > 0) {
+        return matchingExams[0].questions;
+      }
+    }
+    
+    // For backward compatibility or fallback
+    return getDefaultQuestions(subjectId);
+  } catch (error) {
+    console.error('Error loading questions:', error);
+    return getDefaultQuestions(subjectId);
+  }
+};
+
+/**
+ * Get a specific exam by ID
+ * @param {string} examId - The ID of the exam
+ * @returns {Object|null} The exam object or null if not found
+ */
+const getExamById = (examId) => {
+  // Check if it's a sample exam (sample-examType-year-subject-1)
+  if (examId.startsWith('sample-')) {
+    const parts = examId.split('-');
+    if (parts.length >= 4) {
+      const examType = parts[1];
+      const year = parseInt(parts[2].replace('year', ''));
+      const subjectId = parts[3];
+      
+      // Find matching exams
+      const matchingExams = findExams(examType, subjectId, year);
+      return matchingExams.length > 0 ? matchingExams[0] : null;
+    }
+    return null;
+  }
   
-  // You could create different question sets based on examType and year
-  // or use these parameters to fetch from different endpoints
+  // Regular exam ID format: examType-year-subject-number
+  const parts = examId.split('-');
+  if (parts.length >= 4) {
+    const examType = parts[0];
+    const year = parseInt(parts[1]);
+    const subjectId = parts[2];
+    
+    // Find matching exams
+    const matchingExams = findExams(examType, subjectId, year);
+    return matchingExams.length > 0 ? matchingExams[0] : null;
+  }
   
-  // Log the parameters for debugging
-  console.log(`Loading questions for: Subject: ${subjectId}, Type: ${examType}, Year: ${year}, Exam: ${examId}`);
-  
+  return null;
+};
+
+/**
+ * Find exams matching criteria
+ * @param {string} examType - The exam type (naplan, icas, icas_all_stars)
+ * @param {string} subjectId - The subject ID
+ * @param {number} year - The year level
+ * @returns {Array} Array of matching exams
+ */
+const findExams = (examType, subjectId, year) => {
+  try {
+    // Check if we have the exam type and subject
+    if (!examsData[examType] || !examsData[examType][subjectId]) {
+      return [];
+    }
+    
+    // Filter exams by year
+    return examsData[examType][subjectId].filter(exam => 
+      exam.year === year || exam.year === parseInt(year)
+    );
+  } catch (error) {
+    console.error('Error finding exams:', error);
+    return [];
+  }
+};
+
+/**
+ * Get default questions (for backward compatibility)
+ * @param {string} subjectId - The subject ID
+ * @returns {Array} Array of default questions
+ */
+const getDefaultQuestions = (subjectId) => {
   return [
     {
       id: `${subjectId}1`,
@@ -64,40 +150,119 @@ export const getQuestions = (subjectId, examType, year, examId) => {
 };
 
 /**
- * Get exam subjects
+ * Get exam subjects based on exam type
+ * @param {string} examType - Optional exam type to filter subjects
  * @returns {Array} Array of subjects
  */
-export const getSubjects = () => {
-  return [
-    {
-      id: 'math',
-      name: 'Mathematics',
-      questionCount: 20,
-      timeLimit: 30,
-      icon: '🧮'
-    },
-    {
-      id: 'science',
-      name: 'Science',
-      questionCount: 25,
-      timeLimit: 40,
-      icon: '🔬'
-    },
-    {
-      id: 'english',
-      name: 'English',
-      questionCount: 30,
-      timeLimit: 45,
-      icon: '📚'
-    },
-    {
-      id: 'coding',
-      name: 'Coding',
-      questionCount: 15,
-      timeLimit: 30,
-      icon: '💻'
+export const getSubjects = (examType = null) => {
+  try {
+    if (examType && examsData[examType]) {
+      // Get all subjects for the given exam type
+      return Object.keys(examsData[examType]).map(subjectId => {
+        // Use the first exam for this subject to get info
+        const firstExam = examsData[examType][subjectId][0];
+        const questionCount = firstExam ? firstExam.questions.length : 0;
+        const timeLimit = firstExam ? firstExam.timeLimit : 30;
+        
+        // Map subject IDs to display names and icons
+        const subjectMappings = {
+          // NAPLAN
+          'reading': { name: 'Reading', icon: '📚' },
+          'writing': { name: 'Writing', icon: '✏️' },
+          'numeracy': { name: 'Numeracy', icon: '🔢' },
+          'language': { name: 'Language Conventions', icon: '📝' },
+          
+          // ICAS
+          'science': { name: 'Science', icon: '🧪' },
+          'spelling': { name: 'Spelling Bee', icon: '🐝' },
+          'grammar': { name: 'Grammar', icon: '📝' },
+          'mathematics': { name: 'Mathematics', icon: '🔢' },
+          'digital': { name: 'Digital Technologies', icon: '💻' },
+          
+          // ICAS All Stars
+          'english': { name: 'English', icon: '📚' },
+          'reasoning': { name: 'Reasoning', icon: '🧠' },
+          'general_knowledge': { name: 'General Knowledge', icon: '🌍' },
+          'digital_literacy': { name: 'Digital Literacy', icon: '💻' }
+        };
+        
+        const subjectInfo = subjectMappings[subjectId] || { 
+          name: subjectId.charAt(0).toUpperCase() + subjectId.slice(1), 
+          icon: '📝' 
+        };
+        
+        return {
+          id: subjectId,
+          name: subjectInfo.name,
+          questionCount,
+          timeLimit,
+          icon: subjectInfo.icon
+        };
+      });
     }
-  ];
+    
+    // If no exam type provided, return default subjects
+    return [
+      {
+        id: 'math',
+        name: 'Mathematics',
+        questionCount: 20,
+        timeLimit: 30,
+        icon: '🧮'
+      },
+      {
+        id: 'science',
+        name: 'Science',
+        questionCount: 25,
+        timeLimit: 40,
+        icon: '🔬'
+      },
+      {
+        id: 'english',
+        name: 'English',
+        questionCount: 30,
+        timeLimit: 45,
+        icon: '📚'
+      },
+      {
+        id: 'coding',
+        name: 'Coding',
+        questionCount: 15,
+        timeLimit: 30,
+        icon: '💻'
+      }
+    ];
+  } catch (error) {
+    console.error('Error getting subjects:', error);
+    return [];
+  }
+};
+
+/**
+ * Get available exams for a specific subject, exam type, and year
+ * @param {string} examType - The exam type
+ * @param {string} subjectId - The subject ID
+ * @param {number} year - The year level
+ * @returns {Array} Array of available exams
+ */
+export const getAvailableExams = (examType, subjectId, year) => {
+  try {
+    const matchingExams = findExams(examType, subjectId, year);
+    
+    // Map the actual exams to the format expected by the UI
+    return matchingExams.map((exam, index) => ({
+      id: `${examType}-${year}-${subjectId}-${index + 1}`,
+      name: `Exam ${index + 1}`,
+      grade: year,
+      type: examType,
+      subject: subjectId,
+      questionCount: exam.questions.length,
+      timeLimit: exam.timeLimit
+    }));
+  } catch (error) {
+    console.error('Error getting available exams:', error);
+    return [];
+  }
 };
 
 /**

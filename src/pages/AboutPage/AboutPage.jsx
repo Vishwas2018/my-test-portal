@@ -208,14 +208,14 @@ const AboutPage = () => {
         <AboutContent>
           <AboutSection>
             <AboutImage>
-              <img src="/api/placeholder/600/400" alt="Students studying" />
+              <img src="/api/placeholder/600/400" alt="Students preparing for exams" />
             </AboutImage>
             <AboutText>
               <SectionTitle>Our Mission</SectionTitle>
               <p>
                 At our core, we're dedicated to providing the most effective and accessible exam preparation tools for students. 
                 We believe that every child deserves the opportunity to succeed in their academic journey, 
-                and our platform is designed to make that possible through engaging, tailored practice exams.
+                and our platform is designed to make that possible through realistic, tailored practice exams.
               </p>
               <br />
               <p>
@@ -231,13 +231,13 @@ const AboutPage = () => {
               <div className="features-grid">
                 <div className="feature-item">
                   <div className="feature-icon">🎯</div>
-                  <h3>Targeted Practice</h3>
-                  <p>Content aligned with official exam formats and curriculum standards</p>
+                  <h3>Authentic Practice</h3>
+                  <p>Exams aligned with official formats and curriculum standards</p>
                 </div>
                 <div className="feature-item">
                   <div className="feature-icon">📊</div>
-                  <h3>Progress Tracking</h3>
-                  <p>Detailed analytics to monitor improvement and identify areas for growth</p>
+                  <h3>Detailed Analytics</h3>
+                  <p>Comprehensive feedback and performance tracking</p>
                 </div>
                 <div className="feature-item">
                   <div className="feature-icon">🔄</div>
@@ -247,7 +247,7 @@ const AboutPage = () => {
                 <div className="feature-item">
                   <div className="feature-icon">📱</div>
                   <h3>Multi-device Access</h3>
-                  <p>Study anytime, anywhere on any device with our responsive platform</p>
+                  <p>Practice anytime, anywhere on any device with our responsive platform</p>
                 </div>
               </div>
             </AboutText>
@@ -296,7 +296,7 @@ const AboutPage = () => {
             <h2>Ready to get started?</h2>
             <p>Try our free sample tests and see how our platform can help your child excel.</p>
             <div className="cta-buttons">
-              <Link to="/sample-test/icas" className="btn-primary">Try Free Sample Test</Link>
+              <Link to="/sample-test/icas" className="btn-primary">Try Free Sample Exam</Link>
               <Link to="/pricing" className="btn-secondary">View Pricing</Link>
             </div>
           </div>
