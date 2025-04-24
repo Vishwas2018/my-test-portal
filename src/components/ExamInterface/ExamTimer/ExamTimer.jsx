@@ -83,8 +83,11 @@ const ExamTimer = ({ duration, onTimeUp, isPaused = false }) => {
   
   // Memoize the onTimeUp callback to prevent unnecessary effect runs
   const handleTimeUp = useCallback(() => {
-    onTimeUp();
-  }, [onTimeUp]);
+    if (timeLeft <= 0) {
+      console.log("Time up callback fired");
+      onTimeUp();
+    }
+  }, [onTimeUp, timeLeft]);
   
   // Handle time progression with useCallback to stabilize the effect dependencies
   const decrementTime = useCallback(() => {
@@ -118,8 +121,8 @@ const ExamTimer = ({ duration, onTimeUp, isPaused = false }) => {
   
   // Main timer effect
   useEffect(() => {
-    // Time's up
-    if (timeLeft <= 0) {
+    // Time's up - Only trigger once when we reach zero
+    if (timeLeft === 0) {
       handleTimeUp();
       return;
     }
@@ -156,8 +159,10 @@ const ExamTimer = ({ duration, onTimeUp, isPaused = false }) => {
     };
   }, [timeLeft, showTimeWarning]);
   
-  // Calculate progress percentage
-  const progressPercentage = (timeLeft / (duration * 60)) * 100;
+  // Calculate progress percentage - Fix NaN issue
+  const progressPercentage = duration > 0 
+    ? Math.min(100, Math.max(0, (timeLeft / (duration * 60)) * 100)) 
+    : 0;
   
   // Format time as MM:SS
   const minutes = Math.floor(timeLeft / 60);

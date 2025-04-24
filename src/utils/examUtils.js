@@ -1,5 +1,6 @@
 // src/utils/examUtils.js
-import { STORAGE_KEYS } from './constants';
+import { EXAM, STORAGE_KEYS } from './constants';
+
 import examsData from '../data/exam.json';
 
 /**
@@ -14,39 +15,35 @@ export const getQuestions = (subjectId, examType, year, examId) => {
   try {
     console.log(`Loading questions for: Subject: ${subjectId}, Type: ${examType}, Year: ${year}, Exam: ${examId}`);
     
-    // If we have a specific examId, return questions for that exam
+    // Sample exams (just subject ID, no exam type)
+    if (subjectId && !examType && !year) {
+      return getDefaultQuestions(subjectId);
+    }
+    
+    // If we have a specific examId
     if (examId) {
-      const exam = getExamById(examId);
-      return exam ? exam.questions : [];
-    }
-    
-    // If we have type, year, and subject, find matching exam
-    if (examType && year && subjectId) {
-      // Find exams matching the criteria
-      const matchingExams = findExams(examType, subjectId, year);
-      
-      // Return questions from first matching exam, if any
-      if (matchingExams.length > 0) {
-        return matchingExams[0].questions;
-      }
-    }
-    
-    // For sample exams with just a subject ID (no exam type)
-    if (subjectId && !examType) {
-      // Check if subject exists in any exam type
-      for (const type in examsData) {
-        if (examsData[type][subjectId]) {
-          // Find the first available questions for this subject
-          const firstExam = examsData[type][subjectId][0];
-          if (firstExam && firstExam.questions) {
-            // Limit to 5 questions for sample exams
-            return firstExam.questions.slice(0, 5);
-          }
+      if (examsData[examType] && examsData[examType][subjectId]) {
+        // Try to find the exact exam
+        const exactExam = examsData[examType][subjectId].find(e => e.examId === examId);
+        if (exactExam && exactExam.questions) {
+          return exactExam.questions;
         }
       }
     }
     
-    // For backward compatibility or fallback
+    // If we have type, year, and subject
+    if (examType && year && subjectId) {
+      if (examsData[examType] && examsData[examType][subjectId]) {
+        const yearMatch = examsData[examType][subjectId].find(e => 
+          e.year === parseInt(year, 10)
+        );
+        if (yearMatch && yearMatch.questions) {
+          return yearMatch.questions;
+        }
+      }
+    }
+    
+    // Fallback to default questions
     return getDefaultQuestions(subjectId);
   } catch (error) {
     console.error('Error loading questions:', error);
@@ -55,77 +52,17 @@ export const getQuestions = (subjectId, examType, year, examId) => {
 };
 
 /**
- * Get a specific exam by ID
- * @param {string} examId - The ID of the exam
- * @returns {Object|null} The exam object or null if not found
- */
-const getExamById = (examId) => {
-  // Check if it's a sample exam (sample-examType-year-subject-1)
-  if (examId.startsWith('sample-')) {
-    const parts = examId.split('-');
-    if (parts.length >= 4) {
-      const examType = parts[1];
-      const year = parseInt(parts[2].replace('year', ''));
-      const subjectId = parts[3];
-      
-      // Find matching exams
-      const matchingExams = findExams(examType, subjectId, year);
-      return matchingExams.length > 0 ? matchingExams[0] : null;
-    }
-    return null;
-  }
-  
-  // Regular exam ID format: examType-year-subject-number
-  const parts = examId.split('-');
-  if (parts.length >= 4) {
-    const examType = parts[0];
-    const year = parseInt(parts[1]);
-    const subjectId = parts[2];
-    
-    // Find matching exams
-    const matchingExams = findExams(examType, subjectId, year);
-    return matchingExams.length > 0 ? matchingExams[0] : null;
-  }
-  
-  return null;
-};
-
-/**
- * Find exams matching criteria
- * @param {string} examType - The exam type (naplan, icas, icas_all_stars)
- * @param {string} subjectId - The subject ID
- * @param {number} year - The year level
- * @returns {Array} Array of matching exams
- */
-const findExams = (examType, subjectId, year) => {
-  try {
-    // Check if we have the exam type and subject
-    if (!examsData[examType] || !examsData[examType][subjectId]) {
-      return [];
-    }
-    
-    // Filter exams by year
-    return examsData[examType][subjectId].filter(exam => 
-      exam.year === year || exam.year === parseInt(year)
-    );
-  } catch (error) {
-    console.error('Error finding exams:', error);
-    return [];
-  }
-};
-
-/**
- * Get default questions (for backward compatibility)
+ * Get default questions for sample exams
  * @param {string} subjectId - The subject ID
  * @returns {Array} Array of default questions
  */
 const getDefaultQuestions = (subjectId) => {
-  // For science samples
+  // Science sample questions
   if (subjectId === 'science') {
     return [
       {
         id: `${subjectId}1`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'Which of these is a living thing?',
         options: [
           { id: 'a', text: 'Rock' },
@@ -138,7 +75,7 @@ const getDefaultQuestions = (subjectId) => {
       },
       {
         id: `${subjectId}2`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'What is the function of roots in a plant?',
         options: [
           { id: 'a', text: 'To make food using sunlight' },
@@ -151,7 +88,7 @@ const getDefaultQuestions = (subjectId) => {
       },
       {
         id: `${subjectId}3`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'Which state of matter takes the shape of its container but has a fixed volume?',
         options: [
           { id: 'a', text: 'Solid' },
@@ -164,14 +101,14 @@ const getDefaultQuestions = (subjectId) => {
       },
       {
         id: `${subjectId}4`,
-        type: 'trueFalse',
+        type: EXAM.QUESTION_TYPES.TRUE_FALSE,
         text: 'The moon produces its own light.',
         correctAnswer: false,
         explanation: 'The moon reflects light from the sun; it does not produce its own light.'
       },
       {
         id: `${subjectId}5`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'Which of these objects would sink in water?',
         options: [
           { id: 'a', text: 'A wooden block' },
@@ -185,12 +122,12 @@ const getDefaultQuestions = (subjectId) => {
     ];
   }
   
-  // For mathematics samples
+  // Mathematics sample questions
   if (subjectId === 'mathematics') {
     return [
       {
         id: `${subjectId}1`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'Calculate: 37 × 5',
         options: [
           { id: 'a', text: '175' },
@@ -203,7 +140,7 @@ const getDefaultQuestions = (subjectId) => {
       },
       {
         id: `${subjectId}2`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'A rectangle has a length of 12 cm and a width of 7 cm. What is its perimeter?',
         options: [
           { id: 'a', text: '19 cm' },
@@ -216,7 +153,7 @@ const getDefaultQuestions = (subjectId) => {
       },
       {
         id: `${subjectId}3`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'What is 25 + 37?',
         options: [
           { id: 'a', text: '52' },
@@ -229,7 +166,7 @@ const getDefaultQuestions = (subjectId) => {
       },
       {
         id: `${subjectId}4`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'Sarah had $45. She spent $18 on a book and $12 on lunch. How much money does she have left?',
         options: [
           { id: 'a', text: '$10' },
@@ -242,7 +179,7 @@ const getDefaultQuestions = (subjectId) => {
       },
       {
         id: `${subjectId}5`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'Which number comes next in this pattern: 2, 4, 6, 8, __?',
         options: [
           { id: 'a', text: '9' },
@@ -256,12 +193,12 @@ const getDefaultQuestions = (subjectId) => {
     ];
   }
   
-  // For digital technology samples
+  // Digital technologies sample questions
   if (subjectId === 'digital') {
     return [
       {
         id: `${subjectId}1`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'Which of these is an input device?',
         options: [
           { id: 'a', text: 'Printer' },
@@ -274,7 +211,7 @@ const getDefaultQuestions = (subjectId) => {
       },
       {
         id: `${subjectId}2`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'What does "URL" stand for?',
         options: [
           { id: 'a', text: 'Universal Resource Locator' },
@@ -287,14 +224,14 @@ const getDefaultQuestions = (subjectId) => {
       },
       {
         id: `${subjectId}3`,
-        type: 'trueFalse',
+        type: EXAM.QUESTION_TYPES.TRUE_FALSE,
         text: 'Saving a file means storing it permanently on a computer.',
         correctAnswer: true,
         explanation: 'Saving a file means storing it on a storage device (like a hard drive) so it can be accessed later, even after the computer is turned off.'
       },
       {
         id: `${subjectId}4`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'Which of these is NOT a way to stay safe online?',
         options: [
           { id: 'a', text: 'Use strong passwords' },
@@ -307,7 +244,7 @@ const getDefaultQuestions = (subjectId) => {
       },
       {
         id: `${subjectId}5`,
-        type: 'multipleChoice',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
         text: 'What is an algorithm?',
         options: [
           { id: 'a', text: 'A type of computer virus' },
@@ -321,11 +258,11 @@ const getDefaultQuestions = (subjectId) => {
     ];
   }
   
-  // Generic default questions
+  // Default generic questions
   return [
     {
       id: `${subjectId}1`,
-      type: 'multipleChoice',
+      type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
       text: 'What is the capital of France?',
       options: [
         { id: 'a', text: 'London' },
@@ -338,21 +275,21 @@ const getDefaultQuestions = (subjectId) => {
     },
     {
       id: `${subjectId}2`,
-      type: 'trueFalse',
+      type: EXAM.QUESTION_TYPES.TRUE_FALSE,
       text: 'The Earth revolves around the Sun.',
       correctAnswer: true,
       explanation: 'The Earth revolves around the Sun in an elliptical orbit.'
     },
     {
       id: `${subjectId}3`,
-      type: 'fillInBlank',
+      type: EXAM.QUESTION_TYPES.FILL_IN_BLANK,
       text: 'The largest planet in our solar system is ________.',
       correctAnswer: 'Jupiter',
       explanation: 'Jupiter is the largest planet in our solar system.'
     },
     {
       id: `${subjectId}4`,
-      type: 'multipleChoice',
+      type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
       text: 'Which of these is not a programming language?',
       options: [
         { id: 'a', text: 'Python' },
@@ -365,7 +302,7 @@ const getDefaultQuestions = (subjectId) => {
     },
     {
       id: `${subjectId}5`,
-      type: 'multipleChoice',
+      type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
       text: 'Which gas do plants absorb from the atmosphere?',
       options: [
         { id: 'a', text: 'Oxygen' },
@@ -385,36 +322,59 @@ const getDefaultQuestions = (subjectId) => {
  * @returns {Array} Array of subjects
  */
 export const getSubjects = (examType = null) => {
+  // Default subjects for sample exams
+  const defaultSubjects = [
+    {
+      id: 'mathematics',
+      name: 'Mathematics',
+      questionCount: 5,
+      timeLimit: 0, // No time limit for samples
+      icon: '🔢',
+      description: 'Practice solving mathematical problems'
+    },
+    {
+      id: 'science',
+      name: 'Science',
+      questionCount: 5,
+      timeLimit: 0,
+      icon: '🧪',
+      description: 'Test your knowledge of scientific concepts'
+    },
+    {
+      id: 'digital',
+      name: 'Digital Technologies',
+      questionCount: 5,
+      timeLimit: 0,
+      icon: '💻',
+      description: 'Explore digital concepts and computational thinking'
+    }
+  ];
+  
   try {
     if (examType && examsData[examType]) {
+      // Subject mappings for display
+      const subjectMappings = {
+        'reading': { name: 'Reading', icon: '📚' },
+        'writing': { name: 'Writing', icon: '✏️' },
+        'numeracy': { name: 'Numeracy', icon: '🔢' },
+        'language': { name: 'Language Conventions', icon: '📝' },
+        'science': { name: 'Science', icon: '🧪' },
+        'spelling': { name: 'Spelling Bee', icon: '🐝' },
+        'grammar': { name: 'Grammar', icon: '📝' },
+        'mathematics': { name: 'Mathematics', icon: '🔢' },
+        'digital': { name: 'Digital Technologies', icon: '💻' },
+        'english': { name: 'English', icon: '📚' },
+        'reasoning': { name: 'Reasoning', icon: '🧠' },
+        'general_knowledge': { name: 'General Knowledge', icon: '🌍' },
+        'digital_literacy': { name: 'Digital Literacy', icon: '💻' }
+      };
+      
       // Get all subjects for the given exam type
       return Object.keys(examsData[examType]).map(subjectId => {
         // Use the first exam for this subject to get info
         const firstExam = examsData[examType][subjectId][0];
-        const questionCount = firstExam ? firstExam.questions.length : 0;
-        const timeLimit = firstExam ? firstExam.timeLimit : 30;
-        
-        // Map subject IDs to display names and icons
-        const subjectMappings = {
-          // NAPLAN
-          'reading': { name: 'Reading', icon: '📚' },
-          'writing': { name: 'Writing', icon: '✏️' },
-          'numeracy': { name: 'Numeracy', icon: '🔢' },
-          'language': { name: 'Language Conventions', icon: '📝' },
-          
-          // ICAS
-          'science': { name: 'Science', icon: '🧪' },
-          'spelling': { name: 'Spelling Bee', icon: '🐝' },
-          'grammar': { name: 'Grammar', icon: '📝' },
-          'mathematics': { name: 'Mathematics', icon: '🔢' },
-          'digital': { name: 'Digital Technologies', icon: '💻' },
-          
-          // ICAS All Stars
-          'english': { name: 'English', icon: '📚' },
-          'reasoning': { name: 'Reasoning', icon: '🧠' },
-          'general_knowledge': { name: 'General Knowledge', icon: '🌍' },
-          'digital_literacy': { name: 'Digital Literacy', icon: '💻' }
-        };
+        const questionCount = firstExam?.questions?.length || 0;
+        const timeLimit = firstExam?.timeLimit || EXAM.DEFAULT_TIME_LIMIT;
         
         const subjectInfo = subjectMappings[subjectId] || { 
           name: subjectId.charAt(0).toUpperCase() + subjectId.slice(1), 
@@ -431,40 +391,10 @@ export const getSubjects = (examType = null) => {
       });
     }
     
-    // Default subjects for sample exams
-    return [
-      {
-        id: 'science',
-        name: 'Science',
-        questionCount: 5,
-        timeLimit: 0, // No time limit
-        icon: '🧪'
-      },
-      {
-        id: 'mathematics',
-        name: 'Mathematics',
-        questionCount: 5,
-        timeLimit: 0, // No time limit
-        icon: '🔢'
-      },
-      {
-        id: 'digital',
-        name: 'Digital Technologies',
-        questionCount: 5,
-        timeLimit: 0, // No time limit
-        icon: '💻'
-      },
-      {
-        id: 'english',
-        name: 'English',
-        questionCount: 5,
-        timeLimit: 0, // No time limit
-        icon: '📚'
-      }
-    ];
+    return defaultSubjects;
   } catch (error) {
     console.error('Error getting subjects:', error);
-    return [];
+    return defaultSubjects;
   }
 };
 
@@ -477,18 +407,25 @@ export const getSubjects = (examType = null) => {
  */
 export const getAvailableExams = (examType, subjectId, year) => {
   try {
-    const matchingExams = findExams(examType, subjectId, year);
+    if (!examType || !subjectId || !year) {
+      return [];
+    }
     
-    // Map the actual exams to the format expected by the UI
-    return matchingExams.map((exam, index) => ({
-      id: `${examType}-${year}-${subjectId}-${index + 1}`,
-      name: `Exam ${index + 1}`,
-      grade: year,
-      type: examType,
-      subject: subjectId,
-      questionCount: exam.questions.length,
-      timeLimit: exam.timeLimit
-    }));
+    if (examsData[examType] && examsData[examType][subjectId]) {
+      return examsData[examType][subjectId]
+        .filter(exam => exam.year === parseInt(year, 10))
+        .map((exam, index) => ({
+          id: exam.examId || `${examType}-${year}-${subjectId}-${index + 1}`,
+          name: exam.title || `${subjectId.charAt(0).toUpperCase() + subjectId.slice(1)} Exam ${index + 1}`,
+          grade: year,
+          type: examType,
+          subject: subjectId,
+          questionCount: exam.questions?.length || 0,
+          timeLimit: exam.timeLimit || EXAM.DEFAULT_TIME_LIMIT
+        }));
+    }
+    
+    return [];
   } catch (error) {
     console.error('Error getting available exams:', error);
     return [];
@@ -501,10 +438,10 @@ export const getAvailableExams = (examType, subjectId, year) => {
  */
 export const saveExamResult = (result) => {
   try {
-    // Add date to result
+    // Add date to result if not present
     const resultWithDate = {
       ...result,
-      date: new Date().toISOString()
+      date: result.date || new Date().toISOString()
     };
     
     // Get existing results

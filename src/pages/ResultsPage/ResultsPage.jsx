@@ -60,8 +60,8 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled.div`
-  background-color: ${props => props.bgColor || 'var(--light-gray)'};
-  color: ${props => props.textColor || 'var(--dark)'};
+  background-color: ${props => props.$bgColor || 'var(--light-gray)'};
+  color: ${props => props.$textColor || 'var(--dark)'};
   padding: 1.5rem;
   border-radius: var(--radius-md);
   text-align: center;
@@ -93,9 +93,9 @@ const Tab = styled.button`
   padding: 1rem 2rem;
   background: none;
   border: none;
-  border-bottom: 3px solid ${props => props.active ? 'var(--primary)' : 'transparent'};
-  color: ${props => props.active ? 'var(--primary)' : 'var(--dark-gray)'};
-  font-weight: ${props => props.active ? '700' : '500'};
+  border-bottom: 3px solid ${props => props.$active ? 'var(--primary)' : 'transparent'};
+  color: ${props => props.$active ? 'var(--primary)' : 'var(--dark-gray)'};
+  font-weight: ${props => props.$active ? '700' : '500'};
   cursor: pointer;
   transition: all 0.2s ease;
   
@@ -113,13 +113,13 @@ const FilterContainer = styled.div`
 
 const FilterButton = styled.button`
   padding: 0.5rem 1rem;
-  background-color: ${props => props.active ? props.activeColor || 'var(--primary)' : 'var(--light-gray)'};
-  color: ${props => props.active ? 'white' : 'var(--dark)'};
+  background-color: ${props => props.$active ? props.$activeColor || 'var(--primary)' : 'var(--light-gray)'};
+  color: ${props => props.$active ? 'white' : 'var(--dark)'};
   border: none;
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: all 0.2s ease;
-  font-weight: ${props => props.active ? '600' : '400'};
+  font-weight: ${props => props.$active ? '600' : '400'};
   
   &:hover {
     transform: translateY(-2px);
@@ -198,8 +198,8 @@ const StatusBadge = styled.span`
 
 const QuestionBody = styled.div`
   padding: 1.5rem;
-  background-color: ${props => props.bgColor || 'white'};
-  display: ${props => props.isOpen ? 'block' : 'none'};
+  background-color: ${props => props.$bgColor || 'white'};
+  display: ${props => props.$isOpen ? 'block' : 'none'};
 `;
 
 const QuestionText = styled.div`
@@ -222,8 +222,8 @@ const AnswerGrid = styled.div`
 const AnswerCard = styled.div`
   padding: 1rem;
   border-radius: var(--radius-md);
-  background-color: ${props => props.bgColor || 'var(--light-gray)'};
-  border: 1px solid ${props => props.borderColor || 'transparent'};
+  background-color: ${props => props.$bgColor || 'var(--light-gray)'};
+  border: 1px solid ${props => props.$borderColor || 'transparent'};
 `;
 
 const AnswerLabel = styled.div`
@@ -236,7 +236,7 @@ const AnswerLabel = styled.div`
 const AnswerText = styled.div`
   font-size: 1.1rem;
   color: ${props => props.color || 'var(--dark)'};
-  font-weight: ${props => props.bold ? '600' : '400'};
+  font-weight: ${props => props.$bold ? '600' : '400'};
 `;
 
 const ExplanationCard = styled.div`
@@ -255,8 +255,8 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button`
   padding: 0.8rem 1.5rem;
-  background-color: ${props => props.primary ? 'var(--primary)' : 'var(--white)'};
-  color: ${props => props.primary ? 'white' : 'var(--primary)'};
+  background-color: ${props => props.$primary ? 'var(--primary)' : 'var(--white)'};
+  color: ${props => props.$primary ? 'white' : 'var(--primary)'};
   border: 2px solid var(--primary);
   border-radius: var(--radius-md);
   font-weight: 600;

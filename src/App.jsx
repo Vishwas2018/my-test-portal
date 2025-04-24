@@ -4,7 +4,8 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Footer, Header } from './components/layout';
 
-import AboutPage from './pages/AboutPage'; // Import the About page
+import AboutPage from './pages/AboutPage';
+import ActivitiesPage from './pages/ActivitiesPage/ActivitiesPage';
 import { AuthProvider } from './contexts/AuthContext';
 import DashboardPage from './pages/DashboardPage';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -14,7 +15,7 @@ import ExamSelection from './pages/ExamSelection';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
-import PricingPage from './pages/PricingPage'; // Import the Pricing page
+import PricingPage from './pages/PricingPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import React from 'react';
 import ResultsPage from './pages/ResultsPage';
@@ -46,8 +47,8 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />
-                    <Route path="/about" element={<AboutPage />} /> {/* About page route */}
-                    <Route path="/pricing" element={<PricingPage />} /> {/* Pricing page route */}
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/pricing" element={<PricingPage />} />
                     <Route path="/features" element={<div className="container page-content">Features Page (Coming Soon)</div>} />
                     <Route
                       path="/dashboard"
@@ -65,13 +66,10 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
+                    {/* Add this exam route */}
                     <Route
                       path="/exam/:subjectId"
-                      element={
-                        <ProtectedRoute>
-                          <ExamPage />
-                        </ProtectedRoute>
-                      }
+                      element={<ExamPage />}
                     />
                     <Route
                       path="/results/:subjectId/:timestamp"
@@ -95,7 +93,7 @@ function App() {
 
                     {/* Exam Selection Routes */}
                     <Route path="/exam-selection" element={<ExamSelection />} />
-                    <Route path="/activities" element={<ExamSelection />} />
+                    <Route path="/activities" element={<ActivitiesPage />} />
                   </Routes>
                 </ErrorBoundary>
               </main>

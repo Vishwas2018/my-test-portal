@@ -289,22 +289,61 @@ const DashboardPage = () => {
             </div>
           </div>
         </div>
+        <PracticeSection subjects={subjects} navigate={navigate} />
+      </DashboardContainer>
+    </div>
+  );
+};
 
-        {/* Simplified Exam Selection Section */}
-        <div className="section-title">Ready to Practice?</div>
-        <p className="section-description">
-          Take a new exam to continue improving your skills
-        </p>
-        <div className="exam-selection-container">
-          <div className="exam-selection">
-            <div className="placeholder-selection">
-              <Link to="/activities" className="btn-primary">
-                Browse Available Exams
-              </Link>
+// Redesigned Practice Section Component
+/// Updated Practice Section for Dashboard
+// Add this component to your DashboardPage.jsx file
+
+const PracticeSection = ({ subjects, navigate }) => {
+  // Display featured subjects (up to 3)
+  const featuredSubjects = subjects.slice(0, 3);
+  
+  return (
+    <div className="practice-section">
+      <h2 className="section-title">Ready to Practice?</h2>
+      <p className="section-description">
+        Choose a subject or browse all exams to continue your learning journey
+      </p>
+      
+      <div className="practice-cards-container">
+        {featuredSubjects.map(subject => (
+          <div 
+            className="practice-card" 
+            key={subject.id}
+            onClick={() => navigate(`/exam/${subject.id}`)}
+          >
+            <div className="practice-card-header">
+              <div className="practice-card-icon">{subject.icon || '📝'}</div>
+              <h3 className="practice-card-title">{subject.name}</h3>
+            </div>
+            <div className="practice-card-content">
+              <p className="practice-card-description">
+                {subject.description || `Practice your ${subject.name} skills with our curated questions`}
+              </p>
+              <button className="practice-card-button">
+                Start Practice
+                <span className="button-arrow">→</span>
+              </button>
             </div>
           </div>
+        ))}
+        
+        <div className="practice-card browse-card" onClick={() => navigate('/activities')}>
+          <div className="browse-card-content">
+            <div className="browse-icon">🔍</div>
+            <h3 className="browse-title">Browse All Exams</h3>
+            <p className="browse-description">
+              Explore our full collection of practice exams across all subjects
+            </p>
+            <div className="browse-arrow">→</div>
+          </div>
         </div>
-      </DashboardContainer>
+      </div>
     </div>
   );
 };

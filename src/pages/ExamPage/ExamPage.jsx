@@ -187,21 +187,19 @@ const CompletionEmoji = styled.div`
   margin-bottom: 1rem;
 `;
 
-const TimerContainer = styled.div`
-  display: ${props => props.show ? 'block' : 'none'};
-`;
+const TimerContainer = styled.div``;
 
 const ExamPage = () => {
   const { subjectId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Extract query parameters
   const queryParams = new URLSearchParams(location.search);
   const examType = queryParams.get('type');
   const year = queryParams.get('year');
   const examId = queryParams.get('examId');
-  
+
   // State for exam info
   const [examInfo, setExamInfo] = useState(null);
   const [questions, setQuestions] = useState([]);
@@ -213,22 +211,26 @@ const ExamPage = () => {
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     const loadExamData = async () => {
       try {
         setLoading(true);
-        
+        console.log("Loading exam data for subject:", subjectId);
+
         // Load subject information
         const subjects = getSubjects();
-        const subject = subjects.find(s => s.id === subjectId);
+        console.log("Retrieved subjects:", subjects);
         
+        const subject = subjects.find(s => s.id === subjectId);
+        console.log("Found subject:", subject);
+
         if (!subject) {
           setError('Subject not found');
           setLoading(false);
           return;
         }
-        
+
         // Set exam info with additional metadata
         setExamInfo({
           id: subject.id,
@@ -239,11 +241,12 @@ const ExamPage = () => {
           year: year,
           examId: examId
         });
-        
+
         // Load questions for this subject with all metadata
         const subjectQuestions = getQuestions(subjectId, examType, year, examId);
+        console.log("Retrieved questions:", subjectQuestions.length);
         setQuestions(subjectQuestions);
-        
+
       } catch (err) {
         console.error('Error loading exam:', err);
         setError('Failed to load exam data');
@@ -251,47 +254,54 @@ const ExamPage = () => {
         setLoading(false);
       }
     };
-    
+
     loadExamData();
-    
-    // Cleanup function
-    return () => {
-      // Any cleanup needed
-    };
   }, [subjectId, examType, year, examId]);
-  
+
+  // Debug effect for tracking confirm dialog
+  useEffect(() => {
+    if (showConfirmSubmit) {
+      console.log('Submit dialog shown due to:', {
+        questionsLoaded: questions.length > 0,
+        answeredCount: Object.keys(userAnswers).length,
+        currentIndex
+      });
+    }
+  }, [showConfirmSubmit, questions.length, userAnswers, currentIndex]);
+
   const handleAnswerChange = (answer) => {
     setUserAnswers(prev => ({
       ...prev,
       [currentIndex]: answer
     }));
   };
-  
+
   const toggleFlag = () => {
-    setFlaggedQuestions(prev => 
+    setFlaggedQuestions(prev =>
       prev.includes(currentIndex)
         ? prev.filter(i => i !== currentIndex)
         : [...prev, currentIndex]
     );
   };
-  
+
   const handleTimeUp = () => {
+    console.log("Time's up called");
     setShowConfirmSubmit(true);
   };
-  
+
   const handleSubmit = () => {
     if (!examInfo) return;
-    
+
     // Calculate score
     let correctCount = 0;
     const totalQuestions = questions.length;
-    
+
     questions.forEach((question, index) => {
       const userAnswer = userAnswers[index];
       if (userAnswer !== undefined) {
         if (question.type === 'trueFalse') {
           if ((userAnswer === 'true' && question.correctAnswer === true) ||
-              (userAnswer === 'false' && question.correctAnswer === false)) {
+            (userAnswer === 'false' && question.correctAnswer === false)) {
             correctCount++;
           }
         } else if (userAnswer === question.correctAnswer) {
@@ -299,13 +309,14 @@ const ExamPage = () => {
         }
       }
     });
-    
+
     const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
     const timeTaken = Math.floor((new Date() - startTime) / 1000);
-    
+
     // Show completion dialog with confetti
     setShowCompletionDialog(true);
-    
+    setShowConfirmSubmit(false); // Hide the confirmation dialog
+
     // Save result with metadata
     saveExamResult({
       subject: examInfo.id,
@@ -320,12 +331,12 @@ const ExamPage = () => {
       answers: userAnswers
     });
   };
-  
+
   const handleViewResults = () => {
     // Navigate to results page
     navigate(`/results/${examInfo.id}/${new Date().getTime()}`);
   };
-  
+
   const handleNavigateQuestion = (direction) => {
     if (direction === 'next' && currentIndex < questions.length - 1) {
       setCurrentIndex(currentIndex + 1);
@@ -333,7 +344,7 @@ const ExamPage = () => {
       setCurrentIndex(currentIndex - 1);
     }
   };
-  
+
   if (loading) {
     return (
       <PageContainer>
@@ -345,7 +356,7 @@ const ExamPage = () => {
       </PageContainer>
     );
   }
-  
+
   if (error) {
     return (
       <PageContainer>
@@ -358,7 +369,7 @@ const ExamPage = () => {
       </PageContainer>
     );
   }
-  
+
   if (!examInfo || questions.length === 0) {
     return (
       <PageContainer>
@@ -371,12 +382,12 @@ const ExamPage = () => {
       </PageContainer>
     );
   }
-  
+
   const currentQuestion = questions[currentIndex];
   const answeredCount = Object.keys(userAnswers).length;
   const isQuestionFlagged = flaggedQuestions.includes(currentIndex);
   const showTimer = examInfo.timeLimit > 0;
-  
+
   // Display exam metadata
   const examMetadata = examType && year ? (
     <span>
@@ -387,7 +398,7 @@ const ExamPage = () => {
       Sample Exam - No Time Limit
     </span>
   );
-  
+
   return (
     <PageContainer>
       {/* Exam Header */}
@@ -400,24 +411,26 @@ const ExamPage = () => {
           {examMetadata && <br />}
           Answer all questions to complete the exam. You can flag questions to review later.
         </ExamDescription>
-        
-        <TimerContainer show={showTimer}>
-          <ExamTimer 
-            duration={examInfo.timeLimit} 
-            onTimeUp={handleTimeUp}
-          />
-        </TimerContainer>
+
+        {showTimer && (
+          <TimerContainer>
+            <ExamTimer
+              duration={examInfo.timeLimit}
+              onTimeUp={handleTimeUp}
+            />
+          </TimerContainer>
+        )}
       </ExamHeader>
-      
+
       {/* Progress Tracker */}
-      <ProgressTracker 
+      <ProgressTracker
         totalQuestions={questions.length}
         currentQuestion={currentIndex}
         answeredQuestions={Object.keys(userAnswers).map(Number)}
         flaggedQuestions={flaggedQuestions}
         onQuestionClick={setCurrentIndex}
       />
-      
+
       {/* Question Display */}
       <ExamBody>
         <QuestionDisplay
@@ -427,16 +440,16 @@ const ExamPage = () => {
           index={currentIndex}
           total={questions.length}
         />
-        
+
         {/* Navigation Controls */}
         <NavigationBar>
-          <ActionButton 
+          <ActionButton
             $warning={isQuestionFlagged}
             onClick={toggleFlag}
           >
             {isQuestionFlagged ? "Unflag Question" : "Flag for Review"}
           </ActionButton>
-          
+
           <div style={{ display: 'flex', gap: '1rem' }}>
             <NavButton
               onClick={() => handleNavigateQuestion('prev')}
@@ -444,7 +457,7 @@ const ExamPage = () => {
             >
               Previous
             </NavButton>
-            
+
             {currentIndex === questions.length - 1 ? (
               <ActionButton
                 $success
@@ -463,34 +476,34 @@ const ExamPage = () => {
           </div>
         </NavigationBar>
       </ExamBody>
-      
+
       {/* Exam Progress Footer */}
       <ExamProgress>
         <ProgressText>
           {answeredCount} of {questions.length} questions answered
         </ProgressText>
-        
-        <ActionButton 
+
+        <ActionButton
           $success
           onClick={() => setShowConfirmSubmit(true)}
         >
           Submit Exam
         </ActionButton>
       </ExamProgress>
-      
+
       {/* Confirm Submit Dialog */}
       {showConfirmSubmit && (
         <ModalBackdrop>
           <ModalContent>
             <ModalTitle>Ready to submit your exam?</ModalTitle>
-            <p>
-              You have answered <strong>{answeredCount}</strong> of <strong>{questions.length}</strong> questions.
+            <div>
+              <p>You have answered <strong>{answeredCount}</strong> of <strong>{questions.length}</strong> questions.</p>
               {answeredCount < questions.length && (
                 <p style={{ color: 'var(--secondary)', fontWeight: 'bold', marginTop: '0.5rem' }}>
                   There are {questions.length - answeredCount} unanswered questions.
                 </p>
               )}
-            </p>
+            </div>
             <p style={{ marginTop: '1rem' }}>
               Are you sure you want to submit your exam?
             </p>
@@ -498,7 +511,7 @@ const ExamPage = () => {
               <NavButton onClick={() => setShowConfirmSubmit(false)}>
                 Continue Exam
               </NavButton>
-              <ActionButton 
+              <ActionButton
                 $success
                 onClick={handleSubmit}
               >
@@ -508,7 +521,7 @@ const ExamPage = () => {
           </ModalContent>
         </ModalBackdrop>
       )}
-      
+
       {/* Completion Dialog with Confetti */}
       {showCompletionDialog && (
         <>
@@ -521,7 +534,7 @@ const ExamPage = () => {
                 You've completed the {examInfo.name} exam!
               </p>
               <ModalButtons>
-                <ActionButton 
+                <ActionButton
                   $success
                   onClick={handleViewResults}
                 >

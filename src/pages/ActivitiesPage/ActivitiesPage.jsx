@@ -1,11 +1,11 @@
 import './ActivitiesPage.css';
 
-import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 
-import { SubjectCard } from '../../components/ExamInterface';
 import { getSubjects } from '../../utils/examUtils';
 import styled from 'styled-components';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 // Styled components
 const ActivitiesContainer = styled.div`
@@ -44,32 +44,6 @@ const Subtitle = styled.p`
   color: var(--dark-gray);
   max-width: 700px;
   margin: 1.5rem auto 0;
-`;
-
-const ActivitiesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  animation: fadeInUp 0.8s ease-out;
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  }
-  
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 const SectionTitle = styled.h2`
@@ -126,88 +100,11 @@ const ExamTypeIcon = styled.div`
   margin: 0 auto 1rem;
 `;
 
-const QuickAccessGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
-`;
-
-const SubjectItem = styled(Link)`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: var(--light-gray);
-  border-radius: var(--radius-lg);
-  text-decoration: none;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
-  }
-`;
-
-const SubjectIcon = styled.div`
-  width: 45px;
-  height: 45px;
-  background-color: var(--white);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  flex-shrink: 0;
-`;
-
-const SubjectInfo = styled.div`
-  flex: 1;
-`;
-
-const SubjectName = styled.div`
-  font-weight: 700;
-  color: var(--dark);
-  margin-bottom: 0.25rem;
-`;
-
-const SubjectDetails = styled.div`
-  font-size: 0.8rem;
-  color: var(--dark-gray);
-`;
-
-// New styled component for featured sample exams
-const SampleExamSection = styled.div`
-  margin-top: 3rem;
-  padding: 2rem;
-  background-color: var(--white);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  border: 2px dashed var(--accent-light);
-`;
-
-const SampleExamHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-`;
-
-const FreeBadge = styled.span`
-  background-color: var(--accent);
-  color: white;
-  font-size: 0.8rem;
-  font-weight: bold;
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-full);
-`;
-
 // Components for the premium features section
 const PremiumFeaturesContainer = styled.div`
-  background-color: var(--white);
+  background: linear-gradient(145deg, var(--white) 0%, var(--light-gray) 100%);
   border-radius: var(--radius-lg);
-  padding: 1.5rem;
+  padding: 2rem;
   margin-top: 2rem;
   box-shadow: var(--shadow-md);
   border-left: 4px solid var(--primary);
@@ -217,6 +114,19 @@ const PremiumTitle = styled.h3`
   font-size: 1.4rem;
   color: var(--dark);
   margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 30px;
+    height: 3px;
+    background: var(--gradient-fun);
+    border-radius: var(--radius-full);
+  }
 `;
 
 const PremiumFeaturesList = styled.ul`
@@ -242,33 +152,145 @@ const FeatureIcon = styled.span`
   font-weight: bold;
 `;
 
-const YearButtonsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
+// Components for free exams section
+const FreeExamsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
 `;
 
-const YearButton = styled.button`
+const FreeExamCard = styled.div`
   background-color: var(--white);
-  border: 2px solid var(--primary-light);
-  border-radius: var(--radius-lg);
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+const ExamCardHeader = styled.div`
+  background: linear-gradient(45deg, var(--primary), var(--accent));
+  padding: 1.5rem;
+  color: white;
+  display: flex;
+  align-items: center;
+`;
+
+const ExamCardIcon = styled.div`
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+`;
+
+const ExamCardTitle = styled.h3`
+  margin: 0;
+  font-size: 1.3rem;
+`;
+
+const ExamCardContent = styled.div`
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ExamCardDescription = styled.p`
+  color: var(--dark-gray);
+  margin-bottom: 1.5rem;
+  flex: 1;
+`;
+
+const ExamCardFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--light-gray);
+  padding: 1rem 1.5rem;
+  font-size: 0.9rem;
+  color: var(--dark-gray);
+`;
+
+const ExamCardBadge = styled.span`
+  background-color: var(--white);
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-full);
   color: var(--primary);
+  font-weight: 600;
+  font-size: 0.8rem;
+`;
+
+const StartExamButton = styled.button`
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 0.8rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: auto;
+  
+  &:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const LoginButton = styled.button`
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 0.8rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-right: 1rem;
+  
+  &:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const SignupButton = styled.button`
+  background-color: var(--white);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-full);
+  padding: 0.8rem 1.5rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   
   &:hover {
     background-color: var(--primary-light);
-    color: var(--primary-dark);
     transform: translateY(-3px);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   }
-  
-  &:active {
-    transform: translateY(-1px);
-  }
+`;
+
+const AuthButtons = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
 `;
 
 /**
@@ -277,10 +299,10 @@ const YearButton = styled.button`
  * @returns {JSX.Element} Activities component
  */
 const ActivitiesPage = () => {
-  console.log("This is a test comment")
   // Get available subjects for display
   const [subjects, setSubjects] = useState([]);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     try {
@@ -303,7 +325,7 @@ const ActivitiesPage = () => {
     { 
       id: 'icas', 
       name: 'ICAS',
-      description: 'testing',
+      description: 'International Competitions and Assessments for Schools',
       icon: '🎓'
     },
     { 
@@ -321,23 +343,37 @@ const ActivitiesPage = () => {
       name: 'Mathematics',
       questionCount: 5,
       icon: '🔢',
-      description: 'Practice solving mathematical problems and equations'
+      description: 'Practice solving mathematical problems and equations, including arithmetic, algebra, and geometry.'
     },
     {
       id: 'science',
       name: 'Science',
       questionCount: 5,
       icon: '🧪',
-      description: 'Test your knowledge of scientific concepts and theories'
+      description: 'Test your knowledge of scientific concepts, principles, and theories in biology, chemistry, and physics.'
     },
     {
       id: 'digital',
       name: 'Digital Technologies',
       questionCount: 5,
       icon: '💻',
-      description: 'Explore digital concepts and computational thinking'
+      description: 'Explore digital concepts, computational thinking, and problem-solving in technology contexts.'
     }
   ];
+
+  // Handle exam types selection
+  const handleExamTypeSelect = (examTypeId) => {
+    navigate(`/exam-selection?type=${examTypeId}`);
+  };
+
+  // Handle year button click based on authentication
+  const handleYearButtonClick = (year) => {
+    if (isAuthenticated) {
+      navigate(`/exam-selection?year=${year}`);
+    } else {
+      navigate('/signup');
+    }
+  };
 
   return (
     <div className="activities-page">
@@ -349,31 +385,33 @@ const ActivitiesPage = () => {
           </Subtitle>
         </ActivitiesHeader>
         
-        {/* Separate Sample Exams Section */}
-        <SampleExamSection>
-          <SampleExamHeader>
-            <SectionTitle style={{ margin: 0 }}>Sample Exams</SectionTitle>
-            <FreeBadge>FREE</FreeBadge>
-          </SampleExamHeader>
-          <p>Try these free sample exams with 5 questions each and no time limit - no account required</p>
-          
-          <QuickAccessGrid>
-            {sampleExamSubjects.map(subject => (
-              <SubjectItem 
-                to={`/exam/${subject.id}`} 
-                key={subject.id}
-              >
-                <SubjectIcon>{subject.icon}</SubjectIcon>
-                <SubjectInfo>
-                  <SubjectName>{subject.name}</SubjectName>
-                  <SubjectDetails>
-                    {subject.questionCount} questions • No time limit
-                  </SubjectDetails>
-                </SubjectInfo>
-              </SubjectItem>
-            ))}
-          </QuickAccessGrid>
-        </SampleExamSection>
+        {/* Free Exams Section (redesigned) */}
+        <SectionTitle>Free Sample Exams</SectionTitle>
+        <p>Try these sample exams with 5 questions each and no time limit - no account required</p>
+        
+        <FreeExamsGrid>
+          {sampleExamSubjects.map(subject => (
+            <FreeExamCard 
+              key={subject.id}
+              onClick={() => navigate(`/exam/${subject.id}`)}
+            >
+              <ExamCardHeader>
+                <ExamCardIcon>{subject.icon}</ExamCardIcon>
+                <ExamCardTitle>{subject.name}</ExamCardTitle>
+              </ExamCardHeader>
+              <ExamCardContent>
+                <ExamCardDescription>
+                  {subject.description}
+                </ExamCardDescription>
+                <StartExamButton>Start Exam</StartExamButton>
+              </ExamCardContent>
+              <ExamCardFooter>
+                <span>5 questions</span>
+                <ExamCardBadge>No time limit</ExamCardBadge>
+              </ExamCardFooter>
+            </FreeExamCard>
+          ))}
+        </FreeExamsGrid>
         
         {/* Exam Types Section */}
         <SectionTitle>Exam Types</SectionTitle>
@@ -382,7 +420,7 @@ const ActivitiesPage = () => {
           {examTypes.map(examType => (
             <ExamTypeCard 
               key={examType.id}
-              onClick={() => navigate(`/exam-selection?type=${examType.id}`)}
+              onClick={() => handleExamTypeSelect(examType.id)}
             >
               <ExamTypeIcon>{examType.icon}</ExamTypeIcon>
               <h3>{examType.name}</h3>
@@ -391,7 +429,7 @@ const ActivitiesPage = () => {
           ))}
         </ExamTypeGrid>
         
-        {/* Full Exams Section */}
+        {/* Full Exams Section - with redesigned premium features container */}
         <SectionTitle>Full Practice Exams</SectionTitle>
         <p>Access our complete collection with a premium account</p>
         
@@ -416,13 +454,36 @@ const ActivitiesPage = () => {
             </PremiumFeatureItem>
           </PremiumFeaturesList>
           
-          <YearButtonsContainer>
-            <YearButton onClick={() => navigate('/signup')}>Year 2</YearButton>
-            <YearButton onClick={() => navigate('/signup')}>Year 3</YearButton>
-            <YearButton onClick={() => navigate('/signup')}>Year 4</YearButton>
-            <YearButton onClick={() => navigate('/signup')}>Year 5</YearButton>
-            <YearButton onClick={() => navigate('/signup')}>Year 6</YearButton>
-          </YearButtonsContainer>
+          {isAuthenticated ? (
+            <div className="year-buttons-grid">
+              {['Year 2', 'Year 3', 'Year 4', 'Year 5', 'Year 6'].map(year => (
+                <div 
+                  className="year-button" 
+                  key={year} 
+                  onClick={() => handleYearButtonClick(year.split(' ')[1])}
+                >
+                  <div className="year-button-content">
+                    <span className="year-text">{year}</span>
+                    <span className="year-arrow">→</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <>
+              <p style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+                Please log in or sign up to access premium exams
+              </p>
+              <AuthButtons>
+                <LoginButton onClick={() => navigate('/login')}>
+                  Log In
+                </LoginButton>
+                <SignupButton onClick={() => navigate('/signup')}>
+                  Sign Up
+                </SignupButton>
+              </AuthButtons>
+            </>
+          )}
         </PremiumFeaturesContainer>
       </ActivitiesContainer>
     </div>

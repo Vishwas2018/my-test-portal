@@ -18,7 +18,7 @@ const HomePage = () => {
         <div className="container hero-container">
           <div className="hero-content">
             <h1 className="hero-title">
-              Prepare for Success with <span className="highlight">Complete Exam Practice</span>
+              Prepare for nothing with <span className="highlight">Complete Exam Practice</span>
             </h1>
             <p className="hero-subtitle">
               Comprehensive practice tests for NAPLAN, ICAS, and ICAS All Stars to help your child excel
