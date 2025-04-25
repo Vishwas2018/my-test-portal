@@ -247,6 +247,13 @@ const ExplanationCard = styled.div`
   border-left: 3px solid var(--primary);
 `;
 
+const ExplanationText = styled.div`
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--dark);
+`;
+
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -343,7 +350,12 @@ const ResultsPage = () => {
           setResult(targetResult);
           
           // Load questions for this subject
-          const subjectQuestions = getQuestions(subjectId);
+          const subjectQuestions = getQuestions(
+            subjectId, 
+            targetResult.examType, 
+            targetResult.year, 
+            targetResult.examId
+          );
           setQuestions(subjectQuestions);
           
           // Show confetti for scores above 80%
@@ -484,10 +496,10 @@ const ResultsPage = () => {
         <ResultsBody>
           <StatsGrid>
             <StatCard 
-              bgColor={result.score >= 80 ? 'rgba(126, 217, 87, 0.15)' : 
+              $bgColor={result.score >= 80 ? 'rgba(126, 217, 87, 0.15)' : 
                        result.score >= 60 ? 'rgba(255, 193, 7, 0.15)' : 
                        'rgba(255, 87, 34, 0.15)'}
-              textColor={result.score >= 80 ? 'var(--accent-dark)' : 
+              $textColor={result.score >= 80 ? 'var(--accent-dark)' : 
                          result.score >= 60 ? 'var(--secondary-dark)' : 
                          'var(--error)'}
             >
@@ -495,12 +507,12 @@ const ResultsPage = () => {
               <StatLabel>Overall Score</StatLabel>
             </StatCard>
             
-            <StatCard bgColor="rgba(110, 207, 255, 0.15)" textColor="var(--primary-dark)">
+            <StatCard $bgColor="rgba(110, 207, 255, 0.15)" $textColor="var(--primary-dark)">
               <StatValue>{result.correctCount}/{result.totalQuestions}</StatValue>
               <StatLabel>Correct Answers</StatLabel>
             </StatCard>
             
-            <StatCard bgColor="rgba(179, 157, 219, 0.15)" textColor="#7E57C2">
+            <StatCard $bgColor="rgba(179, 157, 219, 0.15)" $textColor="#7E57C2">
               <StatValue>{formatTime(result.timeTaken)}</StatValue>
               <StatLabel>Time Taken</StatLabel>
             </StatCard>
@@ -508,13 +520,13 @@ const ResultsPage = () => {
           
           <TabsContainer>
             <Tab 
-              active={activeTab === 0} 
+              $active={activeTab === 0} 
               onClick={() => handleTabChange(0)}
             >
               Results Summary
             </Tab>
             <Tab 
-              active={activeTab === 1} 
+              $active={activeTab === 1} 
               onClick={() => handleTabChange(1)}
             >
               Review Questions
@@ -542,7 +554,7 @@ const ResultsPage = () => {
                   Back to Dashboard
                 </Button>
                 
-                <Button primary onClick={() => handleTabChange(1)}>
+                <Button $primary onClick={() => handleTabChange(1)}>
                   Review Questions
                 </Button>
               </ButtonContainer>
@@ -551,28 +563,28 @@ const ResultsPage = () => {
             <>
               <FilterContainer>
                 <FilterButton 
-                  active={filterType === 'all'}
+                  $active={filterType === 'all'}
                   onClick={() => handleFilterChange('all')}
                 >
                   All Questions
                 </FilterButton>
                 <FilterButton 
-                  active={filterType === 'correct'}
-                  activeColor="var(--accent)"
+                  $active={filterType === 'correct'}
+                  $activeColor="var(--accent)"
                   onClick={() => handleFilterChange('correct')}
                 >
                   Correct
                 </FilterButton>
                 <FilterButton 
-                  active={filterType === 'incorrect'}
-                  activeColor="var(--error)"
+                  $active={filterType === 'incorrect'}
+                  $activeColor="var(--error)"
                   onClick={() => handleFilterChange('incorrect')}
                 >
                   Incorrect
                 </FilterButton>
                 <FilterButton 
-                  active={filterType === 'unanswered'}
-                  activeColor="var(--secondary)"
+                  $active={filterType === 'unanswered'}
+                  $activeColor="var(--secondary)"
                   onClick={() => handleFilterChange('unanswered')}
                 >
                   Unanswered
@@ -614,7 +626,7 @@ const ResultsPage = () => {
                           </StatusBadge>
                         </QuestionHeader>
                         
-                        <QuestionBody isOpen={isOpen}>
+                        <QuestionBody $isOpen={isOpen}>
                           <QuestionText>{question.text}</QuestionText>
                           
                           {question.type === 'multipleChoice' && (
@@ -654,12 +666,12 @@ const ResultsPage = () => {
                           
                           <AnswerGrid>
                             <AnswerCard 
-                              bgColor={
+                              $bgColor={
                                 isAnswered 
                                   ? (isCorrect ? 'rgba(126, 217, 87, 0.15)' : 'rgba(255, 87, 34, 0.15)') 
                                   : 'rgba(255, 193, 7, 0.15)'
                               }
-                              borderColor={
+                              $borderColor={
                                 isAnswered 
                                   ? (isCorrect ? 'var(--accent)' : 'var(--error)') 
                                   : 'var(--secondary)'
@@ -676,19 +688,19 @@ const ResultsPage = () => {
                                 isAnswered 
                                   ? (isCorrect ? 'var(--accent-dark)' : 'var(--error)') 
                                   : 'var(--secondary-dark)'
-                              } bold>
+                              } $bold>
                                 {getAnswerDisplay(question, userAnswer)}
                               </AnswerText>
                             </AnswerCard>
                             
                             <AnswerCard
-                              bgColor="rgba(126, 217, 87, 0.15)"
-                              borderColor="var(--accent)"
+                              $bgColor="rgba(126, 217, 87, 0.15)"
+                              $borderColor="var(--accent)"
                             >
                               <AnswerLabel color="var(--accent-dark)">
                                 Correct Answer
                               </AnswerLabel>
-                              <AnswerText color="var(--accent-dark)" bold>
+                              <AnswerText color="var(--accent-dark)" $bold>
                                 {getCorrectAnswerDisplay(question)}
                               </AnswerText>
                             </AnswerCard>
@@ -699,7 +711,9 @@ const ResultsPage = () => {
                               <AnswerLabel color="var(--primary-dark)">
                                 Explanation
                               </AnswerLabel>
-                              <div>{question.explanation}</div>
+                              <ExplanationText>
+                                {question.explanation}
+                              </ExplanationText>
                             </ExplanationCard>
                           )}
                         </QuestionBody>
@@ -714,7 +728,7 @@ const ResultsPage = () => {
                   Back to Summary
                 </Button>
                 
-                <Button primary onClick={() => navigate(`/exam/${result.subject}`)}>
+                <Button $primary onClick={() => navigate(`/exam/${result.subject}`)}>
                   Try Again
                 </Button>
               </ButtonContainer>

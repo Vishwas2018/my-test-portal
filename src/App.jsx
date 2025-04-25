@@ -12,6 +12,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import ExamPage from './pages/ExamPage';
 import { ExamProvider } from './contexts/ExamContext';
 import ExamSelection from './pages/ExamSelection';
+import FeaturesPage from './pages/FeaturesPage'; // Import the new FeaturesPage component
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -49,7 +50,7 @@ function App() {
                     <Route path="/signup" element={<SignupPage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/pricing" element={<PricingPage />} />
-                    <Route path="/features" element={<div className="container page-content">Features Page (Coming Soon)</div>} />
+                    <Route path="/features" element={<FeaturesPage />} /> {/* Updated route to use FeaturesPage component */}
                     <Route
                       path="/dashboard"
                       element={

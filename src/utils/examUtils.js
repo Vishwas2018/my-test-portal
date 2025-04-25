@@ -1,7 +1,7 @@
 // src/utils/examUtils.js
 import { EXAM, STORAGE_KEYS } from './constants';
 
-import examsData from '../data/exam.json';
+import examData from '../data/examData';
 
 /**
  * Get questions for a subject, filtered by exam type and year if provided
@@ -15,31 +15,38 @@ export const getQuestions = (subjectId, examType, year, examId) => {
   try {
     console.log(`Loading questions for: Subject: ${subjectId}, Type: ${examType}, Year: ${year}, Exam: ${examId}`);
     
-    // Sample exams (just subject ID, no exam type)
-    if (subjectId && !examType && !year) {
-      return getDefaultQuestions(subjectId);
-    }
-    
-    // If we have a specific examId
-    if (examId) {
-      if (examsData[examType] && examsData[examType][subjectId]) {
+    // If we have a specific examId and complete parameters
+    if (examType && subjectId && year && examId) {
+      // Check if this exam exists in our data structure
+      if (
+        examData[examType] && 
+        examData[examType].subjects && 
+        examData[examType].subjects[subjectId] && 
+        examData[examType].subjects[subjectId].exams && 
+        examData[examType].subjects[subjectId].exams[year]
+      ) {
         // Try to find the exact exam
-        const exactExam = examsData[examType][subjectId].find(e => e.examId === examId);
+        const examsForYear = examData[examType].subjects[subjectId].exams[year];
+        const exactExam = examsForYear.find(e => e.id === examId);
+        
         if (exactExam && exactExam.questions) {
           return exactExam.questions;
         }
       }
     }
     
-    // If we have type, year, and subject
+    // If we have type, year, and subject (but no specific exam ID)
     if (examType && year && subjectId) {
-      if (examsData[examType] && examsData[examType][subjectId]) {
-        const yearMatch = examsData[examType][subjectId].find(e => 
-          e.year === parseInt(year, 10)
-        );
-        if (yearMatch && yearMatch.questions) {
-          return yearMatch.questions;
-        }
+      if (
+        examData[examType] && 
+        examData[examType].subjects && 
+        examData[examType].subjects[subjectId] && 
+        examData[examType].subjects[subjectId].exams && 
+        examData[examType].subjects[subjectId].exams[year] &&
+        examData[examType].subjects[subjectId].exams[year].length > 0
+      ) {
+        // Return the first exam's questions for this combination
+        return examData[examType].subjects[subjectId].exams[year][0].questions;
       }
     }
     
@@ -328,7 +335,7 @@ export const getSubjects = (examType = null) => {
       id: 'mathematics',
       name: 'Mathematics',
       questionCount: 5,
-      timeLimit: 0, // No time limit for samples
+      timeLimit: 45,
       icon: '🔢',
       description: 'Practice solving mathematical problems'
     },
@@ -336,7 +343,7 @@ export const getSubjects = (examType = null) => {
       id: 'science',
       name: 'Science',
       questionCount: 5,
-      timeLimit: 0,
+      timeLimit: 45,
       icon: '🧪',
       description: 'Test your knowledge of scientific concepts'
     },
@@ -344,51 +351,46 @@ export const getSubjects = (examType = null) => {
       id: 'digital',
       name: 'Digital Technologies',
       questionCount: 5,
-      timeLimit: 0,
+      timeLimit: 35,
       icon: '💻',
       description: 'Explore digital concepts and computational thinking'
     }
   ];
   
   try {
-    if (examType && examsData[examType]) {
-      // Subject mappings for display
-      const subjectMappings = {
-        'reading': { name: 'Reading', icon: '📚' },
-        'writing': { name: 'Writing', icon: '✏️' },
-        'numeracy': { name: 'Numeracy', icon: '🔢' },
-        'language': { name: 'Language Conventions', icon: '📝' },
-        'science': { name: 'Science', icon: '🧪' },
-        'spelling': { name: 'Spelling Bee', icon: '🐝' },
-        'grammar': { name: 'Grammar', icon: '📝' },
-        'mathematics': { name: 'Mathematics', icon: '🔢' },
-        'digital': { name: 'Digital Technologies', icon: '💻' },
-        'english': { name: 'English', icon: '📚' },
-        'reasoning': { name: 'Reasoning', icon: '🧠' },
-        'general_knowledge': { name: 'General Knowledge', icon: '🌍' },
-        'digital_literacy': { name: 'Digital Literacy', icon: '💻' }
-      };
-      
-      // Get all subjects for the given exam type
-      return Object.keys(examsData[examType]).map(subjectId => {
-        // Use the first exam for this subject to get info
-        const firstExam = examsData[examType][subjectId][0];
-        const questionCount = firstExam?.questions?.length || 0;
-        const timeLimit = firstExam?.timeLimit || EXAM.DEFAULT_TIME_LIMIT;
+    if (examType && examData[examType]) {
+      // Extract subjects from our new data structure
+      const examTypeData = examData[examType];
+      const subjects = Object.keys(examTypeData.subjects).map(subjectId => {
+        const subjectData = examTypeData.subjects[subjectId];
+        const metadata = subjectData.metadata;
         
-        const subjectInfo = subjectMappings[subjectId] || { 
-          name: subjectId.charAt(0).toUpperCase() + subjectId.slice(1), 
-          icon: '📝' 
-        };
+        // Find the first exam to get question count and time limit
+        let questionCount = 0;
+        let timeLimit = EXAM.DEFAULT_TIME_LIMIT;
+        
+        // Loop through all year levels to find at least one exam
+        const yearLevels = Object.keys(subjectData.exams);
+        if (yearLevels.length > 0) {
+          const firstYearExams = subjectData.exams[yearLevels[0]];
+          if (firstYearExams && firstYearExams.length > 0) {
+            const firstExam = firstYearExams[0];
+            questionCount = firstExam.questions ? firstExam.questions.length : 0;
+            timeLimit = firstExam.timeLimit || EXAM.DEFAULT_TIME_LIMIT;
+          }
+        }
         
         return {
           id: subjectId,
-          name: subjectInfo.name,
+          name: metadata.name,
+          icon: metadata.icon,
           questionCount,
           timeLimit,
-          icon: subjectInfo.icon
+          description: metadata.description
         };
       });
+      
+      return subjects;
     }
     
     return defaultSubjects;
@@ -411,18 +413,24 @@ export const getAvailableExams = (examType, subjectId, year) => {
       return [];
     }
     
-    if (examsData[examType] && examsData[examType][subjectId]) {
-      return examsData[examType][subjectId]
-        .filter(exam => exam.year === parseInt(year, 10))
-        .map((exam, index) => ({
-          id: exam.examId || `${examType}-${year}-${subjectId}-${index + 1}`,
-          name: exam.title || `${subjectId.charAt(0).toUpperCase() + subjectId.slice(1)} Exam ${index + 1}`,
-          grade: year,
-          type: examType,
-          subject: subjectId,
-          questionCount: exam.questions?.length || 0,
-          timeLimit: exam.timeLimit || EXAM.DEFAULT_TIME_LIMIT
-        }));
+    // Check if this combination exists in our data structure
+    if (
+      examData[examType] && 
+      examData[examType].subjects && 
+      examData[examType].subjects[subjectId] && 
+      examData[examType].subjects[subjectId].exams && 
+      examData[examType].subjects[subjectId].exams[year]
+    ) {
+      // Map the exams to the required format
+      return examData[examType].subjects[subjectId].exams[year].map(exam => ({
+        id: exam.id,
+        name: exam.title,
+        grade: parseInt(year, 10),
+        type: examType,
+        subject: subjectId,
+        questionCount: exam.questions ? exam.questions.length : 0,
+        timeLimit: exam.timeLimit || EXAM.DEFAULT_TIME_LIMIT
+      }));
     }
     
     return [];

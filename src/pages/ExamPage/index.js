@@ -1,2 +1,2 @@
-// src/pages/DashboardPage/index.js
+// src/pages/ExamPage/index.js
 export { default } from './ExamPage';

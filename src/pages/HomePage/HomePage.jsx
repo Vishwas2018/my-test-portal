@@ -18,7 +18,7 @@ const HomePage = () => {
         <div className="container hero-container">
           <div className="hero-content">
             <h1 className="hero-title">
-              Prepare for nothing with <span className="highlight">Complete Exam Practice</span>
+              Prepare for success with <span className="highlight">Complete Exam Practice</span>
             </h1>
             <p className="hero-subtitle">
               Comprehensive practice tests for NAPLAN, ICAS, and ICAS All Stars to help your child excel
@@ -33,8 +33,8 @@ const HomePage = () => {
                   <i className="fas fa-star"></i> START PRACTICING NOW
                 </Link>
               )}
-              <Link to="/activities" className="hero-btn secondary">
-                <i className="fas fa-book"></i> EXPLORE EXAMS
+              <Link to="/features" className="hero-btn secondary">
+                <i className="fas fa-list-check"></i> EXPLORE FEATURES
               </Link>
             </div>
           </div>
@@ -114,7 +114,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section - Simplified with link to Features page */}
       <section id="features" className="features">
         <div className="container features-container">
           <h2 className="section-title">Why Choose Our Platform?</h2>
@@ -153,42 +153,11 @@ const HomePage = () => {
               <p>Monitor improvement over time with our intuitive dashboard and progress reports</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Exam Categories Section */}
-      <section id="categories" className="categories-section">
-        <div className="container">
-          <h2 className="section-title">Exam Categories</h2>
-          <p className="section-subtitle">Explore our comprehensive collection of practice exams</p>
-
-          <div className="categories-grid">
-            <div className="category-card math">
-              <div className="category-icon">
-                <i className="fas fa-landmark"></i>
-              </div>
-              <h3>NAPLAN</h3>
-              <p>Australian National Assessment Program exams for literacy and numeracy skills</p>
-              <Link to="/activities" className="btn-outline">Explore NAPLAN</Link>
-            </div>
-
-            <div className="category-card science">
-              <div className="category-icon">
-                <i className="fas fa-graduation-cap"></i>
-              </div>
-              <h3>ICAS</h3>
-              <p>International Competitions and Assessments for Schools across multiple subjects</p>
-              <Link to="/activities" className="btn-outline">Explore ICAS</Link>
-            </div>
-
-            <div className="category-card english">
-              <div className="category-icon">
-                <i className="fas fa-star"></i>
-              </div>
-              <h3>ICAS All Stars</h3>
-              <p>Advanced ICAS exams for high-achieving students looking for an extra challenge</p>
-              <Link to="/activities" className="btn-outline">Explore All Stars</Link>
-            </div>
+          
+          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+            <Link to="/features" className="btn-outline" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
+              Explore All Features <i className="fas fa-arrow-right" style={{ marginLeft: '0.5rem' }}></i>
+            </Link>
           </div>
         </div>
       </section>

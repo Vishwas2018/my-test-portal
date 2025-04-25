@@ -1,8 +1,6 @@
 import './ActivitiesPage.css';
 
-import React, { useEffect, useState } from 'react';
-
-import { getSubjects } from '../../utils/examUtils';
+import React from 'react';
 import styled from 'styled-components';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -108,11 +106,26 @@ const PremiumFeaturesContainer = styled.div`
   margin-top: 2rem;
   box-shadow: var(--shadow-md);
   border-left: 4px solid var(--primary);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(110, 207, 255, 0.2), transparent 70%);
+    z-index: 0;
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+  }
 `;
 
 const PremiumTitle = styled.h3`
   font-size: 1.4rem;
-  color: var(--dark);
+  color: var(--primary-dark);
   margin-bottom: 1rem;
   position: relative;
   display: inline-block;
@@ -133,6 +146,9 @@ const PremiumFeaturesList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
 `;
 
 const PremiumFeatureItem = styled.li`
@@ -147,109 +163,9 @@ const PremiumFeatureItem = styled.li`
 `;
 
 const FeatureIcon = styled.span`
-  color: var(--accent);
+  color: var(--primary);
   margin-right: 0.75rem;
   font-weight: bold;
-`;
-
-// Components for free exams section
-const FreeExamsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-`;
-
-const FreeExamCard = styled.div`
-  background-color: var(--white);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-  }
-`;
-
-const ExamCardHeader = styled.div`
-  background: linear-gradient(45deg, var(--primary), var(--accent));
-  padding: 1.5rem;
-  color: white;
-  display: flex;
-  align-items: center;
-`;
-
-const ExamCardIcon = styled.div`
-  font-size: 2rem;
-  width: 50px;
-  height: 50px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 1rem;
-`;
-
-const ExamCardTitle = styled.h3`
-  margin: 0;
-  font-size: 1.3rem;
-`;
-
-const ExamCardContent = styled.div`
-  padding: 1.5rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-`;
-
-const ExamCardDescription = styled.p`
-  color: var(--dark-gray);
-  margin-bottom: 1.5rem;
-  flex: 1;
-`;
-
-const ExamCardFooter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--light-gray);
-  padding: 1rem 1.5rem;
-  font-size: 0.9rem;
-  color: var(--dark-gray);
-`;
-
-const ExamCardBadge = styled.span`
-  background-color: var(--white);
-  padding: 0.3rem 0.8rem;
-  border-radius: var(--radius-full);
-  color: var(--primary);
-  font-weight: 600;
-  font-size: 0.8rem;
-`;
-
-const StartExamButton = styled.button`
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius-full);
-  padding: 0.8rem 1.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: auto;
-  
-  &:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  }
 `;
 
 const LoginButton = styled.button`
@@ -293,71 +209,100 @@ const AuthButtons = styled.div`
   margin-top: 1.5rem;
 `;
 
+const YearButtonsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+`;
+
+const YearButton = styled.div`
+  background: linear-gradient(145deg, var(--white), var(--light-gray));
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--light-gray);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-light);
+  }
+  
+  &:hover::before {
+    opacity: 0.2;
+  }
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, var(--primary-light), var(--accent-light));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+  }
+`;
+
+const YearText = styled.span`
+  font-weight: 700;
+  color: var(--primary-dark);
+  font-size: 1.1rem;
+  position: relative;
+  z-index: 1;
+`;
+
+const YearArrow = styled.span`
+  color: var(--accent);
+  font-weight: 900;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+  
+  ${YearButton}:hover & {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
 /**
- * Activities page that displays available subject categories and exam types
- * 
- * @returns {JSX.Element} Activities component
+ * Activities page that displays available exam types and premium features
  */
 const ActivitiesPage = () => {
-  // Get available subjects for display
-  const [subjects, setSubjects] = useState([]);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    try {
-      const allSubjects = getSubjects();
-      console.log("Loaded subjects:", allSubjects);
-      setSubjects(allSubjects);
-    } catch (error) {
-      console.error("Error loading subjects:", error);
-    }
-  }, []);
 
   // Define exam types
   const examTypes = [
     { 
       id: 'naplan', 
       name: 'NAPLAN',
-      description: 'Australian National Assessment Program',
+      description: 'Australian National Assessment Program - Literacy and Numeracy tests for Years 3, 5, 7, and 9',
       icon: '🏫'
     },
     { 
       id: 'icas', 
       name: 'ICAS',
-      description: 'International Competitions and Assessments for Schools',
+      description: 'International Competitions and Assessments for Schools - comprehensive subject-specific assessment',
       icon: '🎓'
     },
     { 
       id: 'icas_all_stars', 
       name: 'ICAS All Stars',
-      description: 'Advanced ICAS with comprehensive topics',
+      description: 'Advanced ICAS with comprehensive topics for high-achieving students',
       icon: '⭐'
-    }
-  ];
-
-  // Sample exam subjects with 5 questions and no time limit
-  const sampleExamSubjects = [
-    {
-      id: 'mathematics',
-      name: 'Mathematics',
-      questionCount: 5,
-      icon: '🔢',
-      description: 'Practice solving mathematical problems and equations, including arithmetic, algebra, and geometry.'
-    },
-    {
-      id: 'science',
-      name: 'Science',
-      questionCount: 5,
-      icon: '🧪',
-      description: 'Test your knowledge of scientific concepts, principles, and theories in biology, chemistry, and physics.'
-    },
-    {
-      id: 'digital',
-      name: 'Digital Technologies',
-      questionCount: 5,
-      icon: '💻',
-      description: 'Explore digital concepts, computational thinking, and problem-solving in technology contexts.'
     }
   ];
 
@@ -379,43 +324,15 @@ const ActivitiesPage = () => {
     <div className="activities-page">
       <ActivitiesContainer>
         <ActivitiesHeader>
-          <Title>Exam Selection</Title>
+          <Title>Practice Exams</Title>
           <Subtitle>
-            Choose from our comprehensive collection of practice exams designed to help you excel
+            Choose from our comprehensive collection of practice exams designed to help your child excel
           </Subtitle>
         </ActivitiesHeader>
         
-        {/* Free Exams Section (redesigned) */}
-        <SectionTitle>Free Sample Exams</SectionTitle>
-        <p>Try these sample exams with 5 questions each and no time limit - no account required</p>
-        
-        <FreeExamsGrid>
-          {sampleExamSubjects.map(subject => (
-            <FreeExamCard 
-              key={subject.id}
-              onClick={() => navigate(`/exam/${subject.id}`)}
-            >
-              <ExamCardHeader>
-                <ExamCardIcon>{subject.icon}</ExamCardIcon>
-                <ExamCardTitle>{subject.name}</ExamCardTitle>
-              </ExamCardHeader>
-              <ExamCardContent>
-                <ExamCardDescription>
-                  {subject.description}
-                </ExamCardDescription>
-                <StartExamButton>Start Exam</StartExamButton>
-              </ExamCardContent>
-              <ExamCardFooter>
-                <span>5 questions</span>
-                <ExamCardBadge>No time limit</ExamCardBadge>
-              </ExamCardFooter>
-            </FreeExamCard>
-          ))}
-        </FreeExamsGrid>
-        
         {/* Exam Types Section */}
         <SectionTitle>Exam Types</SectionTitle>
-        <p>Choose from our comprehensive collection of standard exam formats</p>
+        <p>Select an exam format that best suits your preparation needs</p>
         <ExamTypeGrid>
           {examTypes.map(examType => (
             <ExamTypeCard 
@@ -429,9 +346,9 @@ const ActivitiesPage = () => {
           ))}
         </ExamTypeGrid>
         
-        {/* Full Exams Section - with redesigned premium features container */}
+        {/* Premium Features Section - with redesigned container */}
         <SectionTitle>Full Practice Exams</SectionTitle>
-        <p>Access our complete collection with a premium account</p>
+        <p>Access our complete collection of premium practice materials</p>
         
         <PremiumFeaturesContainer>
           <PremiumTitle>Premium Features</PremiumTitle>
@@ -446,29 +363,37 @@ const ActivitiesPage = () => {
             </PremiumFeatureItem>
             <PremiumFeatureItem>
               <FeatureIcon>✓</FeatureIcon>
-              Personalized study plans based on your performance
+              Personalized study plans based on performance
             </PremiumFeatureItem>
             <PremiumFeatureItem>
               <FeatureIcon>✓</FeatureIcon>
               Timed exams that mirror real test conditions
             </PremiumFeatureItem>
+            <PremiumFeatureItem>
+              <FeatureIcon>✓</FeatureIcon>
+              Detailed explanations for each question
+            </PremiumFeatureItem>
+            <PremiumFeatureItem>
+              <FeatureIcon>✓</FeatureIcon>
+              Adaptive learning to target weak areas
+            </PremiumFeatureItem>
           </PremiumFeaturesList>
           
           {isAuthenticated ? (
-            <div className="year-buttons-grid">
-              {['Year 2', 'Year 3', 'Year 4', 'Year 5', 'Year 6'].map(year => (
-                <div 
-                  className="year-button" 
-                  key={year} 
-                  onClick={() => handleYearButtonClick(year.split(' ')[1])}
-                >
-                  <div className="year-button-content">
-                    <span className="year-text">{year}</span>
-                    <span className="year-arrow">→</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <>
+              <h3 style={{ marginTop: '1.5rem' }}>Select Year Level</h3>
+              <YearButtonsGrid>
+                {['Year 2', 'Year 3', 'Year 4', 'Year 5', 'Year 6'].map(year => (
+                  <YearButton 
+                    key={year} 
+                    onClick={() => handleYearButtonClick(year.split(' ')[1])}
+                  >
+                    <YearText>{year}</YearText>
+                    <YearArrow>→</YearArrow>
+                  </YearButton>
+                ))}
+              </YearButtonsGrid>
+            </>
           ) : (
             <>
               <p style={{ textAlign: 'center', marginTop: '1.5rem' }}>

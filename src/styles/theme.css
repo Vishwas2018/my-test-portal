@@ -1,74 +1,74 @@
 /* 
-  theme.css - Unified styling system
+  theme.css - Updated with Terracotta Sky Theme
   This file consolidates all design tokens into a single source of truth.
 */
 
 :root {
   /* 
   ========================================
-  COLOR SYSTEM
+  COLOR SYSTEM - Terracotta Sky Theme
   ========================================
   */
   
-  /* Primary palette */
+  /* Primary palette - Sky Blue */
   --sky-blue-50: #EFF9FF;
   --sky-blue-100: #DEF3FF;
   --sky-blue-200: #B8E8FF;
   --sky-blue-300: #8DDAFF;
-  --sky-blue-400: #6ECFFF; /* Primary */
+  --sky-blue-400: #4C9AFF; /* Primary - Updated to a richer sky blue */
   --sky-blue-500: #4BA3FF;
   --sky-blue-600: #3B8AE5;
   --sky-blue-700: #2C72CC;
   --sky-blue-800: #1D5BA3;
   --sky-blue-900: #0E447A;
   
-  /* Secondary palette */
-  --coral-50: #FFF5F2;
-  --coral-100: #FFEBE5;
-  --coral-200: #FFD6CC;
-  --coral-300: #FFBDA7;
-  --coral-400: #FF9E80; /* Secondary */
-  --coral-500: #FF7D57;
-  --coral-600: #E56E4E;
-  --coral-700: #CC5E45;
-  --coral-800: #A34B38;
-  --coral-900: #7A392B;
+  /* Secondary palette - Terracotta */
+  --terra-50: #FEF6F1;
+  --terra-100: #FDEEE5;
+  --terra-200: #F9DCCB;
+  --terra-300: #F2D5C4; /* Secondary - Soft clay color */
+  --terra-400: #E07A5F; /* Accent - Terracotta */
+  --terra-500: #D76C52;
+  --terra-600: #C55A42;
+  --terra-700: #A84937;
+  --terra-800: #893C2E;
+  --terra-900: #6A2E23;
   
-  /* Accent palette */
+  /* Accent palette - kept as green for variety */
   --green-50: #F2FBF0;
   --green-100: #E5F7E0;
   --green-200: #CCF0C2;
   --green-300: #A5F284;
-  --green-400: #7ED957; /* Accent */
+  --green-400: #7ED957;
   --green-500: #5BB039;
   --green-600: #4C9330;
   --green-700: #3D7627;
   --green-800: #2E591E;
   --green-900: #1F3D15;
   
-  /* Highlight palette */
+  /* Highlight palette - kept as yellow for variety */
   --yellow-50: #FFFDF0;
   --yellow-100: #FFFBE0;
   --yellow-200: #FFF7C2;
   --yellow-300: #FFF295;
-  --yellow-400: #FFDE59; /* Highlight */
+  --yellow-400: #FFDE59;
   --yellow-500: #FFCE29;
   --yellow-600: #E5B825;
   --yellow-700: #CC9F21;
   --yellow-800: #A3781C;
   --yellow-900: #7A5A16;
   
-  /* Neutral grayscale */
-  --gray-50: #F9FDFF; /* Off-white */
-  --gray-100: #E4F0F7; /* Light gray */
-  --gray-200: #D1E2EC;
-  --gray-300: #A4B8C4; /* Medium gray */
-  --gray-400: #8AA6B5;
-  --gray-500: #6B8A99; /* Dark gray */
-  --gray-600: #5A7580;
-  --gray-700: #4B5D67; /* Dark */
-  --gray-800: #36444C;
-  --gray-900: #222B30;
+  /* Neutral grayscale - Warmer tones */
+  --gray-50: #F9F5F0; /* Off-white - Warm cream background */
+  --gray-100: #EEE6DD; /* Light gray - Warmer */
+  --gray-200: #DFD6CD;
+  --gray-300: #C5BBB2; /* Medium gray - Warmer */
+  --gray-400: #AAA095;
+  --gray-500: #8C8178; /* Dark gray - Warmer */
+  --gray-600: #6E655E;
+  --gray-700: #3D3A36; /* Dark - Warmer brown */
+  --gray-800: #2D2A27;
+  --gray-900: #1D1B18;
   
   /* Semantic colors */
   --success: var(--green-500);
@@ -83,15 +83,15 @@
   /* Functional color aliases */
   --primary: var(--sky-blue-400);
   --primary-light: var(--sky-blue-200);
-  --primary-dark: var(--sky-blue-500);
+  --primary-dark: var(--sky-blue-600);
   
-  --secondary: var(--coral-400);
-  --secondary-light: var(--coral-300);
-  --secondary-dark: var(--coral-500);
+  --secondary: var(--terra-300);
+  --secondary-light: var(--terra-100);
+  --secondary-dark: var(--terra-400);
   
-  --accent: var(--green-400);
-  --accent-light: var(--green-300);
-  --accent-dark: var(--green-500);
+  --accent: var(--terra-400);
+  --accent-light: var(--terra-300);
+  --accent-dark: var(--terra-500);
   
   --highlight: var(--yellow-400);
   --highlight-light: var(--yellow-300);
@@ -111,7 +111,7 @@
   */
   --gradient-primary: linear-gradient(90deg, var(--primary), var(--accent));
   --gradient-secondary: linear-gradient(90deg, var(--secondary), var(--highlight));
-  --gradient-wild: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent), #B39DDB);
+  --gradient-wild: linear-gradient(45deg, var(--primary), var(--accent), var(--green-400), #B39DDB);
   --gradient-fun: linear-gradient(135deg, var(--highlight), var(--accent), var(--primary));
   --gradient-soft: linear-gradient(90deg, #E0F7FF, #FFF5E0, #E8F5E0);
   
@@ -120,25 +120,25 @@
   TYPOGRAPHY 
   ========================================
   */
-  /* Font families */
+  /* Font families - unchanged */
   --font-primary: 'Nunito', sans-serif;
   --font-heading: 'Comic Neue', cursive;
   --font-mono: 'Monaco', 'Consolas', monospace;
   
-  /* Font sizes - with fluid typography using clamp() */
-  --text-xs: clamp(0.7rem, 0.7rem + 0.1vw, 0.75rem);       /* 11.2px - 12px */
-  --text-sm: clamp(0.75rem, 0.75rem + 0.25vw, 0.875rem);   /* 12px - 14px */
-  --text-base: clamp(0.875rem, 0.875rem + 0.25vw, 1rem);   /* 14px - 16px */
-  --text-md: clamp(1rem, 1rem + 0.5vw, 1.125rem);          /* 16px - 18px */
-  --text-lg: clamp(1.125rem, 1.125rem + 0.5vw, 1.25rem);   /* 18px - 20px */
-  --text-xl: clamp(1.25rem, 1.25rem + 0.5vw, 1.5rem);      /* 20px - 24px */
-  --text-2xl: clamp(1.5rem, 1.5rem + 1vw, 1.875rem);       /* 24px - 30px */
-  --text-3xl: clamp(1.875rem, 1.875rem + 1vw, 2.25rem);    /* 30px - 36px */
-  --text-4xl: clamp(2.25rem, 2.25rem + 1.5vw, 3rem);       /* 36px - 48px */
-  --text-5xl: clamp(3rem, 3rem + 2vw, 3.75rem);            /* 48px - 60px */
-  --text-6xl: clamp(3.75rem, 3.75rem + 2.5vw, 4.5rem);     /* 60px - 72px */
+  /* Font sizes - with fluid typography using clamp() - unchanged */
+  --text-xs: clamp(0.7rem, 0.7rem + 0.1vw, 0.75rem);
+  --text-sm: clamp(0.75rem, 0.75rem + 0.25vw, 0.875rem);
+  --text-base: clamp(0.875rem, 0.875rem + 0.25vw, 1rem);
+  --text-md: clamp(1rem, 1rem + 0.5vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1.125rem + 0.5vw, 1.25rem);
+  --text-xl: clamp(1.25rem, 1.25rem + 0.5vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.5rem + 1vw, 1.875rem);
+  --text-3xl: clamp(1.875rem, 1.875rem + 1vw, 2.25rem);
+  --text-4xl: clamp(2.25rem, 2.25rem + 1.5vw, 3rem);
+  --text-5xl: clamp(3rem, 3rem + 2vw, 3.75rem);
+  --text-6xl: clamp(3.75rem, 3.75rem + 2.5vw, 4.5rem);
   
-  /* Heading-specific sizes */
+  /* Heading-specific sizes - unchanged */
   --text-h1: var(--text-4xl);
   --text-h2: var(--text-3xl);
   --text-h3: var(--text-2xl);
@@ -146,7 +146,7 @@
   --text-h5: var(--text-lg);
   --text-h6: var(--text-md);
   
-  /* Font weights */
+  /* Font weights - unchanged */
   --weight-light: 300;
   --weight-normal: 400;
   --weight-medium: 600;
@@ -154,7 +154,7 @@
   --weight-bold: 700;
   --weight-extrabold: 800;
   
-  /* Line heights */
+  /* Line heights - unchanged */
   --leading-none: 1;
   --leading-tight: 1.2;
   --leading-snug: 1.375;
@@ -162,7 +162,7 @@
   --leading-relaxed: 1.625;
   --leading-loose: 2;
   
-  /* Letter spacing */
+  /* Letter spacing - unchanged */
   --tracking-tighter: -0.05em;
   --tracking-tight: -0.025em;
   --tracking-normal: 0;
@@ -172,26 +172,26 @@
   
   /* 
   ========================================
-  SPACING SCALE 
+  SPACING SCALE - unchanged
   ========================================
   */
   --space-0: 0;
-  --space-1: 0.25rem;    /* 4px */
-  --space-2: 0.5rem;     /* 8px */
-  --space-3: 0.75rem;    /* 12px */
-  --space-4: 1rem;       /* 16px */
-  --space-5: 1.25rem;    /* 20px */
-  --space-6: 1.5rem;     /* 24px */
-  --space-8: 2rem;       /* 32px */
-  --space-10: 2.5rem;    /* 40px */
-  --space-12: 3rem;      /* 48px */
-  --space-16: 4rem;      /* 64px */
-  --space-20: 5rem;      /* 80px */
-  --space-24: 6rem;      /* 96px */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
   
   /* 
   ========================================
-  SHADOWS & EFFECTS
+  SHADOWS & EFFECTS - unchanged
   ========================================
   */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -206,14 +206,14 @@
   --shadow-fun-lg: 0 12px 0 rgba(0, 0, 0, 0.1);
   
   /* Glow effects */
-  --glow-primary: 0 0 15px rgba(110, 207, 255, 0.5);
-  --glow-secondary: 0 0 15px rgba(255, 158, 128, 0.5);
-  --glow-accent: 0 0 15px rgba(126, 217, 87, 0.5);
+  --glow-primary: 0 0 15px rgba(76, 154, 255, 0.5);
+  --glow-secondary: 0 0 15px rgba(224, 122, 95, 0.5);
+  --glow-accent: 0 0 15px rgba(224, 122, 95, 0.5);
   --glow-highlight: 0 0 15px rgba(255, 222, 89, 0.5);
   
   /* 
   ========================================
-  BORDER RADIUS 
+  BORDER RADIUS - unchanged
   ========================================
   */
   --radius-none: 0;
@@ -227,7 +227,7 @@
   
   /* 
   ========================================
-  TRANSITIONS & ANIMATIONS 
+  TRANSITIONS & ANIMATIONS - unchanged
   ========================================
   */
   --duration-instant: 0.1s;
@@ -251,7 +251,7 @@
   
   /* 
   ========================================
-  Z-INDEX LAYERS
+  Z-INDEX LAYERS - unchanged
   ========================================
   */
   --z-negative: -1;
@@ -270,7 +270,7 @@
 
 /* 
 ========================================
-DARK MODE THEME
+DARK MODE THEME - Updated with Terracotta Sky dark mode
 ========================================
 */
 .dark-mode {
@@ -279,13 +279,13 @@ DARK MODE THEME
   --primary-light: var(--sky-blue-600);
   --primary-dark: var(--sky-blue-200);
   
-  --secondary: var(--coral-300);
-  --secondary-light: var(--coral-600);
-  --secondary-dark: var(--coral-200);
+  --secondary: var(--terra-200);
+  --secondary-light: var(--terra-600);
+  --secondary-dark: var(--terra-100);
   
-  --accent: var(--green-300);
-  --accent-light: var(--green-600);
-  --accent-dark: var(--green-200);
+  --accent: var(--terra-300);
+  --accent-light: var(--terra-600);
+  --accent-dark: var(--terra-200);
   
   --highlight: var(--yellow-300);
   --highlight-light: var(--yellow-600);
@@ -298,15 +298,15 @@ DARK MODE THEME
   --light-gray: var(--gray-800);
   --off-white: var(--gray-900);
   --white: var(--gray-800);
-  
+
   /* Adjusted shadows for dark mode */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
   
   /* Adjusted glow effects */
-  --glow-primary: 0 0 15px rgba(110, 207, 255, 0.3);
-  --glow-secondary: 0 0 15px rgba(255, 158, 128, 0.3);
-  --glow-accent: 0 0 15px rgba(126, 217, 87, 0.3);
+  --glow-primary: 0 0 15px rgba(141, 218, 255, 0.3);
+  --glow-secondary: 0 0 15px rgba(242, 213, 196, 0.3);
+  --glow-accent: 0 0 15px rgba(224, 122, 95, 0.3);
   --glow-highlight: 0 0 15px rgba(255, 222, 89, 0.3);
 }

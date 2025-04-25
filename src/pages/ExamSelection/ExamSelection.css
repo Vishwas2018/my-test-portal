@@ -117,63 +117,79 @@
   transition: var(--transition-bounce);
 }
 
-.exam-option-card:hover {
-  transform: translateY(-5px);
-}
-
-.exam-option-card h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  color: var(--dark);
+/* Premium card styles */
+.premium-card {
+  background: linear-gradient(145deg, #ffffff, #f8f9fa);
+  border-left: 6px solid var(--primary);
   position: relative;
-  display: inline-block;
+  overflow: hidden;
 }
 
-.exam-option-card h2::after {
-  content: '';
+.premium-card::before {
+  content: "";
   position: absolute;
-  height: 3px;
-  width: 50px;
-  background: var(--gradient-fun);
-  bottom: -8px;
-  left: 0;
-  border-radius: var(--radius-full);
+  top: 0;
+  right: 0;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(110, 207, 255, 0.2), transparent 70%);
+  z-index: 0;
+  border-radius: 50%;
+  transform: translate(30%, -30%);
 }
 
-.exam-option-card p {
-  color: var(--dark-gray);
-  margin-bottom: 1.5rem;
+.premium-card h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--primary-dark);
+  position: relative;
+}
+
+.premium-card h3 {
+  font-size: 1.4rem;
+  margin: 1.5rem 0 1rem;
+  color: var(--dark);
+  border-bottom: 2px solid var(--light-gray);
+  padding-bottom: 0.5rem;
+}
+
+.premium-features {
+  margin-top: 2rem;
+  background-color: rgba(var(--primary-rgb), 0.05);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.feature-icon {
+  color: var(--primary);
+  font-weight: bold;
+  position: absolute;
+  left: 0;
 }
 
 .year-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.75rem;
   margin: 1.5rem 0;
 }
 
-.sample-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
-}
-
-.badge {
-  background-color: var(--accent-light);
-  color: var(--accent-dark);
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-full);
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
 .login-required {
-  border: 2px dashed var(--light-gray);
+  border: 2px dashed var(--primary-light);
   padding: 1.5rem;
   border-radius: var(--radius-lg);
-  margin: 1rem 0;
+  margin: 1.5rem 0;
   text-align: center;
+  background-color: rgba(var(--primary-rgb), 0.05);
 }
 
 .login-buttons {
@@ -181,25 +197,6 @@
   justify-content: center;
   gap: 1rem;
   margin-top: 1rem;
-}
-
-.premium-features {
-  margin-top: 1.5rem;
-}
-
-.feature-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.feature-icon {
-  color: var(--accent);
-  font-weight: bold;
-  width: 20px;
-  display: inline-block;
-  text-align: center;
 }
 
 /* Breadcrumb styles */
@@ -252,19 +249,27 @@
 .exam-card {
   background-color: var(--white);
   border-radius: var(--radius-xl);
-  box-shadow: 0 15px 0 -8px var(--light-gray), 0 20px 30px rgba(0, 0, 0, 0.1);
-  border: 6px solid var(--white);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  transition: var(--transition-bounce);
+  transition: all 0.3s ease;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--light-gray);
 }
 
 .exam-card:hover {
   transform: translateY(-8px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-light);
 }
 
 .exam-card-content {
   padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .exam-card-header {
@@ -275,11 +280,10 @@
 
 .subject-icon {
   font-size: 1.5rem;
-  display: inline-block;
   margin-right: 0.75rem;
   width: 45px;
   height: 45px;
-  background-color: var(--white);
+  background-color: var(--primary-light);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -297,42 +301,15 @@
 .exam-card p {
   color: var(--dark-gray);
   line-height: 1.5;
+  margin-bottom: 1rem;
 }
 
-.free-badge {
-  display: inline-block;
-  background-color: var(--accent);
-  color: white;
-  font-size: 0.8rem;
-  font-weight: bold;
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-full);
-  margin-top: 1rem;
-}
-
-.subscription-info {
-  margin-top: 2rem;
+.no-exams-message {
   text-align: center;
-  padding: 1rem;
-  background-color: rgba(var(--primary-rgb), 0.05);
-  border-radius: var(--radius-md);
-  border: 1px dashed var(--primary-light);
-}
-
-.subscription-info p {
-  margin: 0;
-  color: var(--dark);
-}
-
-.subscription-info a {
-  color: var(--primary);
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.subscription-info a:hover {
-  text-decoration: underline;
+  padding: 3rem;
+  background-color: var(--light-gray);
+  border-radius: var(--radius-lg);
+  grid-column: 1 / -1;
 }
 
 /* Responsive styles */
@@ -366,6 +343,7 @@
   
   .year-buttons button {
     width: 100%;
+    margin-bottom: 0.5rem;
   }
 }
 

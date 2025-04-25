@@ -1,3 +1,4 @@
+// src/pages/ExamSelection/ExamSelection.jsx
 import './ExamSelection.css';
 
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -7,7 +8,7 @@ import { getAvailableExams, getSubjects } from '../../utils/examUtils';
 import { Button } from '../../components/common';
 import { useAuth } from '../../contexts/AuthContext';
 
-const ExamSelection = ({ isSampleTest = false }) => {
+const ExamSelection = () => {
   const [selectedExamType, setSelectedExamType] = useState(null);
   const [selectedGrade, setSelectedGrade] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -17,58 +18,24 @@ const ExamSelection = ({ isSampleTest = false }) => {
   const navigate = useNavigate();
   const params = useParams();
   
-  // Handle navigation from URL parameters for sample tests
-  useEffect(() => {
-    if (isSampleTest && params.examType) {
-      setSelectedExamType(params.examType);
-      
-      if (params.grade) {
-        const gradeNum = parseInt(params.grade.replace('year-', ''));
-        setSelectedGrade(gradeNum);
-        
-        // Load subjects for this exam type
-        const subjectsList = getSubjects(params.examType);
-        setSubjects(subjectsList);
-        
-        if (params.subject) {
-          setSelectedSubject(params.subject);
-          
-          // Generate or get available sample exams
-          const exams = getAvailableExams(params.examType, params.subject, gradeNum);
-          
-          // For sample test, show only the first exam
-          const sampleExam = {
-            id: `sample-${params.examType}-${gradeNum}-${params.subject}-1`,
-            name: `Sample Exam`,
-            grade: gradeNum,
-            type: params.examType,
-            subject: params.subject
-          };
-          
-          setAvailableExams(exams.length > 0 ? [exams[0]] : [sampleExam]);
-        }
-      }
-    }
-  }, [isSampleTest, params.examType, params.grade, params.subject]);
-
   // Define exam types
   const examTypes = [
     { 
       id: 'naplan', 
       name: 'NAPLAN',
-      description: 'Australian National Assessment Program',
+      description: 'Australian National Assessment Program - preparing students for literacy and numeracy testing',
       icon: '🏫'
     },
     { 
       id: 'icas', 
       name: 'ICAS',
-      description: 'International Competitions and Assessments for Schools',
+      description: 'International Competitions and Assessments for Schools - comprehensive assessment for high achievers',
       icon: '🎓'
     },
     { 
       id: 'icas_all_stars', 
       name: 'ICAS All Stars',
-      description: 'Advanced ICAS with comprehensive topics',
+      description: 'Advanced ICAS with comprehensive topics - challenging content for talented students',
       icon: '⭐'
     }
   ];
@@ -144,7 +111,7 @@ const ExamSelection = ({ isSampleTest = false }) => {
     );
   }
 
-  // After selecting exam type, show options for free samples vs full exams
+  // After selecting exam type, show grade options if authenticated
   if (selectedExamType && !selectedGrade) {
     return (
       <div className="exam-selection">
@@ -164,78 +131,66 @@ const ExamSelection = ({ isSampleTest = false }) => {
           </div>
           
           <div className="exam-options-container">
-            {/* Sample Tests Section */}
-            <div className="exam-option-card">
-              <h2>Free Sample Tests</h2>
-              <p>Try our sample tests to get familiar with the exam format. No account required.</p>
-              <div className="year-buttons">
-                {grades.map(grade => (
-                  <Button 
-                    key={grade}
-                    variant="primary" 
-                    size="medium"
-                    onClick={() => navigate(`/sample-test/${selectedExamType}/year-${grade}`)}
-                  >
-                    Year {grade}
-                  </Button>
-                ))}
-              </div>
-              <div className="sample-badges">
-                <span className="badge">Free</span>
-                <span className="badge">No Registration Required</span>
-              </div>
-            </div>
-            
             {/* Full Exams Section - requires login */}
-            <div className="exam-option-card">
-              <h2>Full Practice Exams</h2>
-              <p>Access our complete collection of practice exams with detailed results and progress tracking.</p>
-              <div className="year-buttons">
-                {isAuthenticated ? (
-                  grades.map(grade => (
-                    <Button 
-                      key={grade}
-                      variant="secondary" 
-                      size="medium"
-                      onClick={() => handleGradeSelect(grade)}
-                    >
-                      Year {grade}
-                    </Button>
-                  ))
-                ) : (
-                  <div className="login-required">
-                    <p>You need to be logged in to access full practice exams</p>
-                    <div className="login-buttons">
+            <div className="exam-option-card premium-card">
+              <h2>Practice Exams</h2>
+              <p>Full-length practice exams with detailed results and progress tracking.</p>
+              
+              {isAuthenticated ? (
+                <>
+                  <h3>Select Year Level</h3>
+                  <div className="year-buttons">
+                    {grades.map(grade => (
                       <Button 
-                        variant="primary" 
-                        size="medium"
-                        onClick={() => navigate('/login')}
-                      >
-                        Log In
-                      </Button>
-                      <Button 
+                        key={grade}
                         variant="secondary" 
                         size="medium"
-                        onClick={() => navigate('/signup')}
+                        onClick={() => handleGradeSelect(grade)}
                       >
-                        Sign Up
+                        Year {grade}
                       </Button>
-                    </div>
+                    ))}
                   </div>
-                )}
-              </div>
+                </>
+              ) : (
+                <div className="login-required">
+                  <p>You need to be logged in to access practice exams</p>
+                  <div className="login-buttons">
+                    <Button 
+                      variant="primary" 
+                      size="medium"
+                      onClick={() => navigate('/login')}
+                    >
+                      Log In
+                    </Button>
+                    <Button 
+                      variant="secondary" 
+                      size="medium"
+                      onClick={() => navigate('/signup')}
+                    >
+                      Sign Up
+                    </Button>
+                  </div>
+                </div>
+              )}
+              
               <div className="premium-features">
+                <h3>Premium Features</h3>
                 <div className="feature-item">
                   <span className="feature-icon">✓</span>
-                  <span>Detailed Analytics</span>
+                  <span>Full-length exams matching real test conditions</span>
                 </div>
                 <div className="feature-item">
                   <span className="feature-icon">✓</span>
-                  <span>Progress Tracking</span>
+                  <span>Detailed performance analytics</span>
                 </div>
                 <div className="feature-item">
                   <span className="feature-icon">✓</span>
-                  <span>Personalized Feedback</span>
+                  <span>Progress tracking across all subjects</span>
+                </div>
+                <div className="feature-item">
+                  <span className="feature-icon">✓</span>
+                  <span>Personalized learning recommendations</span>
                 </div>
               </div>
             </div>
@@ -257,12 +212,11 @@ const ExamSelection = ({ isSampleTest = false }) => {
               onClick={() => setSelectedGrade(null)}
               className="back-button"
             >
-              ← Back to Options
+              ← Back to Year Levels
             </Button>
             <span>
               {examTypes.find(type => type.id === selectedExamType)?.name} &gt; 
-              Year {selectedGrade} &gt; 
-              {isSampleTest ? 'Sample Test' : 'Full Practice Exams'}
+              Year {selectedGrade}
             </span>
           </div>
           
@@ -272,10 +226,7 @@ const ExamSelection = ({ isSampleTest = false }) => {
               <div 
                 key={subject.id}
                 className="exam-card"
-                onClick={() => isSampleTest 
-                  ? navigate(`/sample-test/${selectedExamType}/year-${selectedGrade}/${subject.id}`)
-                  : handleSubjectSelect(subject.id)
-                }
+                onClick={() => handleSubjectSelect(subject.id)}
               >
                 <div className="exam-card-content">
                   <div className="exam-card-header">
@@ -286,10 +237,9 @@ const ExamSelection = ({ isSampleTest = false }) => {
                     {subject.questionCount} question{subject.questionCount !== 1 ? 's' : ''}<br />
                     {subject.timeLimit} minutes
                   </p>
-                  {isSampleTest && <div className="free-badge">Free Sample</div>}
                 </div>
                 <Button variant="primary" size="small">
-                  {isSampleTest ? 'Select Sample Test' : 'Select'}
+                  Select
                 </Button>
               </div>
             ))}
@@ -321,7 +271,7 @@ const ExamSelection = ({ isSampleTest = false }) => {
           </div>
           
           <h2 className="section-title">
-            {isSampleTest ? 'Sample Test' : 'Available Exams'}
+            Available Exams
           </h2>
           <div className="exams-grid">
             {availableExams.length > 0 ? (
@@ -332,17 +282,16 @@ const ExamSelection = ({ isSampleTest = false }) => {
                   onClick={() => handleExamSelect(exam.id)}
                 >
                   <div className="exam-card-content">
-                    <h3>{isSampleTest ? 'Sample Test' : exam.name}</h3>
+                    <h3>{exam.name}</h3>
                     <p>
                       {examTypes.find(type => type.id === exam.type)?.name} - Year {exam.grade}<br />
                       {subjects.find(s => s.id === selectedSubject)?.name}<br />
                       {subjects.find(s => s.id === selectedSubject)?.questionCount} question{subjects.find(s => s.id === selectedSubject)?.questionCount !== 1 ? 's' : ''}<br />
                       {subjects.find(s => s.id === selectedSubject)?.timeLimit} minutes
                     </p>
-                    {isSampleTest && <div className="free-badge">Free Sample</div>}
                   </div>
                   <Button variant="primary" size="small">
-                    {isSampleTest ? 'Start Sample Test' : 'Start Exam'}
+                    Start Exam
                   </Button>
                 </div>
               ))
@@ -352,12 +301,6 @@ const ExamSelection = ({ isSampleTest = false }) => {
               </div>
             )}
           </div>
-          
-          {isSampleTest && (
-            <div className="subscription-info">
-              <p>Want full access to all exams? <Link to="/pricing">View our subscription plans</Link> or <Link to="/login">login</Link> to your account.</p>
-            </div>
-          )}
         </div>
       </div>
     );

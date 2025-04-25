@@ -1,6 +1,7 @@
 /* 
   base.css - Core application styles
   Sets up the foundational styling and imports the theme
+  Updated with Terracotta Sky theme colors
 */
 
 @import './theme.css';
@@ -29,14 +30,14 @@ body {
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   color: var(--dark);
-  background-color: var(--off-white);
+  background-color: var(--off-white); /* Now using warm cream color */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100%;
   overflow-x: hidden;
   background-image: 
-    radial-gradient(circle at 25% 25%, rgba(110, 207, 255, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(126, 217, 87, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 25% 25%, rgba(76, 154, 255, 0.08) 0%, transparent 50%), /* Sky blue */
+    radial-gradient(circle at 75% 75%, rgba(224, 122, 95, 0.08) 0%, transparent 50%); /* Terracotta */
   background-attachment: fixed;
 }
 
@@ -99,9 +100,9 @@ ul, ol {
 /* Basic layout classes */
 .container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1600px; /* Increased container width */
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 2%; /* Reduced side padding */
 }
 
 .app {

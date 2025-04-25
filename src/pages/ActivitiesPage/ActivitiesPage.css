@@ -53,59 +53,6 @@
   font-size: 0.95rem;
 }
 
-/* Subject item quick access */
-.quick-access-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
-  margin-bottom: 2.5rem;
-}
-
-.subject-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: var(--light-gray);
-  border-radius: var(--radius-lg);
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.subject-item:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
-}
-
-.subject-icon {
-  width: 45px;
-  height: 45px;
-  background-color: var(--white);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  flex-shrink: 0;
-}
-
-.subject-info {
-  flex: 1;
-}
-
-.subject-name {
-  font-weight: 700;
-  color: var(--dark);
-  margin-bottom: 0.25rem;
-}
-
-.subject-details {
-  font-size: 0.8rem;
-  color: var(--dark-gray);
-}
-
 /* Section title */
 .section-title {
   font-size: 1.8rem;
@@ -126,66 +73,6 @@
   border-radius: var(--radius-full);
 }
 
-/* Free badge */
-.free-badge {
-  display: inline-block;
-  background-color: var(--accent);
-  color: white;
-  font-size: 0.8rem;
-  font-weight: bold;
-  padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-full);
-  margin-top: 0.5rem;
-}
-
-/* Bouncing animation for subject cards on hover */
-@keyframes bounce-shadow {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  }
-  50% {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.15);
-  }
-}
-
-/* Decorative elements */
-.floating-shape {
-  position: absolute;
-  border-radius: 40%;
-  filter: blur(40px);
-  opacity: 0.3;
-  z-index: 1;
-  animation: float 15s ease-in-out infinite;
-}
-
-.shape-1 {
-  width: 300px;
-  height: 300px;
-  background: var(--secondary-light);
-  top: 10%;
-  left: 5%;
-}
-
-.shape-2 {
-  width: 200px;
-  height: 200px;
-  background: var(--primary-light);
-  bottom: 10%;
-  right: 10%;
-  animation-delay: 2s;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0) rotate(0);
-  }
-  50% {
-    transform: translateY(-30px) rotate(5deg);
-  }
-}
-
 /* Animation for content */
 @keyframes fadeInUp {
   from {
@@ -198,7 +85,7 @@
   }
 }
 
-/* New styles for the redesigned sample exams */
+/* New styles for the year buttons */
 .year-buttons-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -274,10 +161,6 @@
     padding: 2rem 0;
   }
   
-  .quick-access-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
-  
   .year-buttons-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   }
@@ -286,10 +169,6 @@
 @media (max-width: 480px) {
   .activities-page {
     padding: 1rem 0;
-  }
-  
-  .quick-access-grid {
-    grid-template-columns: 1fr;
   }
   
   .year-buttons-grid {
