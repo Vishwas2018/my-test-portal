@@ -1,18 +1,17 @@
 import './styles/global.css';
 import './App.css';
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Footer, Header } from './components/layout';
 
 import AboutPage from './pages/AboutPage';
-import ActivitiesPage from './pages/ActivitiesPage/ActivitiesPage';
 import { AuthProvider } from './contexts/AuthContext';
 import DashboardPage from './pages/DashboardPage';
 import ErrorBoundary from './components/common/ErrorBoundary';
-import ExamPage from './pages/ExamPage';
+import ExamPage from './pages/ExamPage/ExamPage';
 import { ExamProvider } from './contexts/ExamContext';
-import ExamSelection from './pages/ExamSelection';
-import FeaturesPage from './pages/FeaturesPage'; // Import the new FeaturesPage component
+import Exams from './pages/Exams/Exams'; // New unified Exams component
+import FeaturesPage from './pages/FeaturesPage';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -45,12 +44,29 @@ function App() {
               <main className="main-content">
                 <ErrorBoundary>
                   <Routes>
+                    {/* Public routes */}
                     <Route path="/" element={<HomePage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/pricing" element={<PricingPage />} />
-                    <Route path="/features" element={<FeaturesPage />} /> {/* Updated route to use FeaturesPage component */}
+                    <Route path="/features" element={<FeaturesPage />} />
+                    <Route path="/trial-signup" element={<TrialSignup />} />
+                    
+                    {/* New unified Exams route */}
+                    <Route path="/exams" element={<Exams />} />
+                    
+                    {/* Exam taking route */}
+                    <Route path="/exam/:subjectId" element={<ExamPage />} />
+                    
+                    {/* Redirects from old routes to new Exams page */}
+                    <Route path="/activities" element={<Navigate to="/exams" replace />} />
+                    <Route path="/exam-selection" element={<Navigate to="/exams" replace />} />
+                    <Route path="/sample-test/:examType" element={<Navigate to="/exams" replace />} />
+                    <Route path="/sample-test/:examType/year-:grade" element={<Navigate to="/exams" replace />} />
+                    <Route path="/sample-test/:examType/year-:grade/:subject" element={<Navigate to="/exams" replace />} />
+                    
+                    {/* Protected routes */}
                     <Route
                       path="/dashboard"
                       element={
@@ -67,11 +83,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-                    {/* Add this exam route */}
-                    <Route
-                      path="/exam/:subjectId"
-                      element={<ExamPage />}
-                    />
                     <Route
                       path="/results/:subjectId/:timestamp"
                       element={
@@ -80,21 +91,19 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-                    <Route path="/trial-signup" element={<TrialSignup />} />
-                    <Route path="/demo" element={<div className="container page-content">Demo Page (Coming Soon)</div>} />
+                    
+                    {/* Placeholder routes */}
+                    <Route 
+                      path="/demo" 
+                      element={<div className="container page-content">Demo Page (Coming Soon)</div>} 
+                    />
+                    <Route 
+                      path="/contact" 
+                      element={<div className="container page-content">Contact Page (Coming Soon)</div>} 
+                    />
+                    
+                    {/* Catch-all route */}
                     <Route path="*" element={<NotFoundPage />} />
-
-                    {/* Contact Page for subscription inquiries */}
-                    <Route path="/contact" element={<div className="container page-content">Contact Page (Coming Soon)</div>} />
-
-                    {/* Sample Test Routes */}
-                    <Route path="/sample-test/:examType" element={<ExamSelection isSampleTest={true} />} />
-                    <Route path="/sample-test/:examType/year-:grade" element={<ExamSelection isSampleTest={true} />} />
-                    <Route path="/sample-test/:examType/year-:grade/:subject" element={<ExamSelection isSampleTest={true} />} />
-
-                    {/* Exam Selection Routes */}
-                    <Route path="/exam-selection" element={<ExamSelection />} />
-                    <Route path="/activities" element={<ActivitiesPage />} />
                   </Routes>
                 </ErrorBoundary>
               </main>

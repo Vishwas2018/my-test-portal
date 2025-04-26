@@ -5,6 +5,10 @@ import React from 'react';
 import Testimonials from '../../components/sections/home/Testimonials';
 import { useAuth } from '../../contexts/AuthContext';
 
+/**
+ * HomePage - Main landing page component
+ * Features a modern, engaging layout with blue shades theme
+ */
 const HomePage = () => {
   const { isAuthenticated } = useAuth();
 
@@ -15,6 +19,9 @@ const HomePage = () => {
         <div className="star"></div>
         <div className="star"></div>
         <div className="star"></div>
+        <div className="abstract-shape shape-1"></div>
+        <div className="abstract-shape shape-2"></div>
+        <div className="abstract-shape shape-3"></div>
         <div className="container hero-container">
           <div className="hero-content">
             <h1 className="hero-title">
@@ -39,9 +46,6 @@ const HomePage = () => {
             </div>
           </div>
           <div className="hero-image">
-            <div className="abstract-shape shape-1"></div>
-            <div className="abstract-shape shape-2"></div>
-            <div className="abstract-shape shape-3"></div>           
             <div className="placeholder-image">
               <div className="dashboard-preview">
                 <div className="preview-header">
@@ -114,14 +118,14 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Features Section - Simplified with link to Features page */}
+      {/* Features Section */}
       <section id="features" className="features">
         <div className="container features-container">
           <h2 className="section-title">Why Choose Our Platform?</h2>
           <p className="section-subtitle">Our exam preparation platform is designed to ensure student success</p>
 
           <div className="features-grid">
-            <div className="feature-card">
+            <div className="feature-card animate-fade-in-up delay-100">
               <div className="feature-icon lightning">
                 <i className="fas fa-bolt"></i>
               </div>
@@ -129,7 +133,7 @@ const HomePage = () => {
               <p>Practice with tests that mirror the format, content, and difficulty of actual NAPLAN and ICAS exams</p>
             </div>
 
-            <div className="feature-card">
+            <div className="feature-card animate-fade-in-up delay-200">
               <div className="feature-icon secure">
                 <i className="fas fa-chart-line"></i>
               </div>
@@ -137,7 +141,7 @@ const HomePage = () => {
               <p>Receive comprehensive feedback and performance analytics to identify strengths and areas for improvement</p>
             </div>
 
-            <div className="feature-card">
+            <div className="feature-card animate-fade-in-up delay-300">
               <div className="feature-icon customize">
                 <i className="fas fa-sliders-h"></i>
               </div>
@@ -145,7 +149,7 @@ const HomePage = () => {
               <p>Study at your own pace with exams for different year levels, subjects, and difficulty levels</p>
             </div>
 
-            <div className="feature-card">
+            <div className="feature-card animate-fade-in-up delay-400">
               <div className="feature-icon tracking">
                 <i className="fas fa-check-circle"></i>
               </div>
@@ -154,9 +158,9 @@ const HomePage = () => {
             </div>
           </div>
           
-          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-            <Link to="/features" className="btn-outline" style={{ fontSize: '1.1rem', padding: '1rem 2rem' }}>
-              Explore All Features <i className="fas fa-arrow-right" style={{ marginLeft: '0.5rem' }}></i>
+          <div className="text-center mt-8">
+            <Link to="/features" className="btn-outline">
+              Explore All Features <i className="fas fa-arrow-right ml-2"></i>
             </Link>
           </div>
         </div>
@@ -165,11 +169,12 @@ const HomePage = () => {
       {/* Testimonials Section */}
       <Testimonials />
 
-      {/* Sample Exam Section - Updated to connect to free sample exams */}
+      {/* Sample Exam Section */}
       <section id="sample-activity" className="sample-activity">
         <div className="container">
           <h2 className="section-title">Try Free Sample Exams</h2>
-          <p className="section-description">Experience the quality of our practice exams with no registration required</p>
+          <p className="section-subtitle">Experience the quality of our practice exams with no registration required</p>
+          
           <div className="sample-activity-container">
             <div className="sample-activity-info">
               <h3>Sample Exam Features:</h3>
@@ -182,6 +187,7 @@ const HomePage = () => {
               </ul>
               <Link to="/activities" className="hero-btn primary">Try Free Samples</Link>
             </div>
+            
             <div className="sample-activity-image">
               <div className="placeholder-image">
                 <div className="dashboard-preview">

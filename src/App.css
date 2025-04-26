@@ -1,4 +1,8 @@
-/* src/App.css */
+/* 
+  App.css - Main application styles
+  Contains basic layout and structural styles
+*/
+
 .app {
   display: flex;
   flex-direction: column;
@@ -13,8 +17,210 @@
   padding: 4rem 0;
   min-height: 60vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 1.25rem;
-  color: #6b7280;
+  color: var(--dark-gray);
+}
+
+/* Navigation/header container */
+.app-header {
+  background-color: var(--white);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  max-width: var(--container-2xl);
+  margin: 0 auto;
+}
+
+.app-logo {
+  font-size: 1.5rem;
+  font-weight: var(--weight-bold);
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* Footer styles */
+.app-footer {
+  background-color: var(--light-gray);
+  padding: 2rem 0;
+  margin-top: 2rem;
+}
+
+.footer-container {
+  max-width: var(--container-2xl);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: var(--dark);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+}
+
+.footer-copyright {
+  text-align: center;
+  color: var(--dark-gray);
+  font-size: 0.9rem;
+}
+
+/* Responsive container classes */
+.container-sm {
+  max-width: var(--container-sm);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.container-md {
+  max-width: var(--container-md);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.container-lg {
+  max-width: var(--container-lg);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.container-xl {
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.container-2xl {
+  max-width: var(--container-2xl);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Common page layouts */
+.page-container {
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  color: var(--dark);
+  position: relative;
+  display: inline-block;
+}
+
+.page-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--gradient-fun);
+  border-radius: var(--radius-full);
+}
+
+.page-subtitle {
+  font-size: 1.2rem;
+  color: var(--dark-gray);
+  max-width: 800px;
+}
+
+/* Grid layouts */
+.grid-container {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grid-2-cols {
+  grid-template-columns: 1fr;
+}
+
+.grid-3-cols {
+  grid-template-columns: 1fr;
+}
+
+.grid-4-cols {
+  grid-template-columns: 1fr;
+}
+
+/* Tablet and larger screens */
+@media (min-width: 768px) {
+  .grid-2-cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-3-cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop screens */
+@media (min-width: 1024px) {
+  .grid-3-cols {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .grid-4-cols {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* High-contrast logo styles */
+.app-logo, 
+.navbar-brand, 
+.site-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1D5BA3; /* Deep blue, very visible */
+  background-color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-right: 1rem;
+}
+
+/* Ensure header has distinct background */
+.app-header,
+header,
+.navbar {
+  background-color: white;
+  border-bottom: 2px solid #E4F0F7;
+}
+
+/* If logo is an image */
+.logo-image {
+  max-height: 40px;
+  background-color: white;
+  padding: 4px;
+  border-radius: 4px;
 }

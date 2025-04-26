@@ -1,13 +1,12 @@
-/* src/styles/typography.css - Fluid typography system */
+/* src/styles/typography.css - Typography system for Blue Shades Theme */
 
 /* Import base font families */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Font family variables (from tokens.css) */
-  --font-primary: 'Nunito', sans-serif;
-  --font-heading: 'Comic Neue', cursive; 
+  /* Font family variables (from theme.css) */
+  --font-primary: 'Inter', sans-serif;
+  --font-heading: 'Inter', sans-serif;
   --font-mono: 'Monaco', 'Consolas', monospace;
 
   /* 
@@ -33,25 +32,6 @@
   --text-body: clamp(0.875rem, 0.5vw + 0.75rem, 1rem); /* 14px - 16px */
   --text-sm: clamp(0.75rem, 0.25vw + 0.75rem, 0.875rem); /* 12px - 14px */
   --text-xs: clamp(0.7rem, 0.1vw + 0.65rem, 0.75rem);   /* 11.2px - 12px */
-  
-  /* Special text sizes */
-  --text-hero: clamp(2.5rem, 8vw + 1rem, 5rem);  /* 40px - 80px */
-  --text-display: clamp(3rem, 10vw + 1rem, 6rem); /* 48px - 96px */
-  
-  /* Line heights */
-  --leading-tight: 1.2;
-  --leading-snug: 1.375;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
-  --leading-loose: 2;
-  
-  /* Letter spacing */
-  --tracking-tighter: -0.05em;
-  --tracking-tight: -0.025em;
-  --tracking-normal: 0;
-  --tracking-wide: 0.025em;
-  --tracking-wider: 0.05em;
-  --tracking-widest: 0.1em;
 }
 
 /* 
@@ -134,33 +114,6 @@ small, .text-small {
   font-size: var(--text-sm);
 }
 
-.text-xs {
-  font-size: var(--text-xs);
-}
-
-.text-lg {
-  font-size: var(--text-lg);
-}
-
-.text-xl {
-  font-size: var(--text-xl);
-}
-
-/* Hero text for large headings */
-.text-hero {
-  font-size: var(--text-hero);
-  line-height: 1.1;
-  font-weight: 800;
-  letter-spacing: var(--tracking-tight);
-}
-
-.text-display {
-  font-size: var(--text-display);
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: var(--tracking-tighter);
-}
-
 /* 
 =======================================
 TEXT UTILITIES
@@ -177,6 +130,10 @@ TEXT UTILITIES
 }
 
 .font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
   font-weight: 600;
 }
 
@@ -280,8 +237,8 @@ TEXT UTILITIES
   background-image: var(--gradient-secondary);
 }
 
-.text-gradient-wild {
-  background-image: var(--gradient-wild);
+.text-gradient-blue {
+  background-image: var(--gradient-blue);
 }
 
 /* Text truncation */
@@ -328,10 +285,6 @@ TEXT COLORS
   color: var(--accent);
 }
 
-.text-highlight {
-  color: var(--highlight);
-}
-
 .text-dark {
   color: var(--dark);
 }
@@ -366,7 +319,7 @@ DARK MODE ADJUSTMENTS
 .dark-mode .h4, 
 .dark-mode .h5, 
 .dark-mode .h6 {
-  color: var(--gray-100);
+  color: var(--white);
 }
 
 .dark-mode a {
@@ -375,18 +328,4 @@ DARK MODE ADJUSTMENTS
 
 .dark-mode a:hover {
   color: var(--primary);
-}
-
-/* 
-=======================================
-RESPONSIVE TYPOGRAPHY
-=======================================
-*/
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
 }

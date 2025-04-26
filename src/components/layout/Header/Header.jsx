@@ -11,7 +11,7 @@ const Header = ({ darkMode, toggleDarkMode }) => {
   const { currentUser, logout, isAuthenticated } = useAuth();
   const location = useLocation();
   
-  // Add trial functionality
+  // Trial functionality
   const [isTrialActive, setIsTrialActive] = useState(false);
   const [trialDaysRemaining, setTrialDaysRemaining] = useState(0);
   
@@ -38,7 +38,7 @@ const Header = ({ darkMode, toggleDarkMode }) => {
   
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 100);
+      setScrolled(window.scrollY > 50);
     };
     
     window.addEventListener('scroll', handleScroll);
@@ -61,7 +61,7 @@ const Header = ({ darkMode, toggleDarkMode }) => {
   
   return (
     <header className={`header ${scrolled ? 'scrolled' : ''}`}>
-      <div className="container header-container">
+      <div className="header-container">
         <Link to="/" className="logo">
           <span className="logo-text">WonderLearn</span>
         </Link>
@@ -82,13 +82,13 @@ const Header = ({ darkMode, toggleDarkMode }) => {
             <ul className="nav-links">
               <li><Link to="/" className={location.pathname === '/' ? 'active' : ''}>Home</Link></li>
               <li><Link to="/features" className={location.pathname === '/features' ? 'active' : ''}>Features</Link></li>
-              <li><Link to="/activities" className={location.pathname === '/activities' ? 'active' : ''}>Activities</Link></li>
+              <li><Link to="/exams" className={location.pathname === '/exams' ? 'active' : ''}>Exams</Link></li>
               <li><Link to="/about" className={location.pathname === '/about' ? 'active' : ''}>About</Link></li>
               {isAuthenticated && (
                 <>
                   <li><Link to="/dashboard" className={location.pathname === '/dashboard' ? 'active' : ''}>Dashboard</Link></li>
                   <li><Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''}>Profile</Link></li>
-                  </>
+                </>
               )}
             </ul>
           </nav>

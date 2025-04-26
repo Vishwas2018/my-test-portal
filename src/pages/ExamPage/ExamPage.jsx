@@ -1,226 +1,76 @@
 // src/pages/ExamPage/ExamPage.jsx
-import React, { useEffect, useRef, useState } from 'react';
+import './ExamPage.css';
+
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { getQuestions, getSubjects, saveExamResult } from '../../utils/examUtils';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
+import { Button } from '../../components/common';
 import ConfettiEffect from '../../components/ExamInterface/ConfettiEffect/ConfettiEffect';
 import ExamInterface from '../../components/ExamInterface/ExamInterface';
-import styled from 'styled-components';
-
-// Styled components
-const PageContainer = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1.5rem;
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 50vh;
-  text-align: center;
-`;
-
-const LoadingSpinner = styled.div`
-  width: 50px;
-  height: 50px;
-  border: 5px solid var(--light-gray);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1rem;
-  
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-`;
-
-const ErrorContainer = styled.div`
-  text-align: center;
-  padding: 3rem;
-  background-color: var(--white);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-`;
-
-const ErrorText = styled.p`
-  color: var(--error);
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-`;
-
-const Button = styled.button`
-  padding: 0.8rem 1.5rem;
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-`;
-
-const SecondaryButton = styled(Button)`
-  background-color: var(--white);
-  color: var(--primary);
-  border: 2px solid var(--primary);
-  
-  &:hover {
-    background-color: var(--primary-light);
-  }
-`;
-
-const ModalBackdrop = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-`;
-
-const ModalContent = styled.div`
-  background-color: var(--white);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  max-width: 500px;
-  width: 90%;
-  text-align: center;
-  box-shadow: var(--shadow-lg);
-`;
-
-const ModalTitle = styled.h2`
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: var(--dark);
-`;
-
-const ModalButtons = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-`;
-
-const CompletionEmoji = styled.div`
-  font-size: 4rem;
-  margin-bottom: 1rem;
-`;
-
-const ExamInfoList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 1.5rem 0;
-  text-align: left;
-  background-color: var(--light-gray);
-  padding: 1rem;
-  border-radius: var(--radius-md);
-`;
-
-const ExamInfoItem = styled.li`
-  margin-bottom: 0.5rem;
-  display: flex;
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-const InfoLabel = styled.span`
-  font-weight: 600;
-  width: 140px;
-  flex-shrink: 0;
-`;
-
-const InfoValue = styled.span`
-  flex: 1;
-`;
-
-const WarningBanner = styled.div`
-  background-color: rgba(255, 87, 34, 0.1);
-  border-left: 4px solid var(--error);
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: var(--radius-md);
-  color: var(--error);
-  font-weight: 500;
-`;
 
 /**
- * Exam page that loads and displays exam questions
+ * ExamPage component handles the exam-taking experience
+ * It manages loading exam data, anti-cheating measures, and result submission
  */
 const ExamPage = () => {
   const { subjectId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Refs for anti-cheating
+  // Refs for anti-cheating mechanisms
   const historyRef = useRef(window.history);
   const navigateRef = useRef(navigate);
 
-  // Extract query parameters
+  // Extract query parameters from URL
   const queryParams = new URLSearchParams(location.search);
   const examType = queryParams.get('type');
   const year = queryParams.get('year');
   const examId = queryParams.get('examId');
 
-  // State for exam info
+  // Core state
   const [examInfo, setExamInfo] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [startTime] = useState(new Date());
-  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // New state for confirmation dialog
+  // Dialog state
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const [examStarted, setExamStarted] = useState(false);
   
-  // State for anti-cheating warnings
+  // Anti-cheating state
   const [showTabWarning, setShowTabWarning] = useState(false);
   const [attemptedNavigations, setAttemptedNavigations] = useState(0);
 
-  // Handle back/forward navigation
+  // Handle back/forward browser navigation
   useEffect(() => {
     const handlePopState = (event) => {
       if (examStarted) {
-        // Prevent navigation
+        // Prevent navigation during exam
         event.preventDefault();
         window.history.pushState(null, "", window.location.pathname + window.location.search);
         
-        // Increment attempted navigations counter
+        // Record navigation attempt
         setAttemptedNavigations(prev => prev + 1);
         setShowTabWarning(true);
         
-        // Auto-hide the warning after 3 seconds
-        setTimeout(() => {
-          setShowTabWarning(false);
-        }, 3000);
+        // Auto-hide warning after 3 seconds
+        setTimeout(() => setShowTabWarning(false), 3000);
         
         return false;
       }
     };
 
-    // Push state to ensure we can capture back button
+    // Push initial state to ensure we can capture back button
     window.history.pushState(null, "", window.location.pathname + window.location.search);
     
-    // Set up event listeners for back/forward navigation
+    // Set up event listeners
     window.addEventListener('popstate', handlePopState);
     
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
+    // Clean up event listeners
+    return () => window.removeEventListener('popstate', handlePopState);
   }, [examStarted]);
   
   // Handle tab visibility changes (tab switching)
@@ -235,38 +85,32 @@ const ExamPage = () => {
     
     document.addEventListener('visibilitychange', handleVisibilityChange);
     
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [examStarted]);
   
   // Disable links within the page once exam started
   useEffect(() => {
-    if (examStarted) {
-      const handleClick = (e) => {
-        // Check if the clicked element is a link or inside a link
-        const link = e.target.closest('a');
-        if (link && !link.hasAttribute('data-exam-link')) {
-          e.preventDefault();
-          e.stopPropagation();
-          
-          setAttemptedNavigations(prev => prev + 1);
-          setShowTabWarning(true);
-          
-          setTimeout(() => {
-            setShowTabWarning(false);
-          }, 3000);
-          
-          return false;
-        }
-      };
-      
-      document.addEventListener('click', handleClick, true);
-      
-      return () => {
-        document.removeEventListener('click', handleClick, true);
-      };
-    }
+    if (!examStarted) return;
+    
+    const handleClick = (e) => {
+      // Check if the clicked element is a link or inside a link
+      const link = e.target.closest('a');
+      if (link && !link.hasAttribute('data-exam-link')) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        setAttemptedNavigations(prev => prev + 1);
+        setShowTabWarning(true);
+        
+        setTimeout(() => setShowTabWarning(false), 3000);
+        
+        return false;
+      }
+    };
+    
+    document.addEventListener('click', handleClick, true);
+    
+    return () => document.removeEventListener('click', handleClick, true);
   }, [examStarted]);
   
   // Create beforeunload handler to prevent closing the window/tab
@@ -284,11 +128,10 @@ const ExamPage = () => {
       window.addEventListener('beforeunload', handleBeforeUnload);
     }
     
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [examStarted, showCompletionDialog]);
 
+  // Load exam data on component mount
   useEffect(() => {
     const loadExamData = async () => {
       try {
@@ -326,7 +169,6 @@ const ExamPage = () => {
         
         // Show confirmation dialog once data is loaded
         setShowConfirmation(true);
-
       } catch (err) {
         console.error('Error loading exam:', err);
         setError('Failed to load exam data');
@@ -338,7 +180,8 @@ const ExamPage = () => {
     loadExamData();
   }, [subjectId, examType, year, examId]);
 
-  const handleSubmitExam = (userAnswers) => {
+  // Handler for exam submission
+  const handleSubmitExam = useCallback((userAnswers) => {
     if (!examInfo) return;
 
     // Calculate score
@@ -379,158 +222,173 @@ const ExamPage = () => {
       answers: userAnswers,
       navigationAttempts: attemptedNavigations // Record cheating attempts
     });
-  };
+  }, [examInfo, questions, startTime, attemptedNavigations]);
 
-  const handleStartExam = () => {
+  // Event handlers
+  const handleStartExam = useCallback(() => {
     setExamStarted(true);
     setShowConfirmation(false);
-  };
+  }, []);
   
-  const handleCancelExam = () => {
+  const handleCancelExam = useCallback(() => {
     navigate(-1); // Go back to previous page
-  };
+  }, [navigate]);
 
-  const handleViewResults = () => {
+  const handleViewResults = useCallback(() => {
     // Navigate to results page
     navigate(`/results/${examInfo.id}/${new Date().getTime()}`);
-  };
+  }, [navigate, examInfo]);
 
+  // Loading state
   if (loading) {
     return (
-      <PageContainer>
-        <LoadingContainer>
-          <LoadingSpinner />
-          <h2>Loading exam...</h2>
-          <p>Please wait while we prepare your questions.</p>
-        </LoadingContainer>
-      </PageContainer>
+      <div className="exam-page">
+        <div className="exam-page-container">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <h2>Loading exam...</h2>
+            <p>Please wait while we prepare your questions.</p>
+          </div>
+        </div>
+      </div>
     );
   }
 
+  // Error state
   if (error) {
     return (
-      <PageContainer>
-        <ErrorContainer>
-          <ErrorText>{error}</ErrorText>
-          <Button onClick={() => navigate('/')}>
-            Return to Dashboard
-          </Button>
-        </ErrorContainer>
-      </PageContainer>
+      <div className="exam-page">
+        <div className="exam-page-container">
+          <div className="error-container">
+            <p className="error-text">{error}</p>
+            <Button onClick={() => navigate('/')}>
+              Return to Dashboard
+            </Button>
+          </div>
+        </div>
+      </div>
     );
   }
 
+  // No questions available
   if (!examInfo || questions.length === 0) {
     return (
-      <PageContainer>
-        <ErrorContainer>
-          <ErrorText>No questions available for this exam.</ErrorText>
-          <Button onClick={() => navigate('/')}>
-            Return to Dashboard
-          </Button>
-        </ErrorContainer>
-      </PageContainer>
+      <div className="exam-page">
+        <div className="exam-page-container">
+          <div className="error-container">
+            <p className="error-text">No questions available for this exam.</p>
+            <Button onClick={() => navigate('/')}>
+              Return to Dashboard
+            </Button>
+          </div>
+        </div>
+      </div>
     );
   }
 
+  // Main render - exam interface with dialogs
   return (
-    <PageContainer>
-      {/* Confirmation Dialog */}
-      {showConfirmation && (
-        <ModalBackdrop>
-          <ModalContent>
-            <ModalTitle>Start Exam</ModalTitle>
-            <p>You are about to start the following exam:</p>
-            
-            <ExamInfoList>
-              <ExamInfoItem>
-                <InfoLabel>Subject:</InfoLabel>
-                <InfoValue>{examInfo.name}</InfoValue>
-              </ExamInfoItem>
-              {examInfo.type && (
-                <ExamInfoItem>
-                  <InfoLabel>Exam Type:</InfoLabel>
-                  <InfoValue>{examInfo.type.toUpperCase()}</InfoValue>
-                </ExamInfoItem>
-              )}
-              {examInfo.year && (
-                <ExamInfoItem>
-                  <InfoLabel>Year Level:</InfoLabel>
-                  <InfoValue>Year {examInfo.year}</InfoValue>
-                </ExamInfoItem>
-              )}
-              <ExamInfoItem>
-                <InfoLabel>Questions:</InfoLabel>
-                <InfoValue>{questions.length}</InfoValue>
-              </ExamInfoItem>
-              <ExamInfoItem>
-                <InfoLabel>Time Limit:</InfoLabel>
-                <InfoValue>
-                  {examInfo.timeLimit ? `${examInfo.timeLimit} minutes` : 'No time limit'}
-                </InfoValue>
-              </ExamInfoItem>
-            </ExamInfoList>
-            
-            <p>
-              <strong>Important:</strong> Once you start, you cannot leave this page until 
-              you submit the exam. Attempting to switch tabs, use the back button, or close 
-              the window will be recorded.
-            </p>
-            
-            <p>
-              Are you ready to begin?
-            </p>
-            
-            <ModalButtons>
-              <SecondaryButton onClick={handleCancelExam}>
-                Cancel
-              </SecondaryButton>
-              <Button onClick={handleStartExam}>
-                Start Exam
-              </Button>
-            </ModalButtons>
-          </ModalContent>
-        </ModalBackdrop>
-      )}
-      
-      {/* Tab switching/navigation warning */}
-      {showTabWarning && (
-        <WarningBanner>
-          ⚠️ Navigation detected! Please stay on this page until you complete the exam. 
-          This attempt has been recorded.
-        </WarningBanner>
-      )}
-      
-      {/* Only show exam interface after confirming */}
-      {examStarted && (
-        <ExamInterface 
-          examInfo={examInfo}
-          questions={questions}
-          onSubmitExam={handleSubmitExam}
-        />
-      )}
-
-      {/* Completion Dialog with Confetti */}
-      {showCompletionDialog && (
-        <>
-          <ConfettiEffect />
-          <ModalBackdrop>
-            <ModalContent>
-              <CompletionEmoji>🎉</CompletionEmoji>
-              <ModalTitle>Congratulations!</ModalTitle>
+    <div className="exam-page">
+      <div className="exam-page-container">
+        {/* Start Exam Confirmation Dialog */}
+        {showConfirmation && (
+          <div className="modal-backdrop">
+            <div className="modal-content">
+              <h2 className="modal-title">Start Exam</h2>
+              <p>You are about to start the following exam:</p>
+              
+              <ul className="exam-info-list">
+                <li className="exam-info-item">
+                  <span className="info-label">Subject:</span>
+                  <span className="info-value">{examInfo.name}</span>
+                </li>
+                {examInfo.type && (
+                  <li className="exam-info-item">
+                    <span className="info-label">Exam Type:</span>
+                    <span className="info-value">{examInfo.type.toUpperCase()}</span>
+                  </li>
+                )}
+                {examInfo.year && (
+                  <li className="exam-info-item">
+                    <span className="info-label">Year Level:</span>
+                    <span className="info-value">Year {examInfo.year}</span>
+                  </li>
+                )}
+                <li className="exam-info-item">
+                  <span className="info-label">Questions:</span>
+                  <span className="info-value">{questions.length}</span>
+                </li>
+                <li className="exam-info-item">
+                  <span className="info-label">Time Limit:</span>
+                  <span className="info-value">
+                    {examInfo.timeLimit ? `${examInfo.timeLimit} minutes` : 'No time limit'}
+                  </span>
+                </li>
+              </ul>
+              
               <p>
-                You've completed the {examInfo.name} exam!
+                <strong>Important:</strong> Once you start, you cannot leave this page until 
+                you submit the exam. Attempting to switch tabs, use the back button, or close 
+                the window will be recorded.
               </p>
-              <ModalButtons>
-                <Button onClick={handleViewResults} data-exam-link="true">
-                  See My Results
+              
+              <p>Are you ready to begin?</p>
+              
+              <div className="modal-buttons">
+                <Button 
+                  variant="secondary" 
+                  onClick={handleCancelExam}
+                >
+                  Cancel
                 </Button>
-              </ModalButtons>
-            </ModalContent>
-          </ModalBackdrop>
-        </>
-      )}
-    </PageContainer>
+                <Button onClick={handleStartExam}>
+                  Start Exam
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Navigation warning banner */}
+        {showTabWarning && (
+          <div className="warning-banner">
+            ⚠️ Navigation detected! Please stay on this page until you complete the exam. 
+            This attempt has been recorded.
+          </div>
+        )}
+        
+        {/* Exam interface - only shown after confirmation */}
+        {examStarted && (
+          <ExamInterface 
+            examInfo={examInfo}
+            questions={questions}
+            onSubmitExam={handleSubmitExam}
+          />
+        )}
+
+        {/* Completion Dialog with Confetti */}
+        {showCompletionDialog && (
+          <>
+            <ConfettiEffect />
+            <div className="modal-backdrop">
+              <div className="modal-content">
+                <div className="completion-emoji">🎉</div>
+                <h2 className="modal-title">Congratulations!</h2>
+                <p>You've completed the {examInfo.name} exam!</p>
+                <div className="modal-buttons">
+                  <Button 
+                    onClick={handleViewResults} 
+                    data-exam-link="true"
+                  >
+                    See My Results
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 };
 
