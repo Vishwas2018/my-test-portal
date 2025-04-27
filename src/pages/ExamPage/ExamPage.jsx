@@ -1,27 +1,39 @@
 // src/pages/ExamPage/ExamPage.jsx
 import './ExamPage.css';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { getQuestions, getSubjects, saveExamResult } from '../../utils/examUtils';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
+// Enhanced components
+import AccessibilityControls from '../../components/ExamInterface/AccessibilityControls/AccessibilityControls';
+import AnimatedCelebration from '../../components/ExamInterface/AnimatedCelebration/AnimatedCelebration';
+// Existing components
 import { Button } from '../../components/common';
 import ConfettiEffect from '../../components/ExamInterface/ConfettiEffect/ConfettiEffect';
-import ExamInterface from '../../components/ExamInterface/ExamInterface';
+import ConfirmationDialog from '../../components/ExamInterface/ConfirmationDialog/ConfirmationDialog';
+import { EXAM } from '../../utils/constants';
+import ExamResultSummary from '../../components/ExamInterface/ExamResultsSummary/ExamResultsSummary';
+import ImprovedExamInterface from '../../components/ExamInterface/ImprovedExamInterface/ImprovedExamInterface';
+import StudyTips from '../../components/ExamInterface/StudyTips/StudyTips';
+import ThemeToggler from '../../components/ExamInterface/ThemeToggler/ThemeToggler';
+import { useTheme } from '../../contexts/ThemeContext';
 
 /**
  * ExamPage component handles the exam-taking experience
- * It manages loading exam data, anti-cheating measures, and result submission
  */
 const ExamPage = () => {
   const { subjectId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Refs for anti-cheating mechanisms
-  const historyRef = useRef(window.history);
-  const navigateRef = useRef(navigate);
-
+  // Theme context integration
+  const themeContextFromHook = useTheme?.();
+  
+  // Local state for theme if context not available
+  const [localDarkMode, setLocalDarkMode] = useState(false);
+  const [localAccessibility, setLocalAccessibility] = useState({});
+  
   // Extract query parameters from URL
   const queryParams = new URLSearchParams(location.search);
   const examType = queryParams.get('type');
@@ -35,10 +47,15 @@ const ExamPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  // Dialog state
+  // Result state
+  const [examResult, setExamResult] = useState(null);
+  
+  // UI state
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showCompletionDialog, setShowCompletionDialog] = useState(false);
+  const [showAnimatedCelebration, setShowAnimatedCelebration] = useState(false);
   const [examStarted, setExamStarted] = useState(false);
+  const [showStudyTips, setShowStudyTips] = useState(true);
   
   // Anti-cheating state
   const [showTabWarning, setShowTabWarning] = useState(false);
@@ -46,12 +63,19 @@ const ExamPage = () => {
 
   // Handle back/forward browser navigation
   useEffect(() => {
+    if (!examStarted) return;
+
+    // Modern approach using beforeunload for tab/browser closing
+    const handleBeforeUnload = (event) => {
+      const message = "You're in the middle of an exam. Are you sure you want to leave?";
+      event.preventDefault();
+      event.returnValue = message; // Required for Chrome
+      return message; // Required for older browsers
+    };
+    
+    // Function to handle attempts to navigate away
     const handlePopState = (event) => {
       if (examStarted) {
-        // Prevent navigation during exam
-        event.preventDefault();
-        window.history.pushState(null, "", window.location.pathname + window.location.search);
-        
         // Record navigation attempt
         setAttemptedNavigations(prev => prev + 1);
         setShowTabWarning(true);
@@ -59,127 +83,206 @@ const ExamPage = () => {
         // Auto-hide warning after 3 seconds
         setTimeout(() => setShowTabWarning(false), 3000);
         
+        // Push state back to prevent navigation
+        window.history.pushState({examPage: true}, "", window.location.pathname + window.location.search);
+        
         return false;
       }
     };
 
     // Push initial state to ensure we can capture back button
-    window.history.pushState(null, "", window.location.pathname + window.location.search);
+    window.history.pushState({examPage: true}, "", window.location.pathname + window.location.search);
     
-    // Set up event listeners
-    window.addEventListener('popstate', handlePopState);
+    // Set up event listeners - using multiple approaches for broader browser support
+    window.addEventListener('beforeunload', handleBeforeUnload, true);
+    window.addEventListener('popstate', handlePopState, true);
     
     // Clean up event listeners
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [examStarted]);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload, true);
+      window.removeEventListener('popstate', handlePopState, true);
+    };
+  }, [examStarted, setAttemptedNavigations, setShowTabWarning]);
   
-  // Handle tab visibility changes (tab switching)
+  // PRIMARY ANTI-CHEATING DETECTION
   useEffect(() => {
+    if (!examStarted) return;
+
+    let blurCount = 0;
+    let visibilityCount = 0;
+    
+    // Handle tab visibility changes (hidden = changed tabs)
     const handleVisibilityChange = () => {
-      if (examStarted && document.visibilityState === 'hidden') {
-        // User switched tabs or minimized window
+      if (document.visibilityState === 'hidden' && examStarted) {
+        visibilityCount++;
+        console.log('Tab visibility changed - navigation attempt detected');
+        setAttemptedNavigations(prev => prev + 1);
+        setShowTabWarning(true);
+        
+        // Force the browser to execute JS even when tab is not visible
+        const startTime = Date.now();
+        while (Date.now() - startTime < 100) {
+          // Small delay to ensure the event gets processed
+        }
+      }
+    };
+    
+    // Handle window blur (clicking outside the window)
+    const handleBlur = () => {
+      if (examStarted) {
+        blurCount++;
+        console.log('Window blur - navigation attempt detected');
         setAttemptedNavigations(prev => prev + 1);
         setShowTabWarning(true);
       }
     };
     
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    // Handle window focus returning
+    const handleFocus = () => {
+      // Keep warning visible for 5 seconds when user returns
+      if (examStarted && (blurCount > 0 || visibilityCount > 0)) {
+        setTimeout(() => {
+          setShowTabWarning(false);
+        }, 5000);
+      }
+    };
     
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [examStarted]);
-  
-  // Disable links within the page once exam started
+    // Set up event listeners with capture phase to catch events early
+    document.addEventListener('visibilitychange', handleVisibilityChange, true);
+    window.addEventListener('blur', handleBlur, true);
+    window.addEventListener('focus', handleFocus, true);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange, true);
+      window.removeEventListener('blur', handleBlur, true);
+      window.removeEventListener('focus', handleFocus, true);
+    };
+  }, [examStarted, setAttemptedNavigations, setShowTabWarning]);
+
+  // SECONDARY ANTI-NAVIGATION DETECTION using Broadcast Channel API
+  // This creates a synchronized state across tabs/windows
   useEffect(() => {
     if (!examStarted) return;
     
-    const handleClick = (e) => {
-      // Check if the clicked element is a link or inside a link
-      const link = e.target.closest('a');
-      if (link && !link.hasAttribute('data-exam-link')) {
-        e.preventDefault();
-        e.stopPropagation();
+    // Create a unique channel for this exam
+    const channelId = `exam_${examInfo?.id || 'current'}_${startTime.getTime()}`;
+    let navChannel;
+    
+    try {
+      // Use Broadcast Channel API if available
+      navChannel = new BroadcastChannel(channelId);
+      
+      // Listen for navigation events
+      navChannel.onmessage = (event) => {
+        if (event.data.type === 'navigation_attempt') {
+          setAttemptedNavigations(prev => prev + 1);
+          setShowTabWarning(true);
+          
+          // Auto-hide warning after 5 seconds
+          setTimeout(() => setShowTabWarning(false), 5000);
+        }
+      };
+      
+      // Set up navigation detection
+      const detectNavigation = () => {
+        if (examStarted) {
+          try {
+            // Notify other instances about navigation attempt
+            navChannel.postMessage({ type: 'navigation_attempt', timestamp: Date.now() });
+          } catch (err) {
+            console.error('Error posting navigation message:', err);
+          }
+        }
+      };
+      
+      // Monitor navigation events
+      window.addEventListener('beforeunload', detectNavigation, true);
+      
+      return () => {
+        window.removeEventListener('beforeunload', detectNavigation, true);
+        navChannel.close();
+      };
+    } catch (err) {
+      console.warn('BroadcastChannel not supported, using fallback method');
+      
+      // Fallback method using localStorage monitoring
+      const storageKey = `exam_navigation_${examInfo?.id || 'current'}`;
+      
+      // Set up interval to check localStorage
+      const intervalId = setInterval(() => {
+        try {
+          const lastCheck = parseInt(localStorage.getItem(storageKey) || '0');
+          const now = Date.now();
+          
+          // Update timestamp
+          localStorage.setItem(storageKey, now.toString());
+          
+          // If timestamp didn't change for a while, it means user navigated away
+          if (lastCheck > 0 && now - lastCheck > 2000) {
+            setAttemptedNavigations(prev => prev + 1);
+            setShowTabWarning(true);
+            
+            // Auto-hide warning after 5 seconds
+            setTimeout(() => setShowTabWarning(false), 5000);
+          }
+        } catch (err) {
+          console.error('Error checking localStorage:', err);
+        }
+      }, 1000);
+      
+      return () => {
+        clearInterval(intervalId);
+        localStorage.removeItem(storageKey);
+      };
+    }
+  }, [examStarted, examInfo, startTime, setAttemptedNavigations, setShowTabWarning]);
+
+  // TERTIARY KEYBOARD SHORTCUT PREVENTION
+  useEffect(() => {
+    if (!examStarted) return;
+    
+    // Prevent keyboard shortcuts that might be used to navigate or cheat
+    const handleKeyDown = (event) => {
+      // Detect Alt+Tab, Alt+Left/Right, Ctrl+Tab, Cmd+Tab, etc.
+      if (
+        (event.altKey && (event.key === 'Tab' || event.key === 'ArrowLeft' || event.key === 'ArrowRight')) ||
+        (event.ctrlKey && (event.key === 'Tab' || event.key === 'w' || event.key === 't' || 
+                          event.key === 'h' || event.key === 'n' || event.key === 'j' ||
+                          event.key === 'r')) ||
+        (event.metaKey && (event.key === 'Tab' || event.key === 'w' || event.key === 't'))
+      ) {
+        // Prevent default behavior
+        event.preventDefault();
+        event.stopPropagation();
         
+        // Log attempt
         setAttemptedNavigations(prev => prev + 1);
         setShowTabWarning(true);
         
+        // Auto-hide warning after 3 seconds
         setTimeout(() => setShowTabWarning(false), 3000);
-        
+        return false;
+      }
+      
+      // Block browser refresh and navigation keys
+      if (event.key === 'F5' || (event.ctrlKey && event.key === 'r') || 
+          (event.altKey && event.key === 'Home')) {
+        event.preventDefault();
+        event.stopPropagation();
+        setShowTabWarning(true);
+        setTimeout(() => setShowTabWarning(false), 3000);
         return false;
       }
     };
     
-    document.addEventListener('click', handleClick, true);
+    // Use capture phase to intercept events before they bubble up
+    window.addEventListener('keydown', handleKeyDown, true);
     
-    return () => document.removeEventListener('click', handleClick, true);
-  }, [examStarted]);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown, true);
+    };
+  }, [examStarted, setAttemptedNavigations, setShowTabWarning]);
   
-  // Create beforeunload handler to prevent closing the window/tab
-  useEffect(() => {
-    const handleBeforeUnload = (e) => {
-      if (examStarted && !showCompletionDialog) {
-        // Standard way of showing a confirmation dialog before unload
-        e.preventDefault();
-        e.returnValue = ''; // Chrome requires returnValue to be set
-        return ''; // This text is usually ignored by browsers for security reasons
-      }
-    };
-    
-    if (examStarted) {
-      window.addEventListener('beforeunload', handleBeforeUnload);
-    }
-    
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [examStarted, showCompletionDialog]);
-
-  // Load exam data on component mount
-  useEffect(() => {
-    const loadExamData = async () => {
-      try {
-        setLoading(true);
-        console.log("Loading exam data for subject:", subjectId);
-
-        // Load subject information
-        const subjects = getSubjects();
-        console.log("Retrieved subjects:", subjects);
-        
-        const subject = subjects.find(s => s.id === subjectId);
-        console.log("Found subject:", subject);
-
-        if (!subject) {
-          setError('Subject not found');
-          setLoading(false);
-          return;
-        }
-
-        // Set exam info with additional metadata
-        setExamInfo({
-          id: subject.id,
-          name: subject.name,
-          timeLimit: subject.timeLimit || 0, // Handle sample exams with no time limit
-          icon: subject.icon,
-          type: examType,
-          year: year,
-          examId: examId
-        });
-
-        // Load questions for this subject with all metadata
-        const subjectQuestions = getQuestions(subjectId, examType, year, examId);
-        console.log("Retrieved questions:", subjectQuestions.length);
-        setQuestions(subjectQuestions);
-        
-        // Show confirmation dialog once data is loaded
-        setShowConfirmation(true);
-      } catch (err) {
-        console.error('Error loading exam:', err);
-        setError('Failed to load exam data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadExamData();
-  }, [subjectId, examType, year, examId]);
-
   // Handler for exam submission
   const handleSubmitExam = useCallback((userAnswers) => {
     if (!examInfo) return;
@@ -205,11 +308,8 @@ const ExamPage = () => {
     const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
     const timeTaken = Math.floor((new Date() - startTime) / 1000);
 
-    // Show completion dialog with confetti
-    setShowCompletionDialog(true);
-
-    // Save result with metadata
-    saveExamResult({
+    // Create result object
+    const result = {
       subject: examInfo.id,
       subjectName: examInfo.name,
       examType: examInfo.type || 'sample',
@@ -220,154 +320,226 @@ const ExamPage = () => {
       totalQuestions,
       timeTaken,
       answers: userAnswers,
-      navigationAttempts: attemptedNavigations // Record cheating attempts
-    });
+      navigationAttempts: attemptedNavigations,
+      date: new Date().toISOString()
+    };
+
+    // Store the result
+    setExamResult(result);
+    
+    // Show animated celebration first
+    setShowAnimatedCelebration(true);
+    
+    // Save result to storage
+    saveExamResult(result);
   }, [examInfo, questions, startTime, attemptedNavigations]);
 
   // Event handlers
   const handleStartExam = useCallback(() => {
     setExamStarted(true);
     setShowConfirmation(false);
+    setShowStudyTips(false);
   }, []);
   
   const handleCancelExam = useCallback(() => {
-    navigate(-1); // Go back to previous page
-  }, [navigate]);
+    // Navigate to the exams page with appropriate parameters
+    navigate(`/exams?type=${examType || ''}`);
+  }, [navigate, examType]);
 
   const handleViewResults = useCallback(() => {
     // Navigate to results page
     navigate(`/results/${examInfo.id}/${new Date().getTime()}`);
   }, [navigate, examInfo]);
+  
+  const handleAnimationComplete = useCallback(() => {
+    setShowAnimatedCelebration(false);
+    setShowCompletionDialog(true);
+  }, []);
+  
+  const handleAccessibilityChange = useCallback((settings) => {
+    if (themeContextFromHook?.updateAccessibilitySettings) {
+      themeContextFromHook.updateAccessibilitySettings(settings);
+    } else {
+      setLocalAccessibility(settings);
+    }
+  }, [themeContextFromHook]);
+  
+  const handleThemeChange = useCallback((isDark) => {
+    if (themeContextFromHook?.toggleDarkMode) {
+      themeContextFromHook.toggleDarkMode();
+    } else {
+      setLocalDarkMode(isDark);
+    }
+  }, [themeContextFromHook]);
 
-  // Loading state
-  if (loading) {
-    return (
-      <div className="exam-page">
-        <div className="exam-page-container">
-          <div className="loading-container">
-            <div className="loading-spinner"></div>
-            <h2>Loading exam...</h2>
-            <p>Please wait while we prepare your questions.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Load exam data on component mount
+  useEffect(() => {
+    const loadExamData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        console.log("Loading exam data for subject:", subjectId);
+  
+        // Load subject information
+        const subjects = getSubjects();
+        console.log("Retrieved subjects:", subjects);
+        
+        if (!Array.isArray(subjects) || subjects.length === 0) {
+          setError('No subjects available');
+          setLoading(false);
+          return;
+        }
+        
+        const subject = subjects.find(s => s?.id === subjectId);
+        console.log("Found subject:", subject);
+  
+        if (!subject) {
+          setError(`Subject "${subjectId}" not found`);
+          setLoading(false);
+          return;
+        }
+  
+        // Set exam info with additional metadata and safe defaults
+        setExamInfo({
+          id: subject.id || '',
+          name: subject.name || 'Exam',
+          timeLimit: subject.timeLimit || 0,
+          icon: subject.icon || '📝',
+          type: examType || 'practice',
+          year: year || 'N/A',
+          examId: examId || 'sample',
+          questionCount: subject.questionCount || 0
+        });
+  
+        // Load questions for this subject - with validation
+        try {
+          const subjectQuestions = getQuestions(subjectId, examType, year, examId);
+          console.log("Retrieved questions:", subjectQuestions?.length || 0);
+          
+          if (!Array.isArray(subjectQuestions) || subjectQuestions.length === 0) {
+            setError('No questions available for this exam');
+            setLoading(false);
+            return;
+          }
+          
+          // Make sure we have valid questions that won't cause rendering issues
+          const isValidQuestion = (q) => {
+            if (!q || typeof q !== 'object') return false;
+            if (!q.id || !q.text) return false;
+            
+            // Check different question types
+            if (q.type === EXAM.QUESTION_TYPES.MULTIPLE_CHOICE) {
+              return Array.isArray(q.options) && q.options.length > 0 && q.correctAnswer !== undefined;
+            } else if (q.type === EXAM.QUESTION_TYPES.TRUE_FALSE) {
+              return q.correctAnswer !== undefined;
+            } else if (q.type === EXAM.QUESTION_TYPES.FILL_IN_BLANK) {
+              return q.correctAnswer !== undefined;
+            }
+            
+            return false;
+          };
+          
+          const validQuestions = subjectQuestions.filter(isValidQuestion);
+          
+          if (validQuestions.length === 0) {
+            setError('No valid questions available for this exam');
+            setLoading(false);
+            return;
+          }
+          
+          if (validQuestions.length < subjectQuestions.length) {
+            console.warn(`${subjectQuestions.length - validQuestions.length} invalid questions were filtered out`);
+          }
+          
+          setQuestions(validQuestions);
+          
+          // Show confirmation dialog once data is loaded
+          setShowConfirmation(true);
+        } catch (questionsError) {
+          console.error('Error loading questions:', questionsError);
+          setError('Failed to load exam questions');
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        console.error('Error loading exam:', err);
+        setError('Failed to load exam data');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Error state
-  if (error) {
-    return (
-      <div className="exam-page">
-        <div className="exam-page-container">
-          <div className="error-container">
-            <p className="error-text">{error}</p>
-            <Button onClick={() => navigate('/')}>
-              Return to Dashboard
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+    loadExamData();
+  }, [subjectId, examType, year, examId]);
 
-  // No questions available
-  if (!examInfo || questions.length === 0) {
-    return (
-      <div className="exam-page">
-        <div className="exam-page-container">
-          <div className="error-container">
-            <p className="error-text">No questions available for this exam.</p>
-            <Button onClick={() => navigate('/')}>
-              Return to Dashboard
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Main render - exam interface with dialogs
+  // Main render
   return (
-    <div className="exam-page">
+    <div className={`exam-page ${examStarted ? 'exam-in-progress' : ''}`}>
+      {/* Accessibility Controls */}
+      <AccessibilityControls 
+        settings={themeContextFromHook?.accessibilitySettings || localAccessibility}
+        onChange={handleAccessibilityChange}
+      />
+      
+      {/* Theme Toggler */}
+      <ThemeToggler
+        initialDarkMode={themeContextFromHook?.isDarkMode || localDarkMode}
+        onChange={handleThemeChange}
+      />
+      
       <div className="exam-page-container">
-        {/* Start Exam Confirmation Dialog */}
-        {showConfirmation && (
-          <div className="modal-backdrop">
-            <div className="modal-content">
-              <h2 className="modal-title">Start Exam</h2>
-              <p>You are about to start the following exam:</p>
-              
-              <ul className="exam-info-list">
-                <li className="exam-info-item">
-                  <span className="info-label">Subject:</span>
-                  <span className="info-value">{examInfo.name}</span>
-                </li>
-                {examInfo.type && (
-                  <li className="exam-info-item">
-                    <span className="info-label">Exam Type:</span>
-                    <span className="info-value">{examInfo.type.toUpperCase()}</span>
-                  </li>
-                )}
-                {examInfo.year && (
-                  <li className="exam-info-item">
-                    <span className="info-label">Year Level:</span>
-                    <span className="info-value">Year {examInfo.year}</span>
-                  </li>
-                )}
-                <li className="exam-info-item">
-                  <span className="info-label">Questions:</span>
-                  <span className="info-value">{questions.length}</span>
-                </li>
-                <li className="exam-info-item">
-                  <span className="info-label">Time Limit:</span>
-                  <span className="info-value">
-                    {examInfo.timeLimit ? `${examInfo.timeLimit} minutes` : 'No time limit'}
-                  </span>
-                </li>
-              </ul>
-              
-              <p>
-                <strong>Important:</strong> Once you start, you cannot leave this page until 
-                you submit the exam. Attempting to switch tabs, use the back button, or close 
-                the window will be recorded.
-              </p>
-              
-              <p>Are you ready to begin?</p>
-              
-              <div className="modal-buttons">
-                <Button 
-                  variant="secondary" 
-                  onClick={handleCancelExam}
-                >
-                  Cancel
-                </Button>
-                <Button onClick={handleStartExam}>
-                  Start Exam
-                </Button>
+        {/* Study Tips - shown before exam starts */}
+        {!examStarted && showStudyTips && examInfo && (
+          <StudyTips 
+            subject={examInfo.name} 
+            defaultOpen={true}
+          />
+        )}
+      
+        {/* Conditional rendering for different exam states */}
+        {!examStarted ? (
+          // Show confirmation dialog
+          showConfirmation && (
+            <ConfirmationDialog 
+              examInfo={examInfo} 
+              onStart={handleStartExam} 
+              onCancel={handleCancelExam}
+            />
+          )
+        ) : (
+          // Exam is started
+          <>
+            {/* Navigation warning banner */}
+            {showTabWarning && (
+              <div className="warning-banner">
+                ⚠️ Navigation detected! Please stay on this page until you complete the exam. 
+                This attempt has been recorded.
               </div>
-            </div>
-          </div>
+            )}
+            
+            {/* Exam interface - only shown after confirmation */}
+            {!showCompletionDialog && !showAnimatedCelebration && (
+              <ImprovedExamInterface 
+                examInfo={examInfo}
+                questions={questions}
+                onSubmitExam={handleSubmitExam}
+              />
+            )}
+          </>
         )}
         
-        {/* Navigation warning banner */}
-        {showTabWarning && (
-          <div className="warning-banner">
-            ⚠️ Navigation detected! Please stay on this page until you complete the exam. 
-            This attempt has been recorded.
-          </div>
-        )}
-        
-        {/* Exam interface - only shown after confirmation */}
-        {examStarted && (
-          <ExamInterface 
-            examInfo={examInfo}
-            questions={questions}
-            onSubmitExam={handleSubmitExam}
+        {/* Animated Celebration - shown after exam submission */}
+        {showAnimatedCelebration && examResult && (
+          <AnimatedCelebration
+            show={true}
+            score={examResult.score}
+            subject={examInfo.name}
+            onComplete={handleAnimationComplete}
           />
         )}
 
-        {/* Completion Dialog with Confetti */}
-        {showCompletionDialog && (
+        {/* Completion Dialog with Result Summary */}
+        {showCompletionDialog && examResult && (
           <>
             <ConfettiEffect />
             <div className="modal-backdrop">
@@ -375,17 +547,40 @@ const ExamPage = () => {
                 <div className="completion-emoji">🎉</div>
                 <h2 className="modal-title">Congratulations!</h2>
                 <p>You've completed the {examInfo.name} exam!</p>
+                
+                {/* Enhanced result summary */}
+                <ExamResultSummary result={examResult} />
+                
                 <div className="modal-buttons">
                   <Button 
                     onClick={handleViewResults} 
                     data-exam-link="true"
                   >
-                    See My Results
+                    See Detailed Results
                   </Button>
                 </div>
               </div>
             </div>
           </>
+        )}
+        
+        {/* Loading state */}
+        {loading && (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <h2>Loading exam...</h2>
+            <p>Please wait while we prepare your questions.</p>
+          </div>
+        )}
+
+        {/* Error state */}
+        {error && (
+          <div className="error-container">
+            <p className="error-text">{error}</p>
+            <Button onClick={() => navigate('/')}>
+              Return to Dashboard
+            </Button>
+          </div>
         )}
       </div>
     </div>

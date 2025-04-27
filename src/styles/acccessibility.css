@@ -1,0 +1,130 @@
+/* src/styles/accessibility.css */
+
+/* OpenDyslexic font implementation */
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('../assets/fonts/OpenDyslexic-Regular.woff2') format('woff2'),
+         url('../assets/fonts/OpenDyslexic-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'OpenDyslexic';
+    src: url('../assets/fonts/OpenDyslexic-Bold.woff2') format('woff2'),
+         url('../assets/fonts/OpenDyslexic-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  /* Focus styles for keyboard navigation */
+  :focus-visible {
+    outline: 3px solid var(--primary) !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* Enhanced focus outlines for high contrast mode */
+  .high-contrast :focus-visible {
+    outline: 3px solid var(--primary) !important;
+    outline-offset: 3px !important;
+  }
+  
+  /* Reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  
+  /* Accessibility utility classes */
+  .visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap;
+  }
+  
+  /* Skip to content link for keyboard users */
+  .skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary);
+    color: white;
+    padding: 8px;
+    z-index: 100;
+    transition: top 0.2s;
+  }
+  
+  .skip-to-content:focus {
+    top: 0;
+  }
+  
+  /* Ensure text remains visible during webfont load */
+  html {
+    font-display: swap;
+  }
+  
+  /* Form element accessibility enhancements */
+  input, 
+  select, 
+  textarea, 
+  button {
+    font-family: inherit;
+    font-size: inherit;
+  }
+  
+  /* Improved contrast for form elements */
+  .high-contrast input,
+  .high-contrast select,
+  .high-contrast textarea {
+    border: 2px solid var(--dark) !important;
+    background-color: var(--white) !important;
+    color: var(--black) !important;
+  }
+  
+  /* Input placeholders with sufficient contrast */
+  ::placeholder {
+    color: var(--dark-gray);
+    opacity: 1;
+  }
+  
+  /* Enhanced focus states for interactive elements */
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.4);
+  }
+  
+  /* Improved color contrast for placeholder text in high contrast mode */
+  .high-contrast ::placeholder {
+    color: var(--dark);
+    opacity: 0.8;
+  }
+  
+  /* Ensuring sufficient color contrast for links */
+  a {
+    color: var(--primary-dark);
+    text-decoration: underline;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  .high-contrast a {
+    color: var(--primary-dark);
+    font-weight: bold;
+    text-decoration: underline;
+  }

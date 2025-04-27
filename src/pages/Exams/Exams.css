@@ -550,3 +550,186 @@
       grid-template-columns: repeat(2, 1fr);
     }
   }
+
+  /* Additional mobile responsiveness fixes for Exams.css */
+
+/* Add these at the end of your Exams.css file */
+
+/* Small device improvements */
+@media (max-width: 480px) {
+  /* Improve readability on small screens */
+  .exams-page {
+    padding: 1rem 0.5rem;
+  }
+  
+  .exams-container {
+    padding: 1rem;
+    border-width: 4px;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .exam-type-card {
+    padding: 1.5rem 1rem;
+  }
+  
+  .exam-type-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
+  
+  .exam-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .subject-icon {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Adjust grid layouts */
+  .exam-types-grid,
+  .exams-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  /* Optimize navigation */
+  .breadcrumb-trail {
+    font-size: 0.85rem;
+  }
+  
+  .back-button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+  }
+  
+  /* Touch-friendly adjustments */
+  .year-buttons-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .year-button-content {
+    padding: 1rem;
+  }
+  
+  .year-text {
+    font-size: 1rem;
+  }
+  
+  /* Optimize dropdowns */
+  .filter-controls {
+    gap: 0.5rem;
+  }
+  
+  .filter-dropdown {
+    width: 100%;
+    padding: 0.75rem;
+  }
+}
+
+/* Tiny screens (iPhone SE, etc.) */
+@media (max-width: 360px) {
+  .exams-container {
+    border-width: 3px;
+    border-radius: var(--radius-lg);
+  }
+  
+  .title {
+    font-size: 1.3rem;
+  }
+  
+  .year-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .exam-type-card h3 {
+    font-size: 1.2rem;
+  }
+  
+  .exam-card h3 {
+    font-size: 1.1rem;
+  }
+  
+  /* Improve tap targets */
+  .year-button-content {
+    padding: 1.2rem 1rem;
+  }
+  
+  /* Fix padding when stacked */
+  .login-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+/* Fix for orientation change */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .exams-page {
+    padding: 1rem;
+  }
+  
+  .exam-types-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  
+  .exams-container {
+    max-width: 95%;
+  }
+  
+  /* Reduce vertical space usage */
+  .title {
+    margin-bottom: 0.5rem;
+  }
+  
+  .title::after {
+    bottom: -5px;
+  }
+  
+  .subtitle {
+    margin-top: 0.75rem;
+  }
+  
+  .premium-features {
+    padding: 0.75rem;
+  }
+  
+  .feature-item {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* High-DPI devices with small screens */
+@media (-webkit-min-device-pixel-ratio: 2) and (max-width: 480px),
+       (min-resolution: 192dpi) and (max-width: 480px) {
+  /* Optimize box shadows and borders for high-DPI */
+  .exam-option-card,
+  .exam-type-card,
+  .exam-card {
+    box-shadow: 0 10px 0 -5px var(--light-gray), 0 12px 20px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* Ensure text is readable on high-DPI */
+  .subtitle, 
+  .exam-card p,
+  .subject-description {
+    font-size: 0.95rem;
+  }
+}
+
+/* Fix for dark mode compatibility */
+@media (prefers-color-scheme: dark) {
+  /* These would be overridden by your theme context, but serve as fallbacks */
+  .exam-card,
+  .exam-type-card,
+  .exam-option-card {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+  }
+}

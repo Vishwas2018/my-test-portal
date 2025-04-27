@@ -1,0 +1,294 @@
+/* src/styles/exam-theme.css */
+
+/* Base theme variables - applied to both light and dark modes */
+:root {
+    /* Typography */
+    --font-primary: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-secondary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 3rem;
+    
+    /* Border radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-xxl: 1.5rem;
+    --radius-full: 9999px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: 500ms cubic-bezier(0.2, 0.8, 0.2, 1.4);
+  
+    /* Set default theme to light */
+    color-scheme: light;
+  }
+  
+  /* Light theme (default) */
+  :root, 
+  [data-theme="light"] {
+    /* Colors */
+    --primary-hue: 210;
+    --primary-saturation: 100%;
+    
+    /* Primary colors */
+    --primary: hsl(var(--primary-hue), var(--primary-saturation), 50%);
+    --primary-light: hsl(var(--primary-hue), var(--primary-saturation), 80%);
+    --primary-dark: hsl(var(--primary-hue), var(--primary-saturation), 35%);
+    --primary-rgb: 10, 120, 255;
+    
+    /* Secondary colors */
+    --secondary: hsl(35, 100%, 50%);
+    --secondary-light: hsl(35, 100%, 80%);
+    --secondary-dark: hsl(35, 100%, 35%);
+    --secondary-rgb: 255, 165, 0;
+    
+    /* Accent colors */
+    --accent: hsl(150, 60%, 50%);
+    --accent-light: hsl(150, 60%, 80%);
+    --accent-dark: hsl(150, 60%, 35%);
+    --accent-rgb: 46, 204, 113;
+    
+    /* Highlight colors */
+    --highlight: hsl(280, 60%, 60%);
+    --highlight-light: hsl(280, 60%, 85%);
+    --highlight-dark: hsl(280, 60%, 45%);
+    --highlight-rgb: 155, 89, 182;
+    
+    /* Success/Error states */
+    --success: hsl(150, 60%, 50%);
+    --success-light: hsl(150, 60%, 80%);
+    --success-dark: hsl(150, 60%, 35%);
+    --success-rgb: 46, 204, 113;
+    
+    --error: hsl(0, 90%, 60%);
+    --error-light: hsl(0, 90%, 85%);
+    --error-dark: hsl(0, 90%, 45%);
+    --error-rgb: 231, 76, 60;
+    
+    /* Neutrals */
+    --white: hsl(0, 0%, 100%);
+    --off-white: hsl(210, 20%, 98%);
+    --light-gray: hsl(210, 14%, 89%);
+    --dark-gray: hsl(210, 10%, 40%);
+    --dark: hsl(210, 15%, 20%);
+    --black: hsl(210, 30%, 10%);
+    --dark-rgb: 44, 62, 80;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    --gradient-fun: linear-gradient(135deg, var(--primary), var(--accent));
+    --gradient-warm: linear-gradient(135deg, var(--secondary), var(--highlight));
+    --gradient-cool: linear-gradient(135deg, var(--primary), var(--highlight));
+    --gradient-success: linear-gradient(135deg, var(--accent-light), var(--accent));
+    --gradient-warning: linear-gradient(135deg, var(--secondary-light), var(--secondary));
+    --gradient-neutral: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+    
+    /* Background and text */
+    --bg-primary: var(--white);
+    --bg-secondary: var(--off-white);
+    --bg-tertiary: var(--light-gray);
+    --text-primary: var(--dark);
+    --text-secondary: var(--dark-gray);
+    --text-on-primary: var(--white);
+  }
+  
+  /* Dark theme */
+  [data-theme="dark"] {
+    color-scheme: dark;
+    
+    /* Adjust primary hue and saturation for dark mode */
+    --primary-hue: 215;
+    --primary-saturation: 90%;
+    
+    /* Primary colors */
+    --primary: hsl(var(--primary-hue), var(--primary-saturation), 60%);
+    --primary-light: hsl(var(--primary-hue), var(--primary-saturation), 75%);
+    --primary-dark: hsl(var(--primary-hue), var(--primary-saturation), 45%);
+    
+    /* Secondary colors - warmer in dark mode */
+    --secondary: hsl(35, 90%, 55%);
+    --secondary-light: hsl(35, 90%, 70%);
+    --secondary-dark: hsl(35, 90%, 40%);
+    
+    /* Accent colors - adjusted for dark mode */
+    --accent: hsl(150, 55%, 55%);
+    --accent-light: hsl(150, 55%, 70%);
+    --accent-dark: hsl(150, 55%, 40%);
+    
+    /* Highlight colors - brighter in dark mode */
+    --highlight: hsl(280, 70%, 65%);
+    --highlight-light: hsl(280, 70%, 80%);
+    --highlight-dark: hsl(280, 70%, 50%);
+    
+    /* Neutrals for dark mode */
+    --white: hsl(210, 15%, 15%);
+    --off-white: hsl(210, 15%, 10%);
+    --light-gray: hsl(210, 15%, 20%);
+    --dark-gray: hsl(210, 10%, 70%);
+    --dark: hsl(210, 15%, 90%);
+    --black: hsl(210, 15%, 95%);
+    
+    /* Background and text for dark mode */
+    --bg-primary: hsl(210, 15%, 15%);
+    --bg-secondary: hsl(210, 15%, 10%);
+    --bg-tertiary: hsl(210, 15%, 20%);
+    --text-primary: hsl(210, 15%, 90%);
+    --text-secondary: hsl(210, 10%, 70%);
+    
+    /* Shadows for dark mode */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
+    --shadow-xl: 0 20px 25px rgba(0,0,0,0.3);
+  }
+  
+  /* High contrast mode */
+  .high-contrast {
+    --primary: hsl(220, 100%, 50%);
+    --primary-light: hsl(220, 100%, 80%);
+    --primary-dark: hsl(220, 100%, 30%);
+    
+    --secondary: hsl(40, 100%, 50%);
+    --secondary-light: hsl(40, 100%, 80%);
+    --secondary-dark: hsl(40, 100%, 30%);
+    
+    --accent: hsl(160, 100%, 40%);
+    --accent-light: hsl(160, 100%, 70%);
+    --accent-dark: hsl(160, 100%, 20%);
+    
+    --white: hsl(0, 0%, 100%);
+    --off-white: hsl(0, 0%, 95%);
+    --light-gray: hsl(0, 0%, 80%);
+    --dark-gray: hsl(0, 0%, 30%);
+    --dark: hsl(0, 0%, 10%);
+    --black: hsl(0, 0%, 0%);
+    
+    --text-primary: var(--black);
+    --text-secondary: var(--dark);
+    --bg-primary: var(--white);
+    --bg-secondary: var(--off-white);
+  }
+  
+  /* High contrast dark mode */
+  [data-theme="dark"].high-contrast {
+    --white: hsl(0, 0%, 0%);
+    --off-white: hsl(0, 0%, 5%);
+    --light-gray: hsl(0, 0%, 15%);
+    --dark-gray: hsl(0, 0%, 70%);
+    --dark: hsl(0, 0%, 90%);
+    --black: hsl(0, 0%, 100%);
+    
+    --text-primary: var(--black);
+    --text-secondary: var(--dark);
+    --bg-primary: var(--white);
+    --bg-secondary: var(--off-white);
+  }
+  
+  /* Color blindness modes */
+  [data-color-mode="protanopia"] {
+    --primary: hsl(235, 85%, 60%);
+    --primary-light: hsl(235, 85%, 80%);
+    --primary-dark: hsl(235, 85%, 40%);
+    
+    --secondary: hsl(220, 80%, 70%);
+    --secondary-light: hsl(220, 80%, 85%);
+    --secondary-dark: hsl(220, 80%, 55%);
+    
+    --accent: hsl(60, 80%, 60%);
+    --accent-light: hsl(60, 80%, 80%);
+    --accent-dark: hsl(60, 80%, 40%);
+    
+    --highlight: hsl(180, 60%, 50%);
+    --highlight-light: hsl(180, 60%, 75%);
+    --highlight-dark: hsl(180, 60%, 35%);
+  }
+  
+  [data-color-mode="deuteranopia"] {
+    --primary: hsl(225, 85%, 60%);
+    --primary-light: hsl(225, 85%, 80%);
+    --primary-dark: hsl(225, 85%, 40%);
+    
+    --secondary: hsl(45, 90%, 60%);
+    --secondary-light: hsl(45, 90%, 80%);
+    --secondary-dark: hsl(45, 90%, 40%);
+    
+    --accent: hsl(195, 60%, 60%);
+    --accent-light: hsl(195, 60%, 80%);
+    --accent-dark: hsl(195, 60%, 40%);
+    
+    --highlight: hsl(0, 60%, 60%);
+    --highlight-light: hsl(0, 60%, 80%);
+    --highlight-dark: hsl(0, 60%, 40%);
+  }
+  
+  [data-color-mode="tritanopia"] {
+    --primary: hsl(210, 80%, 60%);
+    --primary-light: hsl(210, 80%, 80%);
+    --primary-dark: hsl(210, 80%, 40%);
+    
+    --secondary: hsl(0, 70%, 60%);
+    --secondary-light: hsl(0, 70%, 80%);
+    --secondary-dark: hsl(0, 70%, 40%);
+    
+    --accent: hsl(60, 60%, 60%);
+    --accent-light: hsl(60, 60%, 80%);
+    --accent-dark: hsl(60, 60%, 40%);
+    
+    --highlight: hsl(330, 50%, 60%);
+    --highlight-light: hsl(330, 50%, 80%);
+    --highlight-dark: hsl(330, 50%, 40%);
+  }
+  
+  /* Reduce motion */
+  .reduce-motion * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Responsive font sizes */
+  html {
+    font-size: 16px;
+  }
+  
+  @media screen and (max-width: 768px) {
+    html {
+      font-size: 15px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    html {
+      font-size: 14px;
+    }
+  }
+  
+  /* Utilities */
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }

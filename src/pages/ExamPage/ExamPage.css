@@ -1,0 +1,235 @@
+/* src/pages/ExamPage/ExamPage.css */
+
+.exam-page {
+    min-height: 100vh;
+    background-color: var(--off-white);
+    background-image: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 100%);
+    padding: 2rem 1rem;
+  }
+  
+  .exam-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    position: relative;
+    min-height: 80vh;
+  }
+  
+  /* Warning banner */
+  .warning-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 0, 0, 0.9);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    z-index: 9999; /* Ensure it's on top of everything */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    animation: warning-pulse 1s infinite alternate;
+  }
+  
+  @keyframes warning-pulse {
+    from {
+      background-color: rgba(255, 0, 0, 0.9);
+    }
+    to {
+      background-color: rgba(255, 50, 50, 0.95);
+    }
+  }
+  
+  /* Loading state */
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(var(--primary-rgb), 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 1.5rem;
+  }
+  
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Error state */
+  .error-container {
+    text-align: center;
+    padding: 3rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .error-text {
+    color: var(--error);
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+  }
+  
+  /* Modal backdrop */
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+    box-shadow: var(--shadow-xl);
+    position: relative;
+  }
+  
+  .completion-emoji {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .modal-title {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+  }
+  
+  .modal-buttons {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .exam-page {
+      padding: 1rem 0.5rem;
+    }
+    
+    .modal-content {
+      padding: 1.5rem;
+      width: 95%;
+    }
+  }
+  
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .exam-page-container {
+      background-color: rgba(30, 30, 30, 0.9);
+    }
+  }
+
+/* Disable footer links during exam */
+.exam-page.exam-in-progress {
+  position: relative;
+  z-index: 10; /* Ensure it's above footer */
+  min-height: 100vh;
+}
+
+.exam-page.exam-in-progress::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px; /* Adjust based on your footer height */
+  background-color: var(--off-white);
+  z-index: 9;
+}
+
+/* Improved modal backdrop that blocks the entire page */
+.confirmation-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000; /* Higher than other elements */
+}
+
+/* Update study tips to be visible with modal */
+.study-tips-container {
+  max-width: 800px;
+  margin: 1rem auto;
+  position: relative;
+  z-index: 1; /* Lower than modal */
+}
+
+/* Two-step confirmation dialog */
+.confirmation-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.confirmation-step {
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.confirmation-step.active {
+  background-color: rgba(var(--primary-rgb), 0.1);
+  border-left: 4px solid var(--primary);
+}
+
+.confirmation-step-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.step-title {
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.step-content {
+  margin-left: 2rem;
+}

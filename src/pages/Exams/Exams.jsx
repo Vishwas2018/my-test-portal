@@ -1,7 +1,8 @@
 // src/pages/Exams/Exams.jsx
 import './Exams.css';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import { EXAM_TYPES, YEAR_LEVELS } from '../../utils/constants';
+import React, { useEffect, useState } from 'react';
 import { getAvailableExams, getSubjects } from '../../utils/examUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -15,12 +16,63 @@ const Exams = () => {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedSection, setSelectedSection] = useState(null); // 'sampleTests' or 'fullExams'
   const [availableExams, setAvailableExams] = useState([]);
-  const [subjects, setSubjects] = useState([]);
+  const [displaySubjects, setDisplaySubjects] = useState([]);
   
   // Auth and navigation
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Hardcoded options - use EXAM_TYPES from constants
+  const examTypes = EXAM_TYPES;
+  const grades = YEAR_LEVELS;
+
+  // Handler functions - defined before use in useEffect
+  const handleExamTypeSelect = (examTypeId) => {
+    setSelectedExamType(examTypeId);
+    setSelectedGrade(null);
+    setSelectedSubject(null);
+    setSelectedSection(null);
+    setAvailableExams([]);
+    
+    // Load subjects for this exam type
+    const subjectsList = getSubjects(examTypeId);
+    setDisplaySubjects(subjectsList);
+  };
+
+  const handleGradeSelect = (grade) => {
+    setSelectedGrade(grade);
+    setSelectedSubject(null);
+    setAvailableExams([]);
+  };
+  
+  const handleSectionSelect = (section) => {
+    setSelectedSection(section);
+    setSelectedSubject(null);
+    setAvailableExams([]);
+  };
+
+  const handleSubjectSelect = (subjectId) => {
+    setSelectedSubject(subjectId);
+    
+    // Get available exams based on selection
+    if (selectedSection === 'fullExams') {
+      const exams = getAvailableExams(selectedExamType, subjectId, selectedGrade);
+      setAvailableExams(exams);
+    } else {
+      // For sample tests, we'd use a different method or hardcoded sample tests
+      setAvailableExams([
+        { id: `sample_${subjectId}_1`, name: 'Sample Test 1', type: selectedExamType, grade: 'All' },
+        { id: `sample_${subjectId}_2`, name: 'Sample Test 2', type: selectedExamType, grade: 'All' }
+      ]);
+    }
+  };
+
+  const handleExamSelect = (examId) => {
+    // Create the URL with query parameters for exam type and grade
+    const url = `/exam/${selectedSubject}?type=${selectedExamType}&year=${selectedGrade || 'all'}&examId=${examId}`;
+    navigate(url);
+  };
 
   // Parse query parameters on component mount
   useEffect(() => {
@@ -36,82 +88,6 @@ const Exams = () => {
       }
     }
   }, [location]);
-  
-  // Define exam types
-  const examTypes = [
-    { 
-      id: 'naplan', 
-      name: 'NAPLAN',
-      description: 'Australian National Assessment Program - preparing students for literacy and numeracy testing',
-      icon: '🏫'
-    },
-    { 
-      id: 'icas', 
-      name: 'ICAS',
-      description: 'International Competitions and Assessments for Schools - comprehensive assessment for high achievers',
-      icon: '🎓'
-    },
-    { 
-      id: 'icas_all_stars', 
-      name: 'ICAS All Stars',
-      description: 'Advanced ICAS with comprehensive topics - challenging content for talented students',
-      icon: '⭐'
-    }
-  ];
-
-  // Define grades
-  const grades = [2, 3, 4, 5, 6, 7, 8, 9];
-  
-  // Handle exam type selection
-  const handleExamTypeSelect = useCallback((examTypeId) => {
-    setSelectedExamType(examTypeId);
-    setSelectedGrade(null);
-    setSelectedSubject(null);
-    setSelectedSection(null);
-    setAvailableExams([]);
-    
-    // Load subjects for this exam type
-    const subjectsList = getSubjects(examTypeId);
-    setSubjects(subjectsList);
-  }, []);
-
-  // Handle grade selection
-  const handleGradeSelect = useCallback((grade) => {
-    setSelectedGrade(grade);
-    setSelectedSubject(null);
-    setAvailableExams([]);
-  }, []);
-  
-  // Handle section selection (sample tests or full exams)
-  const handleSectionSelect = useCallback((section) => {
-    setSelectedSection(section);
-    setSelectedSubject(null);
-    setAvailableExams([]);
-  }, []);
-
-  // Handle subject selection
-  const handleSubjectSelect = useCallback((subjectId) => {
-    setSelectedSubject(subjectId);
-    
-    // Get available exams based on selection
-    if (selectedSection === 'fullExams') {
-      const exams = getAvailableExams(selectedExamType, subjectId, selectedGrade);
-      setAvailableExams(exams);
-    } else {
-      // For sample tests, we'd use a different method or hardcoded sample tests
-      setAvailableExams([
-        { id: `sample_${subjectId}_1`, name: 'Sample Test 1', type: selectedExamType, grade: 'All' },
-        { id: `sample_${subjectId}_2`, name: 'Sample Test 2', type: selectedExamType, grade: 'All' }
-      ]);
-    }
-  }, [selectedExamType, selectedGrade, selectedSection]);
-
-  // Handle exam selection
-  const handleExamSelect = useCallback((examId) => {
-    // Create the URL with query parameters for exam type and grade
-    const url = `/exam/${selectedSubject}?type=${selectedExamType}&year=${selectedGrade || 'all'}&examId=${examId}`;
-    navigate(url);
-  }, [navigate, selectedExamType, selectedGrade, selectedSubject]);
 
   // Get NAPLAN subjects
   const getNaplanSubjects = () => [
@@ -119,7 +95,7 @@ const Exams = () => {
       id: 'reading',
       name: 'Reading',
       icon: '📚',
-      description: 'Comprehension of different text types (narrative, persuasive, informative), understanding literal and inferential meaning, interpreting vocabulary in context',
+      description: 'Comprehension of different text types',
       questionCount: 40,
       timeLimit: 45
     },
@@ -127,7 +103,7 @@ const Exams = () => {
       id: 'writing',
       name: 'Writing',
       icon: '✍️',
-      description: 'One extended writing task based on a given prompt. Task may be narrative or persuasive.',
+      description: 'One extended writing task based on a given prompt',
       questionCount: 1,
       timeLimit: 40
     },
@@ -143,7 +119,7 @@ const Exams = () => {
       id: 'numeracy',
       name: 'Numeracy',
       icon: '➕',
-      description: 'Number and Algebra, Measurement and Geometry, Statistics and Probability',
+      description: 'Number and Algebra, Measurement and Geometry',
       questionCount: 40,
       timeLimit: 50
     }
@@ -155,7 +131,7 @@ const Exams = () => {
       id: 'science',
       name: 'Science',
       icon: '🔬',
-      description: 'Scientific knowledge and understanding across key areas',
+      description: 'Scientific knowledge and understanding',
       questionCount: 30,
       timeLimit: 45
     },
@@ -174,42 +150,10 @@ const Exams = () => {
       description: 'Reading comprehension and analysis',
       questionCount: 45,
       timeLimit: 45
-    },
-    {
-      id: 'english_writing',
-      name: 'English (Writing)',
-      icon: '✍️',
-      description: 'Narrative or persuasive writing',
-      questionCount: 1,
-      timeLimit: 30
-    },
-    {
-      id: 'grammar',
-      name: 'Grammar',
-      icon: '📝',
-      description: 'Grammar rules, structure and usage',
-      questionCount: 30,
-      timeLimit: 30
-    },
-    {
-      id: 'mathematics',
-      name: 'Mathematics',
-      icon: '🧮',
-      description: 'Mathematical concepts, problem-solving and reasoning',
-      questionCount: 35,
-      timeLimit: 40
-    },
-    {
-      id: 'digital',
-      name: 'Digital Technologies',
-      icon: '💻',
-      description: 'Digital systems, data and computational thinking',
-      questionCount: 30,
-      timeLimit: 30
     }
   ];
 
-  // Get sample test subjects (common across all exam types)
+  // Get sample test subjects
   const getSampleTestSubjects = () => [
     {
       id: 'maths',
@@ -355,26 +299,6 @@ const Exams = () => {
                   </div>
                 </div>
               )}
-              
-              <div className="premium-features">
-                <h3>Premium Features</h3>
-                <div className="feature-item">
-                  <span className="feature-icon">✓</span>
-                  <span>Full-length exams matching real test conditions</span>
-                </div>
-                <div className="feature-item">
-                  <span className="feature-icon">✓</span>
-                  <span>Detailed performance analytics</span>
-                </div>
-                <div className="feature-item">
-                  <span className="feature-icon">✓</span>
-                  <span>Progress tracking across all subjects</span>
-                </div>
-                <div className="feature-item">
-                  <span className="feature-icon">✓</span>
-                  <span>Personalized learning recommendations</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -527,7 +451,7 @@ const Exams = () => {
     );
   }
 
-  // After selecting a subject, show available exams (for both sample tests and full exams)
+  // After selecting a subject, show available exams
   if (selectedExamType && selectedSubject) {
     // Find the correct subject list based on section and exam type
     let subjectList;

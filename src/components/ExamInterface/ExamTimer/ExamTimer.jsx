@@ -1,198 +1,219 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+// src/components/ExamInterface/ExamTimer/ExamTimer.jsx
 
-import PropTypes from 'prop-types';
+import React, { useEffect, useRef, useState } from 'react';
+
 import styled from 'styled-components';
 
+// Format time helper function (copied from examUtils to avoid dependency)
+const formatTime = (seconds) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+};
+
 const TimerContainer = styled.div`
-  width: 100%;
-  margin-bottom: 1.5rem;
-`;
-
-const TimerHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-`;
-
-const TimerText = styled.span`
-  font-size: 1.2rem;
-  font-weight: ${props => props.$warning ? '700' : '600'};
-  color: ${props => {
-    if (props.$warning) return 'var(--error)';
-    return 'var(--dark)';
-  }};
-  animation: ${props => props.$blinking ? 'blink 1s infinite' : 'none'};
-  
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-`;
-
-const WarningMessage = styled.div`
-  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
-  background-color: rgba(255, 87, 34, 0.1);
-  color: var(--error);
-  font-weight: 600;
-  animation: pulse 1s infinite;
-  
-  @keyframes pulse {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; }
-  }
-`;
-
-const ProgressBarContainer = styled.div`
-  width: 100%;
-  height: 10px;
-  background-color: var(--light-gray);
-  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
   overflow: hidden;
 `;
 
-const ProgressBar = styled.div`
-  height: 100%;
-  width: ${props => props.percentage}%;
-  background: ${props => {
-    if (props.percentage < 20) return 'var(--error)';
-    if (props.percentage < 50) return 'var(--secondary)';
-    return 'var(--primary)';
-  }};
-  border-radius: var(--radius-full);
-  transition: width 1s linear, background-color 1s ease;
+const TimerProgressBar = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  width: ${props => props.timePercentage}%;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 0;
+  transition: width 1s linear;
+`;
+
+const TimerIcon = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+`;
+
+const TimerText = styled.span`
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: ${props => props.isLow ? 'var(--error)' : 'var(--dark)'};
+  animation: ${props => props.isLow ? 'pulse 1s infinite' : 'none'};
+  position: relative;
+  z-index: 1;
+  
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+  }
+`;
+
+const WarningText = styled.span`
+  font-size: 0.8rem;
+  margin-left: auto;
+  color: var(--error);
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
 `;
 
 /**
- * ExamTimer component that displays the remaining time for an exam
- * Optimized with useCallback and useRef to prevent unnecessary re-renders
+ * ExamTimer Component with improved visualization
+ * Includes a reducing progress bar for time remaining
  * 
- * @param {number} duration - Duration in minutes
- * @param {Function} onTimeUp - Callback when time is up
+ * @param {number} duration - Time limit in minutes
+ * @param {Function} onTimeUp - Callback when timer expires
  * @param {boolean} isPaused - Whether the timer is paused
  */
-const ExamTimer = ({ duration, onTimeUp, isPaused = false }) => {
-  const [timeLeft, setTimeLeft] = useState(duration * 60); // convert to seconds
+const ExamTimer = ({ duration = 30, onTimeUp, isPaused = false }) => {
+  // Convert minutes to seconds
+  const totalSeconds = duration * 60;
+  
+  // State
+  const [timeLeft, setTimeLeft] = useState(totalSeconds);
+  const [isLowTime, setIsLowTime] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
-  const [warningMessage, setWarningMessage] = useState('');
-  const [isBlinking, setIsBlinking] = useState(false);
   
-  // Use refs to track warning timeouts for cleanup
-  const warningTimeoutRef = useRef(null);
+  // References
+  const timerRef = useRef(null);
+  const endTimeRef = useRef(null);
+  const lastTickRef = useRef(Date.now());
   
-  // Memoize the onTimeUp callback to prevent unnecessary effect runs
-  const handleTimeUp = useCallback(() => {
-    if (timeLeft <= 0) {
-      console.log("Time up callback fired");
-      onTimeUp();
-    }
-  }, [onTimeUp, timeLeft]);
+  // Calculate time percentage remaining
+  const timePercentage = Math.max(0, (timeLeft / totalSeconds) * 100);
   
-  // Handle time progression with useCallback to stabilize the effect dependencies
-  const decrementTime = useCallback(() => {
-    setTimeLeft(prevTime => {
-      const newTime = prevTime - 1;
-      return newTime >= 0 ? newTime : 0;
-    });
-  }, []);
-  
-  // Handle warnings for specific time thresholds
-  const showTimeWarning = useCallback((seconds, message) => {
-    setWarningMessage(message);
-    setShowWarning(true);
-    setIsBlinking(true);
-    
-    // Clear any existing timeout
-    if (warningTimeoutRef.current) {
-      clearTimeout(warningTimeoutRef.current);
-    }
-    
-    // Auto-hide warning after 6 seconds
-    warningTimeoutRef.current = setTimeout(() => {
-      setShowWarning(false);
-      
-      // Keep blinking in the last 30 seconds
-      if (seconds > 30) {
-        setIsBlinking(false);
-      }
-    }, 6000);
-  }, []);
-  
-  // Main timer effect
+  // Set up the timer
   useEffect(() => {
-    // Time's up - Only trigger once when we reach zero
-    if (timeLeft === 0) {
-      handleTimeUp();
-      return;
-    }
-    
-    // Don't run the timer when paused
+    // Don't start if paused
     if (isPaused) return;
     
-    // Timer interval
-    const timer = setInterval(decrementTime, 1000);
-    
-    // Cleanup on unmount or when dependencies change
-    return () => clearInterval(timer);
-  }, [timeLeft, isPaused, handleTimeUp, decrementTime]);
-  
-  // Warning effect - separated from the main timer effect
-  useEffect(() => {
-    // Show warnings at specific times
-    if (timeLeft === 300) { // 5 minutes
-      showTimeWarning(300, '5 minutes left!');
-    } else if (timeLeft === 120) { // 2 minutes
-      showTimeWarning(120, '2 minutes left!');
-    } else if (timeLeft === 60) { // 1 minute
-      showTimeWarning(60, '1 minute left!');
-    } else if (timeLeft === 30) { // 30 seconds
-      showTimeWarning(30, '30 seconds left!');
-      setIsBlinking(true); // Keep blinking for last 30 seconds
+    // Set the end time when the component mounts
+    if (!endTimeRef.current) {
+      endTimeRef.current = Date.now() + (timeLeft * 1000);
     }
     
-    // Cleanup function
-    return () => {
-      if (warningTimeoutRef.current) {
-        clearTimeout(warningTimeoutRef.current);
+    // Timer tick function - uses the actual elapsed time for accuracy
+    const tick = () => {
+      const now = Date.now();
+      const elapsedSinceLastTick = (now - lastTickRef.current) / 1000;
+      lastTickRef.current = now;
+      
+      // Calculate time left based on the end time
+      const remaining = Math.max(0, Math.floor((endTimeRef.current - now) / 1000));
+      
+      // Check if the difference is too large (indicating device sleep or tab switch)
+      if (elapsedSinceLastTick > 2) {
+        setShowWarning(true);
+        setTimeout(() => setShowWarning(false), 5000);
+      }
+      
+      setTimeLeft(remaining);
+      
+      // Check for time up
+      if (remaining <= 0) {
+        clearInterval(timerRef.current);
+        if (typeof onTimeUp === 'function') {
+          onTimeUp();
+        }
+      }
+      
+      // Set low time warning at 20% of total time
+      if (remaining <= totalSeconds * 0.2 && !isLowTime) {
+        setIsLowTime(true);
       }
     };
-  }, [timeLeft, showTimeWarning]);
+    
+    // Start the timer
+    timerRef.current = setInterval(tick, 1000);
+    
+    // Cleanup on unmount
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [totalSeconds, isPaused, onTimeUp, isLowTime, timeLeft]);
   
-  // Calculate progress percentage - Fix NaN issue
-  const progressPercentage = duration > 0 
-    ? Math.min(100, Math.max(0, (timeLeft / (duration * 60)) * 100)) 
-    : 0;
+  // Handle visibility change (tab switching)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        // When tab becomes visible again, recalculate time left
+        const now = Date.now();
+        if (endTimeRef.current) {
+          const remaining = Math.max(0, Math.floor((endTimeRef.current - now) / 1000));
+          setTimeLeft(remaining);
+          lastTickRef.current = now;
+        }
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
   
-  // Format time as MM:SS
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
+  // Pause/resume handler
+  useEffect(() => {
+    if (isPaused) {
+      // Store remaining seconds when paused
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    } else if (!timerRef.current) {
+      // Reset end time based on remaining seconds
+      endTimeRef.current = Date.now() + (timeLeft * 1000);
+      lastTickRef.current = Date.now();
+      
+      // Restart timer
+      timerRef.current = setInterval(() => {
+        const now = Date.now();
+        const remaining = Math.max(0, Math.floor((endTimeRef.current - now) / 1000));
+        
+        setTimeLeft(remaining);
+        
+        if (remaining <= 0) {
+          clearInterval(timerRef.current);
+          if (typeof onTimeUp === 'function') {
+            onTimeUp();
+          }
+        }
+      }, 1000);
+    }
+    
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isPaused, timeLeft, onTimeUp]);
   
   return (
     <TimerContainer>
-      <TimerHeader>
-        <TimerText $warning={timeLeft < 60} $blinking={isBlinking}>
-          Time Remaining: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-        </TimerText>
-        
-        {showWarning && (
-          <WarningMessage>
-            {warningMessage}
-          </WarningMessage>
-        )}
-      </TimerHeader>
+      <TimerProgressBar timePercentage={timePercentage} />
+      <TimerIcon>⏱️</TimerIcon>
+      <TimerText isLow={isLowTime}>
+        Time Remaining: {formatTime(timeLeft)}
+      </TimerText>
       
-      <ProgressBarContainer>
-        <ProgressBar percentage={progressPercentage} />
-      </ProgressBarContainer>
+      {showWarning && (
+        <WarningText>
+          Timer adjusted - please keep this tab open
+        </WarningText>
+      )}
     </TimerContainer>
   );
 };
 
-ExamTimer.propTypes = {
-  duration: PropTypes.number.isRequired,
-  onTimeUp: PropTypes.func.isRequired,
-  isPaused: PropTypes.bool
-};
-
-export default React.memo(ExamTimer);
+export default ExamTimer;

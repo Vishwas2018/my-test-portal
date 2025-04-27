@@ -1,6 +1,8 @@
 // src/utils/examUtils.js
 import { EXAM, STORAGE_KEYS } from './constants';
 
+// Import data sources - make sure these imports are correct
+import defaultQuestionBank from '../data/defaultQuestionBank';
 import examData from '../data/examData';
 
 /**
@@ -13,44 +15,43 @@ import examData from '../data/examData';
  */
 export const getQuestions = (subjectId, examType, year, examId) => {
   try {
+    // Input validation
+    if (!subjectId) {
+      console.error('Missing required parameter: subjectId');
+      return getDefaultQuestions();
+    }
+
     console.log(`Loading questions for: Subject: ${subjectId}, Type: ${examType}, Year: ${year}, Exam: ${examId}`);
     
     // If we have a specific examId and complete parameters
     if (examType && subjectId && year && examId) {
-      // Check if this exam exists in our data structure
-      if (
-        examData[examType] && 
-        examData[examType].subjects && 
-        examData[examType].subjects[subjectId] && 
-        examData[examType].subjects[subjectId].exams && 
-        examData[examType].subjects[subjectId].exams[year]
-      ) {
-        // Try to find the exact exam
-        const examsForYear = examData[examType].subjects[subjectId].exams[year];
-        const exactExam = examsForYear.find(e => e.id === examId);
+      try {
+        // Safely access the data structure with optional chaining
+        const examQuestions = examData?.[examType]?.subjects?.[subjectId]?.exams?.[year]?.find(e => e.id === examId)?.questions;
         
-        if (exactExam && exactExam.questions) {
-          return exactExam.questions;
+        if (Array.isArray(examQuestions) && examQuestions.length > 0) {
+          return examQuestions;
         }
+      } catch (err) {
+        console.error('Error accessing specific exam questions:', err);
       }
     }
     
     // If we have type, year, and subject (but no specific exam ID)
     if (examType && year && subjectId) {
-      if (
-        examData[examType] && 
-        examData[examType].subjects && 
-        examData[examType].subjects[subjectId] && 
-        examData[examType].subjects[subjectId].exams && 
-        examData[examType].subjects[subjectId].exams[year] &&
-        examData[examType].subjects[subjectId].exams[year].length > 0
-      ) {
-        // Return the first exam's questions for this combination
-        return examData[examType].subjects[subjectId].exams[year][0].questions;
+      try {
+        // Safely access the data structure with optional chaining
+        const yearExams = examData?.[examType]?.subjects?.[subjectId]?.exams?.[year];
+        
+        if (Array.isArray(yearExams) && yearExams.length > 0 && yearExams[0]?.questions) {
+          return yearExams[0].questions;
+        }
+      } catch (err) {
+        console.error('Error accessing year-specific exam questions:', err);
       }
     }
     
-    // Fallback to default questions
+    // Fallback to default questions for this subject
     return getDefaultQuestions(subjectId);
   } catch (error) {
     console.error('Error loading questions:', error);
@@ -64,211 +65,22 @@ export const getQuestions = (subjectId, examType, year, examId) => {
  * @returns {Array} Array of default questions
  */
 const getDefaultQuestions = (subjectId) => {
-  // Science sample questions
-  if (subjectId === 'science') {
-    return [
-      {
-        id: `${subjectId}1`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'Which of these is a living thing?',
-        options: [
-          { id: 'a', text: 'Rock' },
-          { id: 'b', text: 'Sun' },
-          { id: 'c', text: 'Water' },
-          { id: 'd', text: 'Tree' }
-        ],
-        correctAnswer: 'd',
-        explanation: 'A tree is a living thing because it grows, reproduces, and responds to its environment.'
-      },
-      {
-        id: `${subjectId}2`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'What is the function of roots in a plant?',
-        options: [
-          { id: 'a', text: 'To make food using sunlight' },
-          { id: 'b', text: 'To absorb water and nutrients from soil' },
-          { id: 'c', text: 'To produce flowers and fruits' },
-          { id: 'd', text: 'To release oxygen into the air' }
-        ],
-        correctAnswer: 'b',
-        explanation: 'Roots absorb water and nutrients from the soil, which are essential for the plant\'s growth and survival.'
-      },
-      {
-        id: `${subjectId}3`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'Which state of matter takes the shape of its container but has a fixed volume?',
-        options: [
-          { id: 'a', text: 'Solid' },
-          { id: 'b', text: 'Liquid' },
-          { id: 'c', text: 'Gas' },
-          { id: 'd', text: 'Plasma' }
-        ],
-        correctAnswer: 'b',
-        explanation: 'Liquids have a fixed volume but take the shape of their container.'
-      },
-      {
-        id: `${subjectId}4`,
-        type: EXAM.QUESTION_TYPES.TRUE_FALSE,
-        text: 'The moon produces its own light.',
-        correctAnswer: false,
-        explanation: 'The moon reflects light from the sun; it does not produce its own light.'
-      },
-      {
-        id: `${subjectId}5`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'Which of these objects would sink in water?',
-        options: [
-          { id: 'a', text: 'A wooden block' },
-          { id: 'b', text: 'A plastic bottle with the cap on' },
-          { id: 'c', text: 'A metal coin' },
-          { id: 'd', text: 'A rubber duck' }
-        ],
-        correctAnswer: 'c',
-        explanation: 'A metal coin would sink in water because it has a higher density than water.'
+  try {
+    // Get questions from the default question bank based on subject
+    if (defaultQuestionBank && typeof defaultQuestionBank === 'object' && subjectId && defaultQuestionBank[subjectId]) {
+      const questions = defaultQuestionBank[subjectId];
+      if (Array.isArray(questions) && questions.length > 0) {
+        return questions;
       }
-    ];
+    }
+  } catch (err) {
+    console.error('Error accessing default question bank:', err);
   }
   
-  // Mathematics sample questions
-  if (subjectId === 'mathematics') {
-    return [
-      {
-        id: `${subjectId}1`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'Calculate: 37 × 5',
-        options: [
-          { id: 'a', text: '175' },
-          { id: 'b', text: '185' },
-          { id: 'c', text: '195' },
-          { id: 'd', text: '205' }
-        ],
-        correctAnswer: 'b',
-        explanation: '37 × 5 = (30 × 5) + (7 × 5) = 150 + 35 = 185'
-      },
-      {
-        id: `${subjectId}2`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'A rectangle has a length of 12 cm and a width of 7 cm. What is its perimeter?',
-        options: [
-          { id: 'a', text: '19 cm' },
-          { id: 'b', text: '38 cm' },
-          { id: 'c', text: '48 cm' },
-          { id: 'd', text: '84 cm' }
-        ],
-        correctAnswer: 'b',
-        explanation: 'Perimeter = 2 × (length + width) = 2 × (12 + 7) = 2 × 19 = 38 cm'
-      },
-      {
-        id: `${subjectId}3`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'What is 25 + 37?',
-        options: [
-          { id: 'a', text: '52' },
-          { id: 'b', text: '62' },
-          { id: 'c', text: '72' },
-          { id: 'd', text: '42' }
-        ],
-        correctAnswer: 'b',
-        explanation: '25 + 37 = (20 + 5) + (30 + 7) = (20 + 30) + (5 + 7) = 50 + 12 = 62'
-      },
-      {
-        id: `${subjectId}4`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'Sarah had $45. She spent $18 on a book and $12 on lunch. How much money does she have left?',
-        options: [
-          { id: 'a', text: '$10' },
-          { id: 'b', text: '$15' },
-          { id: 'c', text: '$20' },
-          { id: 'd', text: '$25' }
-        ],
-        correctAnswer: 'b',
-        explanation: 'Sarah spent a total of $18 + $12 = $30. She had $45, so she has $45 - $30 = $15 left.'
-      },
-      {
-        id: `${subjectId}5`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'Which number comes next in this pattern: 2, 4, 6, 8, __?',
-        options: [
-          { id: 'a', text: '9' },
-          { id: 'b', text: '10' },
-          { id: 'c', text: '12' },
-          { id: 'd', text: '16' }
-        ],
-        correctAnswer: 'b',
-        explanation: 'This is a pattern of counting by 2s (even numbers): 2, 4, 6, 8, 10.'
-      }
-    ];
-  }
-  
-  // Digital technologies sample questions
-  if (subjectId === 'digital') {
-    return [
-      {
-        id: `${subjectId}1`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'Which of these is an input device?',
-        options: [
-          { id: 'a', text: 'Printer' },
-          { id: 'b', text: 'Monitor' },
-          { id: 'c', text: 'Speaker' },
-          { id: 'd', text: 'Keyboard' }
-        ],
-        correctAnswer: 'd',
-        explanation: 'A keyboard is an input device because it allows users to input data into a computer.'
-      },
-      {
-        id: `${subjectId}2`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'What does "URL" stand for?',
-        options: [
-          { id: 'a', text: 'Universal Resource Locator' },
-          { id: 'b', text: 'Uniform Resource Locator' },
-          { id: 'c', text: 'United Resource Link' },
-          { id: 'd', text: 'Universal Reference Link' }
-        ],
-        correctAnswer: 'b',
-        explanation: 'URL stands for Uniform Resource Locator, which is the address used to access websites on the internet.'
-      },
-      {
-        id: `${subjectId}3`,
-        type: EXAM.QUESTION_TYPES.TRUE_FALSE,
-        text: 'Saving a file means storing it permanently on a computer.',
-        correctAnswer: true,
-        explanation: 'Saving a file means storing it on a storage device (like a hard drive) so it can be accessed later, even after the computer is turned off.'
-      },
-      {
-        id: `${subjectId}4`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'Which of these is NOT a way to stay safe online?',
-        options: [
-          { id: 'a', text: 'Use strong passwords' },
-          { id: 'b', text: 'Share personal information with everyone' },
-          { id: 'c', text: 'Only visit trusted websites' },
-          { id: 'd', text: 'Ask an adult before downloading files' }
-        ],
-        correctAnswer: 'b',
-        explanation: 'Sharing personal information with everyone online is not safe. Personal information should be kept private to protect your identity and safety.'
-      },
-      {
-        id: `${subjectId}5`,
-        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-        text: 'What is an algorithm?',
-        options: [
-          { id: 'a', text: 'A type of computer virus' },
-          { id: 'b', text: 'A set of step-by-step instructions to complete a task' },
-          { id: 'c', text: 'A special type of keyboard' },
-          { id: 'd', text: 'A computer game' }
-        ],
-        correctAnswer: 'b',
-        explanation: 'An algorithm is a set of step-by-step instructions designed to perform a specific task or solve a problem.'
-      }
-    ];
-  }
-  
-  // Default generic questions
+  // Fallback generic questions if everything else fails
   return [
     {
-      id: `${subjectId}1`,
+      id: 'generic1',
       type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
       text: 'What is the capital of France?',
       options: [
@@ -281,44 +93,18 @@ const getDefaultQuestions = (subjectId) => {
       explanation: 'Paris is the capital city of France.'
     },
     {
-      id: `${subjectId}2`,
+      id: 'generic2',
       type: EXAM.QUESTION_TYPES.TRUE_FALSE,
       text: 'The Earth revolves around the Sun.',
       correctAnswer: true,
       explanation: 'The Earth revolves around the Sun in an elliptical orbit.'
     },
     {
-      id: `${subjectId}3`,
+      id: 'generic3',
       type: EXAM.QUESTION_TYPES.FILL_IN_BLANK,
       text: 'The largest planet in our solar system is ________.',
       correctAnswer: 'Jupiter',
       explanation: 'Jupiter is the largest planet in our solar system.'
-    },
-    {
-      id: `${subjectId}4`,
-      type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-      text: 'Which of these is not a programming language?',
-      options: [
-        { id: 'a', text: 'Python' },
-        { id: 'b', text: 'Java' },
-        { id: 'c', text: 'WebFlow' },
-        { id: 'd', text: 'Ruby' }
-      ],
-      correctAnswer: 'c',
-      explanation: 'WebFlow is a web design tool, not a programming language.'
-    },
-    {
-      id: `${subjectId}5`,
-      type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
-      text: 'Which gas do plants absorb from the atmosphere?',
-      options: [
-        { id: 'a', text: 'Oxygen' },
-        { id: 'b', text: 'Carbon Dioxide' },
-        { id: 'c', text: 'Nitrogen' },
-        { id: 'd', text: 'Hydrogen' }
-      ],
-      correctAnswer: 'b',
-      explanation: 'Plants absorb carbon dioxide from the atmosphere during photosynthesis.'
     }
   ];
 };
@@ -358,22 +144,24 @@ export const getSubjects = (examType = null) => {
   ];
   
   try {
-    if (examType && examData[examType]) {
-      // Extract subjects from our new data structure
+    if (examType && examData?.[examType]) {
+      // Extract subjects from our data structure
       const examTypeData = examData[examType];
-      const subjects = Object.keys(examTypeData.subjects).map(subjectId => {
+      const subjects = Object.keys(examTypeData.subjects || {}).map(subjectId => {
         const subjectData = examTypeData.subjects[subjectId];
-        const metadata = subjectData.metadata;
+        if (!subjectData) return null;
+        
+        const metadata = subjectData.metadata || {};
         
         // Find the first exam to get question count and time limit
         let questionCount = 0;
         let timeLimit = EXAM.DEFAULT_TIME_LIMIT;
         
         // Loop through all year levels to find at least one exam
-        const yearLevels = Object.keys(subjectData.exams);
+        const yearLevels = Object.keys(subjectData.exams || {});
         if (yearLevels.length > 0) {
           const firstYearExams = subjectData.exams[yearLevels[0]];
-          if (firstYearExams && firstYearExams.length > 0) {
+          if (Array.isArray(firstYearExams) && firstYearExams.length > 0) {
             const firstExam = firstYearExams[0];
             questionCount = firstExam.questions ? firstExam.questions.length : 0;
             timeLimit = firstExam.timeLimit || EXAM.DEFAULT_TIME_LIMIT;
@@ -382,13 +170,13 @@ export const getSubjects = (examType = null) => {
         
         return {
           id: subjectId,
-          name: metadata.name,
-          icon: metadata.icon,
+          name: metadata.name || subjectId,
+          icon: metadata.icon || '📚',
           questionCount,
           timeLimit,
-          description: metadata.description
+          description: metadata.description || ''
         };
-      });
+      }).filter(Boolean); // Filter out null entries
       
       return subjects;
     }
@@ -409,26 +197,24 @@ export const getSubjects = (examType = null) => {
  */
 export const getAvailableExams = (examType, subjectId, year) => {
   try {
+    // Input validation
     if (!examType || !subjectId || !year) {
+      console.warn('Missing required parameters for getAvailableExams');
       return [];
     }
     
-    // Check if this combination exists in our data structure
-    if (
-      examData[examType] && 
-      examData[examType].subjects && 
-      examData[examType].subjects[subjectId] && 
-      examData[examType].subjects[subjectId].exams && 
-      examData[examType].subjects[subjectId].exams[year]
-    ) {
+    // Safely access exams with optional chaining
+    const yearExams = examData?.[examType]?.subjects?.[subjectId]?.exams?.[year];
+    
+    if (Array.isArray(yearExams) && yearExams.length > 0) {
       // Map the exams to the required format
-      return examData[examType].subjects[subjectId].exams[year].map(exam => ({
-        id: exam.id,
-        name: exam.title,
-        grade: parseInt(year, 10),
+      return yearExams.map(exam => ({
+        id: exam.id || `${subjectId}_${year}_${Math.random().toString(36).substr(2, 9)}`,
+        name: exam.title || `${subjectId.charAt(0).toUpperCase() + subjectId.slice(1)} Exam`,
+        grade: parseInt(year, 10) || 0,
         type: examType,
         subject: subjectId,
-        questionCount: exam.questions ? exam.questions.length : 0,
+        questionCount: Array.isArray(exam.questions) ? exam.questions.length : 0,
         timeLimit: exam.timeLimit || EXAM.DEFAULT_TIME_LIMIT
       }));
     }
@@ -441,20 +227,38 @@ export const getAvailableExams = (examType, subjectId, year) => {
 };
 
 /**
- * Save exam result to localStorage
+ * Save exam result to localStorage with error handling
  * @param {Object} result - The exam result to save
+ * @returns {boolean} Success status
  */
 export const saveExamResult = (result) => {
   try {
+    // Validate input
+    if (!result || typeof result !== 'object') {
+      console.error('Invalid exam result object');
+      return false;
+    }
+    
     // Add date to result if not present
     const resultWithDate = {
       ...result,
       date: result.date || new Date().toISOString()
     };
     
-    // Get existing results
-    const existingResultsStr = localStorage.getItem(STORAGE_KEYS.EXAM_RESULTS);
-    const existingResults = existingResultsStr ? JSON.parse(existingResultsStr) : [];
+    // Get existing results with fallback
+    let existingResults = [];
+    try {
+      const existingResultsStr = localStorage.getItem(STORAGE_KEYS.EXAM_RESULTS);
+      if (existingResultsStr) {
+        const parsed = JSON.parse(existingResultsStr);
+        if (Array.isArray(parsed)) {
+          existingResults = parsed;
+        }
+      }
+    } catch (parseError) {
+      console.error('Error parsing existing results:', parseError);
+      // Continue with empty array
+    }
     
     // Add new result
     const updatedResults = [resultWithDate, ...existingResults];
@@ -468,6 +272,15 @@ export const saveExamResult = (result) => {
     return true;
   } catch (error) {
     console.error('Error saving exam result:', error);
+    
+    // Attempt fallback to session storage if localStorage fails
+    try {
+      sessionStorage.setItem('last_exam_result', JSON.stringify(result));
+      console.log('Saved to session storage as fallback');
+    } catch (sessionError) {
+      console.error('Session storage fallback also failed:', sessionError);
+    }
+    
     return false;
   }
 };

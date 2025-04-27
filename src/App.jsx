@@ -52,20 +52,19 @@ function App() {
                     <Route path="/pricing" element={<PricingPage />} />
                     <Route path="/features" element={<FeaturesPage />} />
                     <Route path="/trial-signup" element={<TrialSignup />} />
-                    
+
                     {/* New unified Exams route */}
                     <Route path="/exams" element={<Exams />} />
-                    
+
                     {/* Exam taking route */}
                     <Route path="/exam/:subjectId" element={<ExamPage />} />
-                    
+
                     {/* Redirects from old routes to new Exams page */}
                     <Route path="/activities" element={<Navigate to="/exams" replace />} />
-                    <Route path="/exam-selection" element={<Navigate to="/exams" replace />} />
                     <Route path="/sample-test/:examType" element={<Navigate to="/exams" replace />} />
                     <Route path="/sample-test/:examType/year-:grade" element={<Navigate to="/exams" replace />} />
                     <Route path="/sample-test/:examType/year-:grade/:subject" element={<Navigate to="/exams" replace />} />
-                    
+
                     {/* Protected routes */}
                     <Route
                       path="/dashboard"
@@ -91,24 +90,24 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-                    
+
                     {/* Placeholder routes */}
-                    <Route 
-                      path="/demo" 
-                      element={<div className="container page-content">Demo Page (Coming Soon)</div>} 
+                    <Route
+                      path="/demo"
+                      element={<div className="container page-content">Demo Page (Coming Soon)</div>}
                     />
-                    <Route 
-                      path="/contact" 
-                      element={<div className="container page-content">Contact Page (Coming Soon)</div>} 
+                    <Route
+                      path="/contact"
+                      element={<div className="container page-content">Contact Page (Coming Soon)</div>}
                     />
-                    
+
                     {/* Catch-all route */}
                     <Route path="*" element={<NotFoundPage />} />
                   </Routes>
                 </ErrorBoundary>
               </main>
               <Footer />
-            </div>            
+            </div>
           </BrowserRouter>
         </ExamProvider>
       </AuthProvider>
