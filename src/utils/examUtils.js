@@ -1,6 +1,8 @@
-// src/utils/examUtils.js
+// src/utils/examUtils.js (update)
+
 import { EXAM, STORAGE_KEYS } from './constants';
 
+import dataLoader from './dataLoader';
 import examService from '../services/examService';
 
 /**
@@ -11,7 +13,7 @@ import examService from '../services/examService';
  * @param {string} examId - Optional specific exam ID
  * @returns {Array} Array of questions
  */
-export const getQuestions = (subjectId, examType, year, examId) => {
+export const getQuestions = async (subjectId, examType, year, examId) => {
   try {
     // Input validation
     if (!subjectId) {
@@ -21,12 +23,33 @@ export const getQuestions = (subjectId, examType, year, examId) => {
 
     console.log(`Loading questions for: Subject: ${subjectId}, Type: ${examType}, Year: ${year}, Exam: ${examId}`);
     
-    // Try to get questions from our service
-    const questions = examService.getQuestions(examType, subjectId, year, examId);
+    // If specific examId is provided, load that exam
+    if (examId) {
+      const examData = await dataLoader.loadExam(subjectId, examType, examId);
+      if (examData && examData.questions) {
+        return examData.questions;
+      }
+    }
     
-    // If we found questions, return them
-    if (Array.isArray(questions) && questions.length > 0) {
-      return questions;
+    // If year is provided, find an exam for that year
+    if (year && examType) {
+      // This would require additional functionality in dataLoader
+      // For now, we'll use the default loader and filter for the year
+      const exams = await dataLoader.loadAvailableExams(subjectId, examType);
+      const yearExam = exams.find(exam => exam.year === parseInt(year));
+      
+      if (yearExam) {
+        const examData = await dataLoader.loadExam(subjectId, examType, yearExam.id);
+        if (examData && examData.questions) {
+          return examData.questions;
+        }
+      }
+    }
+    
+    // Load default exam for this subject/type
+    const examData = await dataLoader.loadExam(subjectId, examType || 'sample');
+    if (examData && examData.questions) {
+      return examData.questions;
     }
     
     // Fallback to default questions
@@ -204,7 +227,8 @@ export const getSubjects = (examType = null) => {
  * @param {number} year - The year level
  * @returns {Array} Array of available exams
  */
-export const getAvailableExams = (examType, subjectId, year) => {
+// Update getAvailableExams to use our dataLoader
+export const getAvailableExams = async (examType, subjectId, year) => {
   try {
     // Input validation
     if (!examType || !subjectId) {
@@ -212,8 +236,14 @@ export const getAvailableExams = (examType, subjectId, year) => {
       return [];
     }
     
-    // Use the exam service to get available exams
-    return examService.getAvailableExams(examType, subjectId, year);
+    const exams = await dataLoader.loadAvailableExams(subjectId, examType);
+    
+    // Filter by year if provided
+    if (year) {
+      return exams.filter(exam => !exam.year || exam.year === parseInt(year));
+    }
+    
+    return exams;
   } catch (error) {
     console.error('Error getting available exams:', error);
     return [];

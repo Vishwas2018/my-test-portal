@@ -1,13 +1,14 @@
 // src/pages/Exams/Exams.jsx
+
 import './Exams.css';
 
 import React, { useEffect, useState } from 'react';
-import { getAvailableExams, getSubjects } from '../../utils/examUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/common';
 import { YEAR_LEVELS } from '../../utils/constants';
-import examService from '../../services/examService';
+// Import manifest
+import manifest from '../../data/category/manifest.json';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Exams = () => {
@@ -24,39 +25,37 @@ const Exams = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Get exam types from our service instead of hardcoded constants
+  // Load exam types
   const [examTypes, setExamTypes] = useState([]);
   useEffect(() => {
-    // Load exam types from service
-    try {
-      const types = examService.getExamTypes();
-      if (types && types.length > 0) {
-        setExamTypes(types);
+    const types = [
+      { 
+        id: 'naplan', 
+        name: 'NAPLAN',
+        description: 'Australian National Assessment Program - preparing students for literacy and numeracy testing',
+        icon: '🏫'
+      },
+      { 
+        id: 'icas', 
+        name: 'ICAS',
+        description: 'International Competitions and Assessments for Schools',
+        icon: '🎓'
+      },
+      { 
+        id: 'icas_all_stars', 
+        name: 'ICAS All Stars',
+        description: 'Advanced ICAS with comprehensive topics',
+        icon: '⭐'
+      },
+      { 
+        id: 'sample', 
+        name: 'Sample Tests',
+        description: 'Free practice tests for all subjects',
+        icon: '📝'
       }
-    } catch (error) {
-      console.error('Failed to load exam types:', error);
-      // Default fallback
-      setExamTypes([
-        { 
-          id: 'naplan', 
-          name: 'NAPLAN',
-          description: 'Australian National Assessment Program - preparing students for literacy and numeracy testing',
-          icon: '🏫'
-        },
-        { 
-          id: 'icas', 
-          name: 'ICAS',
-          description: 'International Competitions and Assessments for Schools - comprehensive assessment for high achievers',
-          icon: '🎓'
-        },
-        { 
-          id: 'icas_all_stars', 
-          name: 'ICAS All Stars',
-          description: 'Advanced ICAS with comprehensive topics - challenging content for talented students',
-          icon: '⭐'
-        }
-      ]);
-    }
+    ];
+    
+    setExamTypes(types);
   }, []);
 
   const grades = YEAR_LEVELS;
@@ -69,16 +68,23 @@ const Exams = () => {
     setSelectedSection(null);
     setAvailableExams([]);
     
-    // Load subjects for this exam type
-    try {
-      const subjectsList = examService.getSubjects(examTypeId);
-      setDisplaySubjects(subjectsList);
-    } catch (error) {
-      console.error('Failed to load subjects from service:', error);
-      // Fallback to the old method
-      const subjectsList = getSubjects(examTypeId);
-      setDisplaySubjects(subjectsList);
-    }
+    // Load subjects for this exam type from manifest
+    const subjects = [];
+    Object.entries(manifest.subjects).forEach(([id, subject]) => {
+      // Check if this subject has the selected exam type
+      if (subject.examTypes && subject.examTypes[examTypeId]) {
+        subjects.push({
+          id,
+          name: subject.name,
+          icon: subject.icon,
+          description: subject.description,
+          questionCount: subject.defaultQuestionCount,
+          timeLimit: subject.defaultTimeLimit
+        });
+      }
+    });
+    
+    setDisplaySubjects(subjects);
   };
 
   const handleGradeSelect = (grade) => {
@@ -98,21 +104,28 @@ const Exams = () => {
     
     // Get available exams based on selection
     if (selectedSection === 'fullExams') {
-      try {
-        const exams = examService.getAvailableExams(selectedExamType, subjectId, selectedGrade);
-        setAvailableExams(exams);
-      } catch (error) {
-        console.error('Failed to get available exams from service:', error);
-        // Fallback to old method
-        const exams = getAvailableExams(selectedExamType, subjectId, selectedGrade);
-        setAvailableExams(exams);
+      const subject = manifest.subjects[subjectId];
+      if (subject && subject.examTypes && subject.examTypes[selectedExamType]) {
+        const exams = subject.examTypes[selectedExamType].exams || [];
+        
+        // Filter by year if needed
+        if (selectedGrade) {
+          const filteredExams = exams.filter(exam => exam.year === selectedGrade);
+          setAvailableExams(filteredExams);
+        } else {
+          setAvailableExams(exams);
+        }
+      } else {
+        setAvailableExams([]);
       }
     } else {
-      // For sample tests, we'll use a simplified list
-      setAvailableExams([
-        { id: `sample_${subjectId}_1`, name: 'Sample Test 1', type: selectedExamType, year: 'All' },
-        { id: `sample_${subjectId}_2`, name: 'Sample Test 2', type: selectedExamType, year: 'All' }
-      ]);
+      // For sample tests, get exams from the sample exam type
+      const subject = manifest.subjects[subjectId];
+      if (subject && subject.examTypes && subject.examTypes.sample) {
+        setAvailableExams(subject.examTypes.sample.exams || []);
+      } else {
+        setAvailableExams([]);
+      }
     }
   };
 
@@ -137,42 +150,22 @@ const Exams = () => {
     }
   }, [location]);
 
-  // Get sample test subjects
+  // Get sample test subjects from manifest
   const getSampleTestSubjects = () => {
-    return [
-      {
-        id: 'mathematics',
-        name: 'Mathematics',
-        icon: '🧮',
-        description: 'Sample mathematical problems and concepts',
-        questionCount: 20,
-        timeLimit: 30
-      },
-      {
-        id: 'english',
-        name: 'English',
-        icon: '📚',
-        description: 'Reading comprehension and language skills',
-        questionCount: 20,
-        timeLimit: 30
-      },
-      {
-        id: 'science',
-        name: 'Science',
-        icon: '🔬',
-        description: 'Scientific knowledge and inquiry skills',
-        questionCount: 20,
-        timeLimit: 30
-      },
-      {
-        id: 'digital',
-        name: 'Digital Technologies',
-        icon: '💻',
-        description: 'Digital systems and computational thinking',
-        questionCount: 20,
-        timeLimit: 30
+    const sampleSubjects = [];
+    Object.entries(manifest.subjects).forEach(([id, subject]) => {
+      if (subject.examTypes && subject.examTypes.sample) {
+        sampleSubjects.push({
+          id,
+          name: subject.name,
+          icon: subject.icon,
+          description: subject.description,
+          questionCount: subject.defaultQuestionCount,
+          timeLimit: subject.defaultTimeLimit
+        });
       }
-    ];
+    });
+    return sampleSubjects;
   };
 
   // Render initial exam type selection screen
@@ -477,8 +470,8 @@ const Exams = () => {
                       {examTypes.find(type => type.id === selectedExamType)?.name}
                       {selectedSection === 'fullExams' ? ` - Year ${selectedGrade}` : ''}<br />
                       {currentSubject?.name}<br />
-                      {currentSubject?.questionCount} {currentSubject?.questionCount === 1 ? 'question' : 'questions'}<br />
-                      {currentSubject?.timeLimit} minutes
+                      {exam.questionCount} {exam.questionCount === 1 ? 'question' : 'questions'}<br />
+                      {exam.timeLimit} minutes
                     </p>
                   </div>
                   <Button variant="primary" size="small">

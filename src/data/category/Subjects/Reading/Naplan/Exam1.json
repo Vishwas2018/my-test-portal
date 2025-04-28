@@ -1,0 +1,70 @@
+{
+    "id": "Exam1",
+    "title": "NAPLAN Reading Year 3",
+    "subject": "reading",
+    "examType": "naplan",
+    "year": 3,
+    "timeLimit": 45,
+    "questionCount": 5,
+    "questions": [
+      {
+        "id": "naplan-reading-y3-q1",
+        "type": "multipleChoice",
+        "text": "Read the passage below and answer the question:\n\nThe old lighthouse stood tall on the rocky cliff. For over a hundred years, it had guided ships safely to shore. Its bright beam could be seen for miles on dark, stormy nights. Now, modern technology has replaced many lighthouses, but this one remains as a historic monument.\n\nWhat is the main idea of this passage?",
+        "options": [
+          { "id": "a", "text": "Lighthouses are no longer needed" },
+          { "id": "b", "text": "A historic lighthouse still stands despite new technology" },
+          { "id": "c", "text": "Ships rely on lighthouses during storms" },
+          { "id": "d", "text": "The lighthouse is very old" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "The passage describes how the lighthouse has historical value even though new technology has made many lighthouses obsolete."
+      },
+      {
+        "id": "naplan-reading-y3-q2",
+        "type": "multipleChoice",
+        "text": "From the passage, we can infer that:",
+        "options": [
+          { "id": "a", "text": "The lighthouse is still operational" },
+          { "id": "b", "text": "The lighthouse was built less than 100 years ago" },
+          { "id": "c", "text": "Modern ships don't need lighthouses anymore" },
+          { "id": "d", "text": "The lighthouse will be torn down soon" }
+        ],
+        "correctAnswer": "c",
+        "explanation": "The passage states 'modern technology has replaced many lighthouses', indicating that modern ships don't rely on lighthouses as they once did."
+      },
+      {
+        "id": "naplan-reading-y3-q3",
+        "type": "multipleChoice",
+        "text": "In the sentence 'Its bright beam could be seen for miles on dark, stormy nights', the word 'beam' refers to:",
+        "options": [
+          { "id": "a", "text": "A wooden support" },
+          { "id": "b", "text": "A ship" },
+          { "id": "c", "text": "A ray of light" },
+          { "id": "d", "text": "A radio signal" }
+        ],
+        "correctAnswer": "c",
+        "explanation": "In this context, 'beam' refers to the ray of light that the lighthouse produces to guide ships."
+      },
+      {
+        "id": "naplan-reading-y3-q4",
+        "type": "trueFalse",
+        "text": "According to the passage, the lighthouse is still used to guide ships.",
+        "correctAnswer": false,
+        "explanation": "The passage states that the lighthouse 'remains as a historic monument' and that 'modern technology has replaced many lighthouses', suggesting this lighthouse is no longer used for its original purpose."
+      },
+      {
+        "id": "naplan-reading-y3-q5",
+        "type": "multipleChoice",
+        "text": "The author's attitude toward the lighthouse can best be described as:",
+        "options": [
+          { "id": "a", "text": "Critical" },
+          { "id": "b", "text": "Nostalgic" },
+          { "id": "c", "text": "Fearful" },
+          { "id": "d", "text": "Indifferent" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "The author's tone is nostalgic, appreciating the historical value and past importance of the lighthouse while acknowledging that times have changed."
+      }
+    ]
+  }

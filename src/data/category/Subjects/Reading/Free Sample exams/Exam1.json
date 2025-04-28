@@ -1,0 +1,70 @@
+{
+    "id": "Exam1",
+    "title": "Reading Sample Exam 1",
+    "subject": "reading",
+    "examType": "sample",
+    "year": 3,
+    "timeLimit": 30,
+    "questionCount": 5,
+    "questions": [
+      {
+        "id": "reading-sample-q1",
+        "type": "multipleChoice",
+        "text": "Read the passage and answer the question:\n\nMax walked to school every day. On Monday, he saw a small puppy following him. The puppy had no collar. Max picked up the puppy and carried it to school. His teacher called the animal shelter.\n\nWhy did Max pick up the puppy?",
+        "options": [
+          { "id": "a", "text": "Because he wanted a pet" },
+          { "id": "b", "text": "Because the puppy had no collar" },
+          { "id": "c", "text": "Because the puppy was injured" },
+          { "id": "d", "text": "Because the puppy was hungry" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "The passage states 'The puppy had no collar.' This suggests the puppy might be lost or a stray, which is why Max picked it up."
+      },
+      {
+        "id": "reading-sample-q2",
+        "type": "multipleChoice",
+        "text": "What happened after Max brought the puppy to school?",
+        "options": [
+          { "id": "a", "text": "The puppy ran away" },
+          { "id": "b", "text": "Max took the puppy home" },
+          { "id": "c", "text": "The teacher called the animal shelter" },
+          { "id": "d", "text": "The puppy found its owner" }
+        ],
+        "correctAnswer": "c",
+        "explanation": "The passage states 'His teacher called the animal shelter' after Max brought the puppy to school."
+      },
+      {
+        "id": "reading-sample-q3",
+        "type": "multipleChoice",
+        "text": "Which word best describes Max in this story?",
+        "options": [
+          { "id": "a", "text": "Selfish" },
+          { "id": "b", "text": "Angry" },
+          { "id": "c", "text": "Kind" },
+          { "id": "d", "text": "Worried" }
+        ],
+        "correctAnswer": "c",
+        "explanation": "Max's actions of picking up the stray puppy and bringing it to school for help show that he is kind and caring."
+      },
+      {
+        "id": "reading-sample-q4",
+        "type": "trueFalse",
+        "text": "According to the passage, the puppy followed Max to school every day.",
+        "correctAnswer": false,
+        "explanation": "The passage only states that the puppy followed Max on Monday, not every day: 'On Monday, he saw a small puppy following him.'"
+      },
+      {
+        "id": "reading-sample-q5",
+        "type": "multipleChoice",
+        "text": "What was the FIRST thing that happened in the story?",
+        "options": [
+          { "id": "a", "text": "Max picked up the puppy" },
+          { "id": "b", "text": "Max walked to school" },
+          { "id": "c", "text": "The teacher called the animal shelter" },
+          { "id": "d", "text": "The puppy lost its collar" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "The first event mentioned in the passage is 'Max walked to school every day.'"
+      }
+    ]
+  }

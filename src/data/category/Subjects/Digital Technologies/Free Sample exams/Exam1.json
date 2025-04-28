@@ -1,0 +1,70 @@
+{
+    "id": "Exam1",
+    "title": "Digital Technologies Sample Exam 1",
+    "subject": "digital",
+    "examType": "sample",
+    "year": 3,
+    "timeLimit": 30,
+    "questionCount": 5,
+    "questions": [
+      {
+        "id": "digital-sample-q1",
+        "type": "multipleChoice",
+        "text": "Which of these is an input device?",
+        "options": [
+          { "id": "a", "text": "Printer" },
+          { "id": "b", "text": "Monitor" },
+          { "id": "c", "text": "Speaker" },
+          { "id": "d", "text": "Keyboard" }
+        ],
+        "correctAnswer": "d",
+        "explanation": "A keyboard is an input device because it allows users to input data into a computer."
+      },
+      {
+        "id": "digital-sample-q2",
+        "type": "multipleChoice",
+        "text": "What does 'URL' stand for?",
+        "options": [
+          { "id": "a", "text": "Universal Resource Locator" },
+          { "id": "b", "text": "Uniform Resource Locator" },
+          { "id": "c", "text": "United Resource Link" },
+          { "id": "d", "text": "Universal Reference Link" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "URL stands for Uniform Resource Locator, which is the address used to access websites on the internet."
+      },
+      {
+        "id": "digital-sample-q3",
+        "type": "trueFalse",
+        "text": "Saving a file means storing it permanently on a computer.",
+        "correctAnswer": true,
+        "explanation": "Saving a file means storing it on a storage device (like a hard drive) so it can be accessed later, even after the computer is turned off."
+      },
+      {
+        "id": "digital-sample-q4",
+        "type": "multipleChoice",
+        "text": "Which of these is NOT a way to stay safe online?",
+        "options": [
+          { "id": "a", "text": "Use strong passwords" },
+          { "id": "b", "text": "Share personal information with everyone" },
+          { "id": "c", "text": "Only visit trusted websites" },
+          { "id": "d", "text": "Ask an adult before downloading files" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "Sharing personal information with everyone online is not safe. Personal information should be kept private to protect your identity and safety."
+      },
+      {
+        "id": "digital-sample-q5",
+        "type": "multipleChoice",
+        "text": "What is an algorithm?",
+        "options": [
+          { "id": "a", "text": "A type of computer virus" },
+          { "id": "b", "text": "A set of step-by-step instructions to complete a task" },
+          { "id": "c", "text": "A special type of keyboard" },
+          { "id": "d", "text": "A computer game" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "An algorithm is a set of step-by-step instructions designed to perform a specific task or solve a problem."
+      }
+    ]
+  }

@@ -1,0 +1,76 @@
+{
+    "id": "Exam1",
+    "title": "Writing Sample Exam 1",
+    "subject": "writing",
+    "examType": "sample",
+    "year": 3,
+    "timeLimit": 30,
+    "questionCount": 5,
+    "questions": [
+      {
+        "id": "writing-sample-q1",
+        "type": "multipleChoice",
+        "text": "Which sentence has the correct punctuation?",
+        "options": [
+          { "id": "a", "text": "We went to the park and played on the swings?" },
+          { "id": "b", "text": "We went to the park and played on the swings." },
+          { "id": "c", "text": "We went to the park and played, on the swings." },
+          { "id": "d", "text": "We went to the park and played. on the swings." }
+        ],
+        "correctAnswer": "b",
+        "explanation": "This is a simple statement that should end with a period/full stop."
+      },
+      {
+        "id": "writing-sample-q2", 
+        "type": "multipleChoice",
+        "text": "Which word is spelled incorrectly?",
+        "options": [
+          { "id": "a", "text": "because" },
+          { "id": "b", "text": "freind" },
+          { "id": "c", "text": "school" },
+          { "id": "d", "text": "people" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "The correct spelling is 'friend' (i before e except after c)."
+      },
+      {
+        "id": "writing-sample-q3",
+        "type": "multipleChoice",
+        "text": "Which sentence uses capital letters correctly?",
+        "options": [
+          { "id": "a", "text": "my teacher, mrs. Green, lives in Sydney." },
+          { "id": "b", "text": "My Teacher, Mrs. green, Lives in sydney." },
+          { "id": "c", "text": "My teacher, Mrs. Green, lives in Sydney." },
+          { "id": "d", "text": "my Teacher, mrs. Green, lives in sydney." }
+        ],
+        "correctAnswer": "c",
+        "explanation": "Capital letters are correctly used for the start of the sentence, the title and surname of a person (Mrs. Green), and the name of a place (Sydney)."
+      },
+      {
+        "id": "writing-sample-q4",
+        "type": "multipleChoice",
+        "text": "Choose the best word to complete this sentence:\n\nThe cat was _____ tired that it fell asleep right away.",
+        "options": [
+          { "id": "a", "text": "much" },
+          { "id": "b", "text": "very" },
+          { "id": "c", "text": "so" },
+          { "id": "d", "text": "too" }
+        ],
+        "correctAnswer": "c",
+        "explanation": "'So' is the correct intensifier for this construction: 'so [adjective] that [result]'."
+      },
+      {
+        "id": "writing-sample-q5",
+        "type": "multipleChoice",
+        "text": "Which of these is a complete sentence?",
+        "options": [
+          { "id": "a", "text": "Running to the store." },
+          { "id": "b", "text": "Because it was raining." },
+          { "id": "c", "text": "The big, furry dog." },
+          { "id": "d", "text": "She walked to school." }
+        ],
+        "correctAnswer": "d",
+        "explanation": "Only 'She walked to school' is a complete sentence with a subject (She) and a verb (walked)."
+      }
+    ]
+  }

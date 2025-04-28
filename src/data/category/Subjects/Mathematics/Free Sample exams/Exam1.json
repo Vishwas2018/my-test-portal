@@ -1,0 +1,70 @@
+{
+    "id": "math-sample-1",
+    "title": "Mathematics Sample Exam 1",
+    "subject": "mathematics",
+    "examType": "sample",
+    "year": 3,
+    "timeLimit": 30,
+    "questionCount": 5,
+    "questions": [
+      {
+        "id": "math-sample-q1",
+        "type": "multipleChoice",
+        "text": "What is 25 + 37?",
+        "options": [
+          { "id": "a", "text": "52" },
+          { "id": "b", "text": "62" },
+          { "id": "c", "text": "72" },
+          { "id": "d", "text": "42" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "25 + 37 = (20 + 5) + (30 + 7) = (20 + 30) + (5 + 7) = 50 + 12 = 62"
+      },
+      {
+        "id": "math-sample-q2",
+        "type": "multipleChoice",
+        "text": "A rectangle has a length of 12 cm and a width of 7 cm. What is its perimeter?",
+        "options": [
+          { "id": "a", "text": "19 cm" },
+          { "id": "b", "text": "38 cm" },
+          { "id": "c", "text": "48 cm" },
+          { "id": "d", "text": "84 cm" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "Perimeter = 2 × (length + width) = 2 × (12 + 7) = 2 × 19 = 38 cm"
+      },
+      {
+        "id": "math-sample-q3",
+        "type": "multipleChoice",
+        "text": "What is the value of the underlined digit in the number 5,278?",
+        "options": [
+          { "id": "a", "text": "200" },
+          { "id": "b", "text": "20" },
+          { "id": "c", "text": "2" },
+          { "id": "d", "text": "2,000" }
+        ],
+        "correctAnswer": "a",
+        "explanation": "In 5,278, the digit 2 is in the hundreds place, so its value is 2 × 100 = 200."
+      },
+      {
+        "id": "math-sample-q4",
+        "type": "multipleChoice",
+        "text": "Sarah had $45. She spent $18 on a book and $12 on lunch. How much money does she have left?",
+        "options": [
+          { "id": "a", "text": "$10" },
+          { "id": "b", "text": "$15" },
+          { "id": "c", "text": "$20" },
+          { "id": "d", "text": "$25" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "Sarah spent a total of $18 + $12 = $30. She had $45, so she has $45 - $30 = $15 left."
+      },
+      {
+        "id": "math-sample-q5",
+        "type": "trueFalse",
+        "text": "The sum of the angles in a triangle is 180 degrees.",
+        "correctAnswer": true,
+        "explanation": "The sum of the angles in any triangle is always 180 degrees."
+      }
+    ]
+  }

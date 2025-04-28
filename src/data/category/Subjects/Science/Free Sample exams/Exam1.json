@@ -1,0 +1,70 @@
+{
+    "id": "Exam1",
+    "title": "Science Sample Exam 1",
+    "subject": "science",
+    "examType": "sample",
+    "year": 3,
+    "timeLimit": 30,
+    "questionCount": 5,
+    "questions": [
+      {
+        "id": "science-sample-q1",
+        "type": "multipleChoice",
+        "text": "Which of these is a living thing?",
+        "options": [
+          { "id": "a", "text": "Rock" },
+          { "id": "b", "text": "Sun" },
+          { "id": "c", "text": "Water" },
+          { "id": "d", "text": "Tree" }
+        ],
+        "correctAnswer": "d",
+        "explanation": "A tree is a living thing because it grows, reproduces, and responds to its environment."
+      },
+      {
+        "id": "science-sample-q2",
+        "type": "multipleChoice",
+        "text": "What is the function of roots in a plant?",
+        "options": [
+          { "id": "a", "text": "To make food using sunlight" },
+          { "id": "b", "text": "To absorb water and nutrients from soil" },
+          { "id": "c", "text": "To produce flowers and fruits" },
+          { "id": "d", "text": "To release oxygen into the air" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "Roots absorb water and nutrients from the soil, which are essential for the plant's growth and survival."
+      },
+      {
+        "id": "science-sample-q3",
+        "type": "multipleChoice",
+        "text": "Which state of matter takes the shape of its container but has a fixed volume?",
+        "options": [
+          { "id": "a", "text": "Solid" },
+          { "id": "b", "text": "Liquid" },
+          { "id": "c", "text": "Gas" },
+          { "id": "d", "text": "Plasma" }
+        ],
+        "correctAnswer": "b",
+        "explanation": "Liquids have a fixed volume but take the shape of their container."
+      },
+      {
+        "id": "science-sample-q4",
+        "type": "trueFalse",
+        "text": "The moon produces its own light.",
+        "correctAnswer": false,
+        "explanation": "The moon reflects light from the sun; it does not produce its own light."
+      },
+      {
+        "id": "science-sample-q5",
+        "type": "multipleChoice",
+        "text": "Which of these objects would sink in water?",
+        "options": [
+          { "id": "a", "text": "A wooden block" },
+          { "id": "b", "text": "A plastic bottle with the cap on" },
+          { "id": "c", "text": "A metal coin" },
+          { "id": "d", "text": "A rubber duck" }
+        ],
+        "correctAnswer": "c",
+        "explanation": "A metal coin would sink in water because it has a higher density than water."
+      }
+    ]
+  }

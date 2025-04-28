@@ -1,0 +1,121 @@
+{
+  "subjects": {
+    "mathematics": {
+      "name": "Mathematics",
+      "icon": "🔢",
+      "description": "Mathematical reasoning and problem-solving",
+      "defaultQuestionCount": 20,
+      "defaultTimeLimit": 45,
+      "examTypes": {
+        "sample": {
+          "name": "Free Sample exams",
+          "exams": [
+            {"id": "Exam1", "name": "Sample Exam 1", "year": 3, "questionCount": 5, "timeLimit": 30},
+            {"id": "Exam2", "name": "Sample Exam 2", "year": 4, "questionCount": 5, "timeLimit": 30},
+            {"id": "Exam3", "name": "Sample Exam 3", "year": 5, "questionCount": 5, "timeLimit": 30}
+          ]
+        },
+        "icas": {
+          "name": "ICAS",
+          "exams": [
+            {"id": "Exam1", "name": "ICAS Math Exam 1", "year": 3, "questionCount": 20, "timeLimit": 45},
+            {"id": "Exam2", "name": "ICAS Math Exam 2", "year": 4, "questionCount": 20, "timeLimit": 45},
+            {"id": "Exam3", "name": "ICAS Math Exam 3", "year": 5, "questionCount": 20, "timeLimit": 45}
+          ]
+        },
+        "icas_all_stars": {
+          "name": "ICAS All",
+          "exams": [
+            {"id": "Exam1", "name": "ICAS All Stars Math 1", "year": 5, "questionCount": 25, "timeLimit": 60},
+            {"id": "Exam2", "name": "ICAS All Stars Math 2", "year": 6, "questionCount": 25, "timeLimit": 60}
+          ]
+        }
+      }
+    },
+    "science": {
+      "name": "Science",
+      "icon": "🧪",
+      "description": "Scientific knowledge and concepts",
+      "defaultQuestionCount": 20,
+      "defaultTimeLimit": 45,
+      "examTypes": {
+        "sample": {
+          "name": "Free Sample exams",
+          "exams": [
+            {"id": "Exam1", "name": "Sample Science Exam 1", "year": 3, "questionCount": 5, "timeLimit": 30},
+            {"id": "Exam2", "name": "Sample Science Exam 2", "year": 4, "questionCount": 5, "timeLimit": 30}
+          ]
+        },
+        "icas": {
+          "name": "ICAS",
+          "exams": [
+            {"id": "Exam1", "name": "ICAS Science Exam 1", "year": 4, "questionCount": 20, "timeLimit": 45}
+          ]
+        }
+      }
+    },
+    "digital": {
+      "name": "Digital Technologies",
+      "icon": "💻",
+      "description": "Digital systems and computational thinking",
+      "defaultQuestionCount": 20,
+      "defaultTimeLimit": 35,
+      "examTypes": {
+        "sample": {
+          "name": "Free Sample exams",
+          "exams": [
+            {"id": "Exam1", "name": "Sample Digital Exam 1", "year": 3, "questionCount": 5, "timeLimit": 30}
+          ]
+        },
+        "icas": {
+          "name": "ICAS",
+          "exams": [
+            {"id": "Exam1", "name": "ICAS Digital Exam 1", "year": 4, "questionCount": 20, "timeLimit": 35}
+          ]
+        }
+      }
+    },
+    "reading": {
+      "name": "Reading",
+      "icon": "📚",
+      "description": "Reading comprehension and analysis",
+      "defaultQuestionCount": 15,
+      "defaultTimeLimit": 40,
+      "examTypes": {
+        "sample": {
+          "name": "Free Sample exams",
+          "exams": [
+            {"id": "Exam1", "name": "Sample Reading Exam 1", "year": 3, "questionCount": 5, "timeLimit": 30}
+          ]
+        },
+        "naplan": {
+          "name": "Naplan",
+          "exams": [
+            {"id": "Exam1", "name": "NAPLAN Reading Exam 1", "year": 3, "questionCount": 15, "timeLimit": 45}
+          ]
+        }
+      }
+    },
+    "writing": {
+      "name": "Writing",
+      "icon": "✏️",
+      "description": "Writing skills and expression",
+      "defaultQuestionCount": 15,
+      "defaultTimeLimit": 40,
+      "examTypes": {
+        "sample": {
+          "name": "Free Sample exams",
+          "exams": [
+            {"id": "Exam1", "name": "Sample Writing Exam 1", "year": 3, "questionCount": 5, "timeLimit": 30}
+          ]
+        },
+        "naplan": {
+          "name": "Naplan",
+          "exams": [
+            {"id": "Exam1", "name": "NAPLAN Writing Exam 1", "year": 3, "questionCount": 15, "timeLimit": 40}
+          ]
+        }
+      }
+    }
+  }
+}
