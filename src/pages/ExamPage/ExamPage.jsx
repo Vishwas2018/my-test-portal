@@ -2,13 +2,12 @@
 import './ExamPage.css';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { getQuestions, getSubjects, saveExamResult } from '../../utils/examUtils';
+import { getQuestions, saveExamResult } from '../../utils/examUtils';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-// Enhanced components
+// Import components and services
 import AccessibilityControls from '../../components/ExamInterface/AccessibilityControls/AccessibilityControls';
 import AnimatedCelebration from '../../components/ExamInterface/AnimatedCelebration/AnimatedCelebration';
-// Existing components
 import { Button } from '../../components/common';
 import ConfettiEffect from '../../components/ExamInterface/ConfettiEffect/ConfettiEffect';
 import ConfirmationDialog from '../../components/ExamInterface/ConfirmationDialog/ConfirmationDialog';
@@ -17,6 +16,7 @@ import ExamResultSummary from '../../components/ExamInterface/ExamResultsSummary
 import ImprovedExamInterface from '../../components/ExamInterface/ImprovedExamInterface/ImprovedExamInterface';
 import StudyTips from '../../components/ExamInterface/StudyTips/StudyTips';
 import ThemeToggler from '../../components/ExamInterface/ThemeToggler/ThemeToggler';
+import examService from '../../services/examService';
 import { useTheme } from '../../contexts/ThemeContext';
 
 /**
@@ -380,87 +380,59 @@ const ExamPage = () => {
         setError(null);
         console.log("Loading exam data for subject:", subjectId);
   
-        // Load subject information
-        const subjects = getSubjects();
-        console.log("Retrieved subjects:", subjects);
-        
-        if (!Array.isArray(subjects) || subjects.length === 0) {
-          setError('No subjects available');
-          setLoading(false);
-          return;
-        }
-        
-        const subject = subjects.find(s => s?.id === subjectId);
-        console.log("Found subject:", subject);
-  
-        if (!subject) {
-          setError(`Subject "${subjectId}" not found`);
-          setLoading(false);
-          return;
+        // Get subjects for this exam type
+        let subjectData;
+        try {
+          // Try to get the subject from the exam service first
+          const subjects = examService.getSubjects(examType);
+          subjectData = subjects.find(s => s.id === subjectId);
+        } catch (err) {
+          console.error('Error loading from exam service, falling back to utils:', err);
         }
   
-        // Set exam info with additional metadata and safe defaults
+        // If that didn't work, fall back to the old method
+        if (!subjectData) {
+          const subjects = getQuestions(subjectId, examType, year, examId);
+          subjectData = subjects.find(s => s.id === subjectId);
+        }
+  
+        // If we still don't have data, create something generic
+        if (!subjectData) {
+          subjectData = {
+            id: subjectId,
+            name: subjectId.charAt(0).toUpperCase() + subjectId.slice(1).replace(/_/g, ' '),
+            questionCount: 0,
+            timeLimit: EXAM.DEFAULT_TIME_LIMIT,
+            icon: '📝',
+            description: 'Practice exam'
+          };
+        }
+  
+        // Set exam info
         setExamInfo({
-          id: subject.id || '',
-          name: subject.name || 'Exam',
-          timeLimit: subject.timeLimit || 0,
-          icon: subject.icon || '📝',
+          id: subjectData.id || '',
+          name: subjectData.name || 'Exam',
+          timeLimit: subjectData.timeLimit || EXAM.DEFAULT_TIME_LIMIT,
+          icon: subjectData.icon || '📝',
           type: examType || 'practice',
           year: year || 'N/A',
           examId: examId || 'sample',
-          questionCount: subject.questionCount || 0
+          questionCount: subjectData.questionCount || 0
         });
   
-        // Load questions for this subject - with validation
-        try {
-          const subjectQuestions = getQuestions(subjectId, examType, year, examId);
-          console.log("Retrieved questions:", subjectQuestions?.length || 0);
-          
-          if (!Array.isArray(subjectQuestions) || subjectQuestions.length === 0) {
-            setError('No questions available for this exam');
-            setLoading(false);
-            return;
-          }
-          
-          // Make sure we have valid questions that won't cause rendering issues
-          const isValidQuestion = (q) => {
-            if (!q || typeof q !== 'object') return false;
-            if (!q.id || !q.text) return false;
-            
-            // Check different question types
-            if (q.type === EXAM.QUESTION_TYPES.MULTIPLE_CHOICE) {
-              return Array.isArray(q.options) && q.options.length > 0 && q.correctAnswer !== undefined;
-            } else if (q.type === EXAM.QUESTION_TYPES.TRUE_FALSE) {
-              return q.correctAnswer !== undefined;
-            } else if (q.type === EXAM.QUESTION_TYPES.FILL_IN_BLANK) {
-              return q.correctAnswer !== undefined;
-            }
-            
-            return false;
-          };
-          
-          const validQuestions = subjectQuestions.filter(isValidQuestion);
-          
-          if (validQuestions.length === 0) {
-            setError('No valid questions available for this exam');
-            setLoading(false);
-            return;
-          }
-          
-          if (validQuestions.length < subjectQuestions.length) {
-            console.warn(`${subjectQuestions.length - validQuestions.length} invalid questions were filtered out`);
-          }
-          
-          setQuestions(validQuestions);
-          
-          // Show confirmation dialog once data is loaded
-          setShowConfirmation(true);
-        } catch (questionsError) {
-          console.error('Error loading questions:', questionsError);
-          setError('Failed to load exam questions');
+        // Load questions
+        const examQuestions = getQuestions(subjectId, examType, year, examId);
+        
+        if (!Array.isArray(examQuestions) || examQuestions.length === 0) {
+          setError('No questions available for this exam');
           setLoading(false);
           return;
         }
+        
+        setQuestions(examQuestions);
+        
+        // Show confirmation dialog once data is loaded
+        setShowConfirmation(true);
       } catch (err) {
         console.error('Error loading exam:', err);
         setError('Failed to load exam data');

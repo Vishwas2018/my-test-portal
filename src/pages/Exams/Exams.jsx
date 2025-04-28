@@ -1,12 +1,13 @@
 // src/pages/Exams/Exams.jsx
 import './Exams.css';
 
-import { EXAM_TYPES, YEAR_LEVELS } from '../../utils/constants';
 import React, { useEffect, useState } from 'react';
 import { getAvailableExams, getSubjects } from '../../utils/examUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/common';
+import { YEAR_LEVELS } from '../../utils/constants';
+import examService from '../../services/examService';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Exams = () => {
@@ -23,11 +24,44 @@ const Exams = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Hardcoded options - use EXAM_TYPES from constants
-  const examTypes = EXAM_TYPES;
+  // Get exam types from our service instead of hardcoded constants
+  const [examTypes, setExamTypes] = useState([]);
+  useEffect(() => {
+    // Load exam types from service
+    try {
+      const types = examService.getExamTypes();
+      if (types && types.length > 0) {
+        setExamTypes(types);
+      }
+    } catch (error) {
+      console.error('Failed to load exam types:', error);
+      // Default fallback
+      setExamTypes([
+        { 
+          id: 'naplan', 
+          name: 'NAPLAN',
+          description: 'Australian National Assessment Program - preparing students for literacy and numeracy testing',
+          icon: '🏫'
+        },
+        { 
+          id: 'icas', 
+          name: 'ICAS',
+          description: 'International Competitions and Assessments for Schools - comprehensive assessment for high achievers',
+          icon: '🎓'
+        },
+        { 
+          id: 'icas_all_stars', 
+          name: 'ICAS All Stars',
+          description: 'Advanced ICAS with comprehensive topics - challenging content for talented students',
+          icon: '⭐'
+        }
+      ]);
+    }
+  }, []);
+
   const grades = YEAR_LEVELS;
 
-  // Handler functions - defined before use in useEffect
+  // Handler functions
   const handleExamTypeSelect = (examTypeId) => {
     setSelectedExamType(examTypeId);
     setSelectedGrade(null);
@@ -36,8 +70,15 @@ const Exams = () => {
     setAvailableExams([]);
     
     // Load subjects for this exam type
-    const subjectsList = getSubjects(examTypeId);
-    setDisplaySubjects(subjectsList);
+    try {
+      const subjectsList = examService.getSubjects(examTypeId);
+      setDisplaySubjects(subjectsList);
+    } catch (error) {
+      console.error('Failed to load subjects from service:', error);
+      // Fallback to the old method
+      const subjectsList = getSubjects(examTypeId);
+      setDisplaySubjects(subjectsList);
+    }
   };
 
   const handleGradeSelect = (grade) => {
@@ -57,13 +98,20 @@ const Exams = () => {
     
     // Get available exams based on selection
     if (selectedSection === 'fullExams') {
-      const exams = getAvailableExams(selectedExamType, subjectId, selectedGrade);
-      setAvailableExams(exams);
+      try {
+        const exams = examService.getAvailableExams(selectedExamType, subjectId, selectedGrade);
+        setAvailableExams(exams);
+      } catch (error) {
+        console.error('Failed to get available exams from service:', error);
+        // Fallback to old method
+        const exams = getAvailableExams(selectedExamType, subjectId, selectedGrade);
+        setAvailableExams(exams);
+      }
     } else {
-      // For sample tests, we'd use a different method or hardcoded sample tests
+      // For sample tests, we'll use a simplified list
       setAvailableExams([
-        { id: `sample_${subjectId}_1`, name: 'Sample Test 1', type: selectedExamType, grade: 'All' },
-        { id: `sample_${subjectId}_2`, name: 'Sample Test 2', type: selectedExamType, grade: 'All' }
+        { id: `sample_${subjectId}_1`, name: 'Sample Test 1', type: selectedExamType, year: 'All' },
+        { id: `sample_${subjectId}_2`, name: 'Sample Test 2', type: selectedExamType, year: 'All' }
       ]);
     }
   };
@@ -89,105 +137,43 @@ const Exams = () => {
     }
   }, [location]);
 
-  // Get NAPLAN subjects
-  const getNaplanSubjects = () => [
-    {
-      id: 'reading',
-      name: 'Reading',
-      icon: '📚',
-      description: 'Comprehension of different text types',
-      questionCount: 40,
-      timeLimit: 45
-    },
-    {
-      id: 'writing',
-      name: 'Writing',
-      icon: '✍️',
-      description: 'One extended writing task based on a given prompt',
-      questionCount: 1,
-      timeLimit: 40
-    },
-    {
-      id: 'language',
-      name: 'Language Conventions',
-      icon: '📖',
-      description: 'Grammar, punctuation, and spelling',
-      questionCount: 50,
-      timeLimit: 40
-    },
-    {
-      id: 'numeracy',
-      name: 'Numeracy',
-      icon: '➕',
-      description: 'Number and Algebra, Measurement and Geometry',
-      questionCount: 40,
-      timeLimit: 50
-    }
-  ];
-
-  // Get ICAS subjects
-  const getIcasSubjects = () => [
-    {
-      id: 'science',
-      name: 'Science',
-      icon: '🔬',
-      description: 'Scientific knowledge and understanding',
-      questionCount: 30,
-      timeLimit: 45
-    },
-    {
-      id: 'spelling',
-      name: 'Spelling Bee',
-      icon: '🐝',
-      description: 'Spelling patterns, rules and conventions',
-      questionCount: 40,
-      timeLimit: 25
-    },
-    {
-      id: 'english_reading',
-      name: 'English (Reading)',
-      icon: '📖',
-      description: 'Reading comprehension and analysis',
-      questionCount: 45,
-      timeLimit: 45
-    }
-  ];
-
   // Get sample test subjects
-  const getSampleTestSubjects = () => [
-    {
-      id: 'maths',
-      name: 'Mathematics',
-      icon: '🧮',
-      description: 'Sample mathematical problems and concepts',
-      questionCount: 20,
-      timeLimit: 30
-    },
-    {
-      id: 'english',
-      name: 'English',
-      icon: '📚',
-      description: 'Reading comprehension and language skills',
-      questionCount: 20,
-      timeLimit: 30
-    },
-    {
-      id: 'science',
-      name: 'Science',
-      icon: '🔬',
-      description: 'Scientific knowledge and inquiry skills',
-      questionCount: 20,
-      timeLimit: 30
-    },
-    {
-      id: 'digital',
-      name: 'Digital Technologies',
-      icon: '💻',
-      description: 'Digital systems and computational thinking',
-      questionCount: 20,
-      timeLimit: 30
-    }
-  ];
+  const getSampleTestSubjects = () => {
+    return [
+      {
+        id: 'mathematics',
+        name: 'Mathematics',
+        icon: '🧮',
+        description: 'Sample mathematical problems and concepts',
+        questionCount: 20,
+        timeLimit: 30
+      },
+      {
+        id: 'english',
+        name: 'English',
+        icon: '📚',
+        description: 'Reading comprehension and language skills',
+        questionCount: 20,
+        timeLimit: 30
+      },
+      {
+        id: 'science',
+        name: 'Science',
+        icon: '🔬',
+        description: 'Scientific knowledge and inquiry skills',
+        questionCount: 20,
+        timeLimit: 30
+      },
+      {
+        id: 'digital',
+        name: 'Digital Technologies',
+        icon: '💻',
+        description: 'Digital systems and computational thinking',
+        questionCount: 20,
+        timeLimit: 30
+      }
+    ];
+  };
 
   // Render initial exam type selection screen
   if (!selectedExamType) {
@@ -400,9 +386,6 @@ const Exams = () => {
 
   // After selecting year level for full exams, show subject selection
   if (selectedExamType && selectedSection === 'fullExams' && selectedGrade && !selectedSubject) {
-    // Select appropriate subjects based on exam type
-    const examSubjects = selectedExamType === 'naplan' ? getNaplanSubjects() : getIcasSubjects();
-    
     return (
       <div className="exams-page">
         <div className="exams-container">
@@ -423,7 +406,7 @@ const Exams = () => {
           
           <h2 className="section-title">Select Subject</h2>
           <div className="exams-grid">
-            {examSubjects.map(subject => (
+            {displaySubjects.map(subject => (
               <div 
                 key={subject.id}
                 className="exam-card"
@@ -453,17 +436,10 @@ const Exams = () => {
 
   // After selecting a subject, show available exams
   if (selectedExamType && selectedSubject) {
-    // Find the correct subject list based on section and exam type
-    let subjectList;
-    if (selectedSection === 'sampleTests') {
-      subjectList = getSampleTestSubjects();
-    } else if (selectedExamType === 'naplan') {
-      subjectList = getNaplanSubjects();
-    } else {
-      subjectList = getIcasSubjects();
-    }
-    
-    const currentSubject = subjectList.find(s => s.id === selectedSubject);
+    // Find the current subject
+    const currentSubject = selectedSection === 'sampleTests'
+      ? getSampleTestSubjects().find(s => s.id === selectedSubject)
+      : displaySubjects.find(s => s.id === selectedSubject);
     
     return (
       <div className="exams-page">

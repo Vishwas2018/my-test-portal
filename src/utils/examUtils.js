@@ -1,9 +1,7 @@
 // src/utils/examUtils.js
 import { EXAM, STORAGE_KEYS } from './constants';
 
-// Import data sources - make sure these imports are correct
-import defaultQuestionBank from '../data/defaultQuestionBank';
-import examData from '../data/examData';
+import examService from '../services/examService';
 
 /**
  * Get questions for a subject, filtered by exam type and year if provided
@@ -23,35 +21,15 @@ export const getQuestions = (subjectId, examType, year, examId) => {
 
     console.log(`Loading questions for: Subject: ${subjectId}, Type: ${examType}, Year: ${year}, Exam: ${examId}`);
     
-    // If we have a specific examId and complete parameters
-    if (examType && subjectId && year && examId) {
-      try {
-        // Safely access the data structure with optional chaining
-        const examQuestions = examData?.[examType]?.subjects?.[subjectId]?.exams?.[year]?.find(e => e.id === examId)?.questions;
-        
-        if (Array.isArray(examQuestions) && examQuestions.length > 0) {
-          return examQuestions;
-        }
-      } catch (err) {
-        console.error('Error accessing specific exam questions:', err);
-      }
+    // Try to get questions from our service
+    const questions = examService.getQuestions(examType, subjectId, year, examId);
+    
+    // If we found questions, return them
+    if (Array.isArray(questions) && questions.length > 0) {
+      return questions;
     }
     
-    // If we have type, year, and subject (but no specific exam ID)
-    if (examType && year && subjectId) {
-      try {
-        // Safely access the data structure with optional chaining
-        const yearExams = examData?.[examType]?.subjects?.[subjectId]?.exams?.[year];
-        
-        if (Array.isArray(yearExams) && yearExams.length > 0 && yearExams[0]?.questions) {
-          return yearExams[0].questions;
-        }
-      } catch (err) {
-        console.error('Error accessing year-specific exam questions:', err);
-      }
-    }
-    
-    // Fallback to default questions for this subject
+    // Fallback to default questions
     return getDefaultQuestions(subjectId);
   } catch (error) {
     console.error('Error loading questions:', error);
@@ -65,20 +43,92 @@ export const getQuestions = (subjectId, examType, year, examId) => {
  * @returns {Array} Array of default questions
  */
 const getDefaultQuestions = (subjectId) => {
-  try {
-    // Get questions from the default question bank based on subject
-    if (defaultQuestionBank && typeof defaultQuestionBank === 'object' && subjectId && defaultQuestionBank[subjectId]) {
-      const questions = defaultQuestionBank[subjectId];
-      if (Array.isArray(questions) && questions.length > 0) {
-        return questions;
+  // Default questions by subject
+  const defaultQuestionsMap = {
+    mathematics: [
+      {
+        id: 'math1',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
+        text: 'What is 25 + 37?',
+        options: [
+          { id: 'a', text: '52' },
+          { id: 'b', text: '62' },
+          { id: 'c', text: '72' },
+          { id: 'd', text: '42' }
+        ],
+        correctAnswer: 'b',
+        explanation: '25 + 37 = (20 + 5) + (30 + 7) = (20 + 30) + (5 + 7) = 50 + 12 = 62'
+      },
+      {
+        id: 'math2',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
+        text: 'A rectangle has a length of 12 cm and a width of 7 cm. What is its perimeter?',
+        options: [
+          { id: 'a', text: '19 cm' },
+          { id: 'b', text: '38 cm' },
+          { id: 'c', text: '48 cm' },
+          { id: 'd', text: '84 cm' }
+        ],
+        correctAnswer: 'b',
+        explanation: 'Perimeter = 2 × (length + width) = 2 × (12 + 7) = 2 × 19 = 38 cm'
       }
-    }
-  } catch (err) {
-    console.error('Error accessing default question bank:', err);
-  }
+    ],
+    science: [
+      {
+        id: 'science1',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
+        text: 'Which of these is a living thing?',
+        options: [
+          { id: 'a', text: 'Rock' },
+          { id: 'b', text: 'Sun' },
+          { id: 'c', text: 'Water' },
+          { id: 'd', text: 'Tree' }
+        ],
+        correctAnswer: 'd',
+        explanation: 'A tree is a living thing because it grows, reproduces, and responds to its environment.'
+      },
+      {
+        id: 'science2',
+        type: EXAM.QUESTION_TYPES.TRUE_FALSE,
+        text: 'The moon produces its own light.',
+        correctAnswer: false,
+        explanation: 'The moon reflects light from the sun; it does not produce its own light.'
+      }
+    ],
+    english: [
+      {
+        id: 'english1',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
+        text: 'Which of these is a synonym for "happy"?',
+        options: [
+          { id: 'a', text: 'Sad' },
+          { id: 'b', text: 'Angry' },
+          { id: 'c', text: 'Joyful' },
+          { id: 'd', text: 'Tired' }
+        ],
+        correctAnswer: 'c',
+        explanation: '"Joyful" is a synonym for "happy" as both words describe a feeling of pleasure or contentment.'
+      }
+    ],
+    digital: [
+      {
+        id: 'digital1',
+        type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
+        text: 'Which of these is an input device?',
+        options: [
+          { id: 'a', text: 'Printer' },
+          { id: 'b', text: 'Monitor' },
+          { id: 'c', text: 'Speaker' },
+          { id: 'd', text: 'Keyboard' }
+        ],
+        correctAnswer: 'd',
+        explanation: 'A keyboard is an input device because it allows users to input data into a computer.'
+      }
+    ]
+  };
   
-  // Fallback generic questions if everything else fails
-  return [
+  // Return subject specific questions or generic fallback
+  return defaultQuestionsMap[subjectId] || [
     {
       id: 'generic1',
       type: EXAM.QUESTION_TYPES.MULTIPLE_CHOICE,
@@ -98,13 +148,6 @@ const getDefaultQuestions = (subjectId) => {
       text: 'The Earth revolves around the Sun.',
       correctAnswer: true,
       explanation: 'The Earth revolves around the Sun in an elliptical orbit.'
-    },
-    {
-      id: 'generic3',
-      type: EXAM.QUESTION_TYPES.FILL_IN_BLANK,
-      text: 'The largest planet in our solar system is ________.',
-      correctAnswer: 'Jupiter',
-      explanation: 'Jupiter is the largest planet in our solar system.'
     }
   ];
 };
@@ -115,76 +158,42 @@ const getDefaultQuestions = (subjectId) => {
  * @returns {Array} Array of subjects
  */
 export const getSubjects = (examType = null) => {
-  // Default subjects for sample exams
-  const defaultSubjects = [
-    {
-      id: 'mathematics',
-      name: 'Mathematics',
-      questionCount: 5,
-      timeLimit: 45,
-      icon: '🔢',
-      description: 'Practice solving mathematical problems'
-    },
-    {
-      id: 'science',
-      name: 'Science',
-      questionCount: 5,
-      timeLimit: 45,
-      icon: '🧪',
-      description: 'Test your knowledge of scientific concepts'
-    },
-    {
-      id: 'digital',
-      name: 'Digital Technologies',
-      questionCount: 5,
-      timeLimit: 35,
-      icon: '💻',
-      description: 'Explore digital concepts and computational thinking'
-    }
-  ];
+  // If no exam type is provided, return default subjects
+  if (!examType) {
+    return [
+      {
+        id: 'mathematics',
+        name: 'Mathematics',
+        questionCount: 5,
+        timeLimit: 45,
+        icon: '🔢',
+        description: 'Practice solving mathematical problems'
+      },
+      {
+        id: 'science',
+        name: 'Science',
+        questionCount: 5,
+        timeLimit: 45,
+        icon: '🧪',
+        description: 'Test your knowledge of scientific concepts'
+      },
+      {
+        id: 'digital',
+        name: 'Digital Technologies',
+        questionCount: 5,
+        timeLimit: 35,
+        icon: '💻',
+        description: 'Explore digital concepts and computational thinking'
+      }
+    ];
+  }
   
+  // Use the exam service to get subjects
   try {
-    if (examType && examData?.[examType]) {
-      // Extract subjects from our data structure
-      const examTypeData = examData[examType];
-      const subjects = Object.keys(examTypeData.subjects || {}).map(subjectId => {
-        const subjectData = examTypeData.subjects[subjectId];
-        if (!subjectData) return null;
-        
-        const metadata = subjectData.metadata || {};
-        
-        // Find the first exam to get question count and time limit
-        let questionCount = 0;
-        let timeLimit = EXAM.DEFAULT_TIME_LIMIT;
-        
-        // Loop through all year levels to find at least one exam
-        const yearLevels = Object.keys(subjectData.exams || {});
-        if (yearLevels.length > 0) {
-          const firstYearExams = subjectData.exams[yearLevels[0]];
-          if (Array.isArray(firstYearExams) && firstYearExams.length > 0) {
-            const firstExam = firstYearExams[0];
-            questionCount = firstExam.questions ? firstExam.questions.length : 0;
-            timeLimit = firstExam.timeLimit || EXAM.DEFAULT_TIME_LIMIT;
-          }
-        }
-        
-        return {
-          id: subjectId,
-          name: metadata.name || subjectId,
-          icon: metadata.icon || '📚',
-          questionCount,
-          timeLimit,
-          description: metadata.description || ''
-        };
-      }).filter(Boolean); // Filter out null entries
-      
-      return subjects;
-    }
-    
-    return defaultSubjects;
+    return examService.getSubjects(examType);
   } catch (error) {
     console.error('Error getting subjects:', error);
-    return defaultSubjects;
+    return [];
   }
 };
 
@@ -198,39 +207,20 @@ export const getSubjects = (examType = null) => {
 export const getAvailableExams = (examType, subjectId, year) => {
   try {
     // Input validation
-    if (!examType || !subjectId || !year) {
+    if (!examType || !subjectId) {
       console.warn('Missing required parameters for getAvailableExams');
       return [];
     }
     
-    // Safely access exams with optional chaining
-    const yearExams = examData?.[examType]?.subjects?.[subjectId]?.exams?.[year];
-    
-    if (Array.isArray(yearExams) && yearExams.length > 0) {
-      // Map the exams to the required format
-      return yearExams.map(exam => ({
-        id: exam.id || `${subjectId}_${year}_${Math.random().toString(36).substr(2, 9)}`,
-        name: exam.title || `${subjectId.charAt(0).toUpperCase() + subjectId.slice(1)} Exam`,
-        grade: parseInt(year, 10) || 0,
-        type: examType,
-        subject: subjectId,
-        questionCount: Array.isArray(exam.questions) ? exam.questions.length : 0,
-        timeLimit: exam.timeLimit || EXAM.DEFAULT_TIME_LIMIT
-      }));
-    }
-    
-    return [];
+    // Use the exam service to get available exams
+    return examService.getAvailableExams(examType, subjectId, year);
   } catch (error) {
     console.error('Error getting available exams:', error);
     return [];
   }
 };
 
-/**
- * Save exam result to localStorage with error handling
- * @param {Object} result - The exam result to save
- * @returns {boolean} Success status
- */
+// Keep existing functions unchanged
 export const saveExamResult = (result) => {
   try {
     // Validate input
@@ -285,10 +275,6 @@ export const saveExamResult = (result) => {
   }
 };
 
-/**
- * Get exam results from localStorage
- * @returns {Array} Array of exam results
- */
 export const getExamResults = () => {
   try {
     const resultsStr = localStorage.getItem(STORAGE_KEYS.EXAM_RESULTS);
@@ -299,9 +285,6 @@ export const getExamResults = () => {
   }
 };
 
-/**
- * Update user streak when completing an exam
- */
 const updateStreak = () => {
   try {
     // Get current streak data
@@ -348,11 +331,6 @@ const updateStreak = () => {
   }
 };
 
-/**
- * Format time in seconds to MM:SS
- * @param {number} seconds - Time in seconds
- * @returns {string} Formatted time
- */
 export const formatTime = (seconds) => {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
