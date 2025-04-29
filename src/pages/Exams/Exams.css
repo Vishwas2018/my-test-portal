@@ -1,819 +1,74 @@
 .exams-page {
-    padding: 4rem 1.5rem;
-    min-height: 80vh;
-    background-color: var(--off-white);
-    background-image: 
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%236ECFFF' fill-opacity='0.1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
-      radial-gradient(circle at 15% 50%, rgba(110, 207, 255, 0.15), transparent 25%),
-      radial-gradient(circle at 85% 30%, rgba(126, 217, 87, 0.15), transparent 25%);
-  }
-  
-  .exams-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: var(--white);
-    border-radius: var(--radius-xl);
-    box-shadow: 
-      0 15px 0 -8px var(--light-gray),
-      0 20px 30px rgba(0, 0, 0, 0.1);
-    border: 6px solid var(--white);
-    padding: 2rem;
-    overflow: visible;
-  }
-  
-  .exams-header {
-    margin-bottom: 2.5rem;
-    text-align: center;
-  }
-  
-  .title {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: var(--dark);
-    position: relative;
-    display: inline-block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .title::after {
-    content: '';
-    position: absolute;
-    height: 4px;
-    width: 80px;
-    background: var(--gradient-fun);
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: var(--radius-full);
-  }
-  
-  .subtitle {
-    font-size: 1.1rem;
-    color: var(--dark-gray);
-    max-width: 800px;
-    margin: 1.5rem auto 0;
-    line-height: 1.6;
-  }
-  
-  /* Category description */
-  .category-description {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--light-gray);
-  }
-  
-  .category-description h2 {
-    font-size: 1.8rem;
-    color: var(--primary);
-    margin-bottom: 1rem;
-  }
-  
-  .category-description p {
-    color: var(--dark-gray);
-    line-height: 1.6;
-    max-width: 90%;
-  }
-  
-  /* Exam Types Grid */
-  .exam-types-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-  }
-  
-  .exam-type-card {
-    background-color: var(--white);
-    border-radius: var(--radius-xl);
-    box-shadow: 0 12px 0 -6px var(--light-gray), 0 15px 20px rgba(0, 0, 0, 0.08);
-    border: 4px solid var(--white);
-    padding: 2rem;
-    text-align: center;
-    transition: var(--transition-bounce);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .exam-type-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 0 -8px var(--light-gray), 0 25px 35px rgba(0, 0, 0, 0.1);
-  }
-  
-  .exam-type-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    display: inline-block;
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(to right bottom, var(--accent-light), var(--primary-light));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    box-shadow: var(--shadow-md);
-  }
-  
-  .exam-type-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    color: var(--dark);
-  }
-  
-  .exam-type-card p {
-    color: var(--dark-gray);
-    margin-bottom: 0.5rem;
-  }
-  
-  /* Exam Options Container */
-  .exam-options-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-  
-  .exam-option-card {
-    background-color: var(--white);
-    border-radius: var(--radius-xl);
-    box-shadow: 0 15px 0 -8px var(--light-gray), 0 20px 30px rgba(0, 0, 0, 0.1);
-    border: 6px solid var(--white);
-    transition: var(--transition-bounce);
-    padding: 2rem;
-  }
-  
-  /* Premium card styles */
-  .premium-card {
-    background: linear-gradient(145deg, #ffffff, #f8f9fa);
-    border-left: 6px solid var(--primary);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .premium-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 150px;
-    height: 150px;
-    background: radial-gradient(circle, rgba(110, 207, 255, 0.2), transparent 70%);
-    z-index: 0;
-    border-radius: 50%;
-    transform: translate(30%, -30%);
-  }
-  
-  .premium-card h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: var(--primary-dark);
-    position: relative;
-  }
-  
-  .premium-card h3 {
-    font-size: 1.4rem;
-    margin: 1.5rem 0 1rem;
-    color: var(--dark);
-    border-bottom: 2px solid var(--light-gray);
-    padding-bottom: 0.5rem;
-  }
-  
-  .premium-features {
-    margin-top: 2rem;
-    background-color: rgba(var(--primary-rgb), 0.05);
-    padding: 1.5rem;
-    border-radius: var(--radius-lg);
-  }
-  
-  .feature-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    position: relative;
-    padding-left: 1.5rem;
-  }
-  
-  .feature-icon {
-    color: var(--primary);
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-  }
-  
-  .login-required {
-    border: 2px dashed var(--primary-light);
-    padding: 1.5rem;
-    border-radius: var(--radius-lg);
-    margin: 1.5rem 0;
-    text-align: center;
-    background-color: rgba(var(--primary-rgb), 0.05);
-  }
-  
-  .login-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-  
-  /* Breadcrumb styles */
-  .breadcrumb-trail {
-    display: flex;
-    align-items: center;
-    margin-bottom: 2rem;
-    font-weight: 500;
-    color: var(--dark);
-    flex-wrap: wrap;
-  }
-  
-  .back-button {
-    margin-right: 1rem;
-  }
-  
-  /* Section title */
-  .section-title {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    color: var(--dark);
-    text-align: center;
-    position: relative;
-    display: inline-block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-  }
-  
-  .section-title::after {
-    content: '';
-    position: absolute;
-    height: 4px;
-    width: 60px;
-    background: var(--gradient-fun);
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: var(--radius-full);
-  }
-  
-  /* Exams grid */
-  .exams-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
-  }
-  
-  .exam-card {
-    background-color: var(--white);
-    border-radius: var(--radius-xl);
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    border: 1px solid var(--light-gray);
-  }
-  
-  .exam-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
-    border-color: var(--primary-light);
-  }
-  
-  .exam-card-content {
-    padding: 1.5rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .exam-card-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.75rem;
-  }
-  
-  .subject-icon {
-    font-size: 1.5rem;
-    margin-right: 0.75rem;
-    width: 45px;
-    height: 45px;
-    background-color: var(--primary-light);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-sm);
-    flex-shrink: 0;
-  }
-  
-  .exam-card h3 {
-    font-size: 1.3rem;
-    margin: 0 0 0.5rem 0;
-    color: var(--dark);
-  }
-  
-  .exam-card p {
-    color: var(--dark-gray);
-    line-height: 1.5;
-    margin-bottom: 1rem;
-  }
-  
-  .subject-description {
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-    color: var(--dark-gray);
-    flex-grow: 1;
-  }
-  
-  .no-exams-message {
-    text-align: center;
-    padding: 3rem;
-    background-color: var(--light-gray);
-    border-radius: var(--radius-lg);
-    grid-column: 1 / -1;
-  }
-  
-  /* Year buttons grid */
-  .year-buttons-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 1rem;
-    margin-top: 1.5rem;
-  }
-  
-  .year-button {
-    background: linear-gradient(145deg, var(--white), var(--light-gray));
-    border-radius: var(--radius-lg);
-    padding: 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    position: relative;
-    overflow: hidden;
-    border: 1px solid var(--light-gray);
-  }
-  
-  .year-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(45deg, var(--primary-light), var(--accent-light));
+  padding: 4rem 1.5rem;
+  min-height: 80vh;
+  background-color: var(--off-white);
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%236ECFFF' fill-opacity='0.1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+    radial-gradient(circle at 85% 50%, rgba(110, 207, 255, 0.15), transparent 25%),
+    radial-gradient(circle at 15% 30%, rgba(126, 217, 87, 0.15), transparent 25%);
+  animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
     opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 0;
   }
-  
-  .year-button:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .year-button:hover::before {
-    opacity: 0.2;
-  }
-  
-  .year-button-content {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1rem;
-  }
-  
-  .year-text {
-    font-weight: 700;
-    color: var(--primary-dark);
-    font-size: 1.1rem;
-  }
-  
-  .year-arrow {
-    color: var(--accent);
-    font-weight: 900;
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: all 0.3s ease;
-  }
-  
-  .year-button:hover .year-arrow {
+  to {
     opacity: 1;
-    transform: translateX(0);
-  }
-  
-  /* Animation for content */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .fade-in {
-    animation: fadeInUp 0.4s ease-out forwards;
-  }
-  
-  /* Badge styles */
-  .exam-badge {
-    display: inline-block;
-    padding: 0.3rem 0.6rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    border-radius: var(--radius-full);
-    margin-bottom: 0.5rem;
-  }
-  
-  .badge-primary {
-    background-color: var(--primary-light);
-    color: var(--primary-dark);
-  }
-  
-  .badge-accent {
-    background-color: var(--accent-light);
-    color: var(--accent-dark);
-  }
-  
-  /* Sample and free labels */
-  .sample-label, 
-  .free-label {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    padding: 0.3rem 0.6rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    border-radius: var(--radius-full);
-    z-index: 5;
-  }
-  
-  .sample-label {
-    background-color: var(--accent-light);
-    color: var(--accent-dark);
-  }
-  
-  .free-label {
-    background-color: var(--success-light);
-    color: var(--success-dark);
-  }
-  
-  /* Filter controls */
-  .filter-controls {
-    margin-bottom: 2rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: center;
-  }
-  
-  .filter-label {
-    font-weight: 600;
-    color: var(--dark);
-  }
-  
-  .filter-dropdown {
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--light-gray);
-    border-radius: var(--radius-lg);
-    background-color: var(--white);
-    font-size: 0.9rem;
-    margin-right: 1.5rem;
-    cursor: pointer;
-  }
-  
-  .filter-dropdown:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px var(--primary-light);
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 992px) {
-    .exam-types-grid {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    }
-    
-    .exam-options-container {
-      grid-template-columns: 1fr;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .exams-page {
-      padding: 2rem 1rem;
-    }
-    
-    .title {
-      font-size: 2rem;
-    }
-    
-    .exams-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .year-buttons-grid {
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
-    
-    .filter-controls {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    
-    .filter-dropdown {
-      width: 100%;
-      margin-right: 0;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .exams-container {
-      padding: 1.5rem;
-    }
-    
-    .title {
-      font-size: 1.8rem;
-    }
-    
-    .year-buttons-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  /* Additional mobile responsiveness fixes for Exams.css */
-
-/* Add these at the end of your Exams.css file */
-
-/* Small device improvements */
-@media (max-width: 480px) {
-  /* Improve readability on small screens */
-  .exams-page {
-    padding: 1rem 0.5rem;
-  }
-  
-  .exams-container {
-    padding: 1rem;
-    border-width: 4px;
-  }
-  
-  .title {
-    font-size: 1.5rem;
-  }
-  
-  .subtitle {
-    font-size: 0.9rem;
-  }
-  
-  .exam-type-card {
-    padding: 1.5rem 1rem;
-  }
-  
-  .exam-type-icon {
-    width: 60px;
-    height: 60px;
-    font-size: 2rem;
-  }
-  
-  .exam-card-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .subject-icon {
-    margin-bottom: 0.5rem;
-  }
-  
-  /* Adjust grid layouts */
-  .exam-types-grid,
-  .exams-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  /* Optimize navigation */
-  .breadcrumb-trail {
-    font-size: 0.85rem;
-  }
-  
-  .back-button {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.85rem;
-  }
-  
-  /* Touch-friendly adjustments */
-  .year-buttons-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .year-button-content {
-    padding: 1rem;
-  }
-  
-  .year-text {
-    font-size: 1rem;
-  }
-  
-  /* Optimize dropdowns */
-  .filter-controls {
-    gap: 0.5rem;
-  }
-  
-  .filter-dropdown {
-    width: 100%;
-    padding: 0.75rem;
   }
 }
 
-/* Tiny screens (iPhone SE, etc.) */
-@media (max-width: 360px) {
-  .exams-container {
-    border-width: 3px;
-    border-radius: var(--radius-lg);
-  }
-  
-  .title {
-    font-size: 1.3rem;
-  }
-  
-  .year-buttons-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .exam-type-card h3 {
-    font-size: 1.2rem;
-  }
-  
-  .exam-card h3 {
-    font-size: 1.1rem;
-  }
-  
-  /* Improve tap targets */
-  .year-button-content {
-    padding: 1.2rem 1rem;
-  }
-  
-  /* Fix padding when stacked */
-  .login-buttons {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-}
-
-/* Fix for orientation change */
-@media screen and (orientation: landscape) and (max-height: 500px) {
-  .exams-page {
-    padding: 1rem;
-  }
-  
-  .exam-types-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  }
-  
-  .exams-container {
-    max-width: 95%;
-  }
-  
-  /* Reduce vertical space usage */
-  .title {
-    margin-bottom: 0.5rem;
-  }
-  
-  .title::after {
-    bottom: -5px;
-  }
-  
-  .subtitle {
-    margin-top: 0.75rem;
-  }
-  
-  .premium-features {
-    padding: 0.75rem;
-  }
-  
-  .feature-item {
-    margin-bottom: 0.5rem;
-  }
-}
-
-/* High-DPI devices with small screens */
-@media (-webkit-min-device-pixel-ratio: 2) and (max-width: 480px),
-       (min-resolution: 192dpi) and (max-width: 480px) {
-  /* Optimize box shadows and borders for high-DPI */
-  .exam-option-card,
-  .exam-type-card,
-  .exam-card {
-    box-shadow: 0 10px 0 -5px var(--light-gray), 0 12px 20px rgba(0, 0, 0, 0.08);
-  }
-  
-  /* Ensure text is readable on high-DPI */
-  .subtitle, 
-  .exam-card p,
-  .subject-description {
-    font-size: 0.95rem;
-  }
-}
-
-/* Fix for dark mode compatibility */
-@media (prefers-color-scheme: dark) {
-  /* These would be overridden by your theme context, but serve as fallbacks */
-  .exam-card,
-  .exam-type-card,
-  .exam-option-card {
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-  }
-}
-
-.section-header {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-
-.section-header h2 {
-  font-size: 1.8rem;
-  color: var(--primary);
-  margin-bottom: 0.5rem;
-  position: relative;
-  display: inline-block;
-}
-
-.section-header h2::after {
-  content: '';
-  position: absolute;
-  height: 3px;
-  width: 80px;
-  background: var(--gradient-primary);
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: var(--radius-full);
-}
-
-.section-header p {
-  color: var(--dark-gray);
-  max-width: 700px;
-  margin: 1rem auto 0;
-}
-
-.section-divider {
-  height: 1px;
-  background: var(--light-gray);
-  margin: 3rem 0;
-  position: relative;
-}
-
-.section-divider::before {
-  content: '';
-  position: absolute;
-  width: 60px;
-  height: 4px;
-  background: var(--primary-light);
-  top: -2px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 2px;
-}
-
-/* Free sample exam card highlighting */
-.exam-type-card.sample-card {
-  border-left: 4px solid var(--accent);
-  background: linear-gradient(to right, rgba(var(--accent-rgb), 0.05), transparent);
-}
-
-.exam-type-card.sample-card .exam-type-icon {
-  background: linear-gradient(to right bottom, var(--accent), var(--accent-light));
-}
-
-/* Free label for sample exams */
-.free-label {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: var(--accent);
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-full);
-}
-
-.exams-overview {
+.exams-container {
+  max-width: 1200px;
+  margin: 0 auto;
   background-color: var(--white);
   border-radius: var(--radius-xl);
+  box-shadow: 
+    0 15px 0 -8px var(--light-gray),
+    0 20px 30px rgba(0, 0, 0, 0.1);
+  border: 6px solid var(--white);
   padding: 2rem;
+  overflow: visible;
+}
+
+.exams-header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--dark);
+  position: relative;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  height: 4px;
+  width: 80px;
+  background: var(--gradient-fun);
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: var(--radius-full);
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--dark-gray);
+  max-width: 800px;
+  margin: 1.5rem auto 0;
+  line-height: 1.6;
+}
+
+/* Overview section */
+.exams-overview {
   margin-bottom: 3rem;
-  box-shadow: var(--shadow-md);
 }
 
 .overview-content {
@@ -850,12 +105,7 @@
   line-height: 1.6;
 }
 
-@media (max-width: 768px) {
-  .overview-content {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* Study tips section */
 .study-tips-container {
   margin-bottom: 3rem;
 }
@@ -880,12 +130,88 @@
   box-shadow: var(--shadow-md);
 }
 
-@media (max-width: 768px) {
-  .tips-grid {
-    grid-template-columns: 1fr;
-  }
+/* Category description */
+.category-description {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--light-gray);
 }
 
+.category-description h2 {
+  font-size: 1.8rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.category-description p {
+  color: var(--dark-gray);
+  line-height: 1.6;
+  max-width: 90%;
+}
+
+/* Exam Types Grid */
+.exam-types-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.exam-type-card {
+  background-color: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 12px 0 -6px var(--light-gray), 0 15px 20px rgba(0, 0, 0, 0.08);
+  border: 4px solid var(--white);
+  padding: 2rem;
+  text-align: center;
+  transition: var(--transition-bounce);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.exam-type-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 0 -8px var(--light-gray), 0 25px 35px rgba(0, 0, 0, 0.1);
+}
+
+.exam-type-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(to right bottom, var(--accent-light), var(--primary-light));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.exam-type-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--dark);
+}
+
+.exam-type-card p {
+  color: var(--dark-gray);
+  margin-bottom: 0.5rem;
+}
+
+/* Free sample exam card highlighting */
+.exam-type-card.sample-card {
+  border-left: 4px solid var(--accent);
+  background: linear-gradient(to right, rgba(var(--accent-rgb), 0.05), transparent);
+}
+
+.exam-type-card.sample-card .exam-type-icon {
+  background: linear-gradient(to right bottom, var(--accent), var(--accent-light));
+}
+
+/* Exam Sections Container */
 .exam-sections-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -969,6 +295,22 @@
   border-left: 6px solid var(--primary);
 }
 
+.login-required {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  border: 2px dashed var(--primary-light);
+  border-radius: var(--radius-lg);
+  background-color: rgba(var(--primary-rgb), 0.05);
+  text-align: center;
+}
+
+.login-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
 .pricing-link {
   margin-top: 1rem;
   text-align: center;
@@ -984,12 +326,46 @@
   text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-  .exam-sections-container {
-    grid-template-columns: 1fr;
-  }
+/* Breadcrumb styles */
+.breadcrumb-trail {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  color: var(--dark);
+  flex-wrap: wrap;
 }
 
+.back-button {
+  margin-right: 1rem;
+}
+
+/* Section title */
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--dark);
+  text-align: center;
+  position: relative;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  height: 4px;
+  width: 60px;
+  background: var(--gradient-fun);
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: var(--radius-full);
+}
+
+/* Benefits container */
 .subject-benefits-container {
   margin-bottom: 2.5rem;
 }
@@ -1028,6 +404,180 @@
   text-align: center;
 }
 
+.btn-outline {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid var(--primary);
+  border-radius: 30px;
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+.btn-outline:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(30, 86, 160, 0.4);
+}
+
+/* Exams grid */
+.exams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.exam-card {
+  background-color: var(--white);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--light-gray);
+  position: relative;
+}
+
+.exam-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-light);
+}
+
+.exam-card-content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.exam-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.subject-icon {
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
+  width: 45px;
+  height: 45px;
+  background-color: var(--primary-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.exam-card h3 {
+  font-size: 1.3rem;
+  margin: 0 0 0.5rem 0;
+  color: var(--dark);
+}
+
+.exam-card p {
+  color: var(--dark-gray);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.subject-description {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  color: var(--dark-gray);
+  flex-grow: 1;
+}
+
+.no-exams-message {
+  text-align: center;
+  padding: 2rem;
+  color: var(--dark-gray);
+  background-color: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  grid-column: 1 / -1;
+}
+
+/* Year buttons grid */
+.year-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.year-button {
+  background: linear-gradient(145deg, var(--white), var(--light-gray));
+  border-radius: var(--radius-lg);
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--light-gray);
+}
+
+.year-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, var(--primary-light), var(--accent-light));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.year-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.year-button:hover::before {
+  opacity: 0.2;
+}
+
+.year-button-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+}
+
+.year-text {
+  font-weight: 700;
+  color: var(--primary-dark);
+  font-size: 1.1rem;
+}
+
+.year-arrow {
+  color: var(--accent);
+  font-weight: 900;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.year-button:hover .year-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Free and premium labels */
 .free-label {
   position: absolute;
   top: 15px;
@@ -1069,19 +619,6 @@
   position: relative;
 }
 
-.premium-badge {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: var(--gradient-primary);
-  color: white;
-  padding: 0.3rem 0.6rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: var(--radius-full);
-  z-index: 5;
-}
-
 .comprehensive-features {
   background-color: var(--light-gray);
   border-radius: var(--radius-lg);
@@ -1096,21 +633,128 @@
   color: var(--accent);
 }
 
-.features-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+/* Section header */
+.section-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  position: relative;
 }
 
-.features-list li {
+.section-header h2 {
+  font-size: 1.8rem;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.section-header h2::after {
+  content: '';
+  position: absolute;
+  height: 3px;
+  width: 80px;
+  background: var(--gradient-primary);
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: var(--radius-full);
+}
+
+.section-header p {
+  color: var(--dark-gray);
+  max-width: 700px;
+  margin: 1rem auto 0;
+}
+
+/* Loading and Error states */
+.loading-container, .error-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+  text-align: center;
 }
 
-.features-list li i {
-  color: var(--accent);
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(var(--primary-rgb), 0.3);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes spin {
+  to {transform: rotate(360deg);}
+}
+
+.error-text {
+  color: var(--error);
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .exam-types-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .exam-sections-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .exams-page {
+    padding: 2rem 1rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .exams-grid, .overview-content, .tips-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .year-buttons-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .login-buttons {
+    flex-direction: column;
+  }
+  
+  .features-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .exams-container {
+    padding: 1.5rem;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+  }
+  
+  .year-buttons-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .exam-card-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .subject-icon {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
 }

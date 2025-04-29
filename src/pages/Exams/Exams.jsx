@@ -644,75 +644,43 @@ const Exams = () => {
               onClick={() => setSelectedGrade(null)}
               className="back-button"
             >
-              ← Back
-            </Button>
-            <span>
-              {examTypes.find(type => type.id === selectedExamType)?.name} &gt;
-              Full Exams
-            </span>
-          </div>
-
-          <h2 className="section-title">Select Year Level</h2>
-          <div className="year-buttons-grid">
-            {YEAR_LEVELS.map(grade => (
-              <div
-                key={grade}
-                className="year-button"
-                onClick={() => handleGradeSelect(grade)}
-              >
-                <div className="year-button-content">
-                  <span className="year-text">Year {grade}</span>
-                  <span className="year-arrow">→</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // After selecting year level for full exams, show subject selection
-  if (selectedExamType && selectedSection === 'fullExams' && selectedGrade && !selectedSubject) {
-    return (
-      <div className="exams-page">
-        <div className="exams-container">
-          <div className="breadcrumb-trail">
-            <Button
-              variant="secondary"
-              size="small"
-              onClick={() => setSelectedGrade(null)}
-              className="back-button"
-            >
               ← Back to Year Levels
             </Button>
             <span>
-              {examTypes.find(type => type.id === selectedExamType)?.name} &gt;
+              {examTypes.find(type => type.id === selectedExamType)?.name} &gt; 
               Full Exams &gt; Year {selectedGrade}
             </span>
           </div>
-
+          
           <h2 className="section-title">Select Subject</h2>
+          <div className="comprehensive-info">
+            <p>
+              <i className="fas fa-info-circle"></i> Each subject contains 5 comprehensive practice exams designed to build mastery and confidence.
+            </p>
+          </div>
+          
           <div className="exams-grid">
             {displaySubjects.map(subject => (
-              <div
+              <div 
                 key={subject.id}
-                className="exam-card"
+                className="exam-card comprehensive-card"
                 onClick={() => handleSubjectSelect(subject.id)}
               >
+                <div className="premium-badge">Premium</div>
                 <div className="exam-card-content">
                   <div className="exam-card-header">
                     <span className="subject-icon">{subject.icon}</span>
                     <h3>{subject.name}</h3>
                   </div>
                   <p>
-                    {subject.questionCount} {subject.questionCount === 1 ? 'question' : 'questions'}<br />
-                    {subject.timeLimit} minutes
+                    5 comprehensive exams<br />
+                    {subject.questionCount} questions per exam<br />
+                    {subject.timeLimit} minutes per exam
                   </p>
                   <p className="subject-description">{subject.description}</p>
                 </div>
                 <Button variant="primary" size="small">
-                  Select
+                  View Exams
                 </Button>
               </div>
             ))}
@@ -728,39 +696,59 @@ const Exams = () => {
     const currentSubject = selectedSection === 'sampleTests'
       ? getSampleTestSubjects().find(s => s.id === selectedSubject)
       : displaySubjects.find(s => s.id === selectedSubject);
-
+    
     return (
       <div className="exams-page">
         <div className="exams-container">
           <div className="breadcrumb-trail">
-            <Button
-              variant="secondary"
-              size="small"
+            <Button 
+              variant="secondary" 
+              size="small" 
               onClick={() => setSelectedSubject(null)}
               className="back-button"
             >
               ← Back to Subjects
             </Button>
             <span>
-              {examTypes.find(type => type.id === selectedExamType)?.name} &gt;
-              {selectedSection === 'fullExams' ? `Full Exams &gt; Year ${selectedGrade} &gt;` : 'Sample Tests &gt;'}
+              {examTypes.find(type => type.id === selectedExamType)?.name} &gt; 
+              {selectedSection === 'fullExams' ? `Full Exams &gt; Year ${selectedGrade} &gt;` : 'Sample Tests &gt;'} 
               {currentSubject?.name}
             </span>
           </div>
-
+          
           <h2 className="section-title">
-            Available {selectedSection === 'sampleTests' ? 'Sample' : ''} Exams
+            Available {selectedSection === 'sampleTests' ? 'Sample' : 'Comprehensive'} Exams
           </h2>
+          
+          {selectedSection === 'fullExams' && (
+            <div className="comprehensive-features">
+              <h3>Comprehensive Exam Features:</h3>
+              <ul className="features-list">
+                <li><i className="fas fa-check"></i> Realistic exam environment with timer</li>
+                <li><i className="fas fa-check"></i> Detailed performance analytics</li>
+                <li><i className="fas fa-check"></i> Question-by-question explanations</li>
+                <li><i className="fas fa-check"></i> Performance tracking across attempts</li>
+                <li><i className="fas fa-check"></i> Personalized study recommendations</li>
+              </ul>
+            </div>
+          )}
+          
           <div className="exams-grid">
             {availableExams.length > 0 ? (
-              availableExams.map(exam => (
-                <div
+              availableExams.map((exam, index) => (
+                <div 
                   key={exam.id}
-                  className="exam-card"
+                  className={`exam-card ${selectedSection === 'fullExams' ? 'comprehensive-card' : ''}`}
                   onClick={() => handleExamSelect(exam.id)}
                 >
+                  {selectedSection === 'sampleTests' && (
+                    <div className="free-label">Free Sample</div>
+                  )}
+                  {selectedSection === 'fullExams' && (
+                    <div className="premium-badge">Premium</div>
+                  )}
                   <div className="exam-card-content">
-                    <h3>{exam.name}</h3>
+                    <h3>{exam.name || `Exam ${index + 1}`}</h3>
                     <p>
                       {examTypes.find(type => type.id === selectedExamType)?.name}
                       {selectedSection === 'fullExams' ? ` - Year ${selectedGrade}` : ''}<br />
@@ -770,7 +758,7 @@ const Exams = () => {
                     </p>
                   </div>
                   <Button variant="primary" size="small">
-                    Start Exam
+                    {selectedSection === 'sampleTests' ? 'Try Free Sample' : 'Start Exam'}
                   </Button>
                 </div>
               ))
