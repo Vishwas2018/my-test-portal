@@ -11,7 +11,6 @@ import AnimatedCelebration from '../../components/ExamInterface/AnimatedCelebrat
 import { Button } from '../../components/common';
 import ConfettiEffect from '../../components/ExamInterface/ConfettiEffect/ConfettiEffect';
 import ConfirmationDialog from '../../components/ExamInterface/ConfirmationDialog/ConfirmationDialog';
-import { EXAM } from '../../utils/constants';
 import ExamResultSummary from '../../components/ExamInterface/ExamResultsSummary/ExamResultsSummary';
 import ImprovedExamInterface from '../../components/ExamInterface/ImprovedExamInterface/ImprovedExamInterface';
 import StudyTips from '../../components/ExamInterface/StudyTips/StudyTips';
@@ -62,9 +61,6 @@ const ExamPage = () => {
   // Anti-cheating state
   const [showTabWarning, setShowTabWarning] = useState(false);
   const [attemptedNavigations, setAttemptedNavigations] = useState(0);
-
-  // Anti-cheating effects remain the same
-  // ... [All the useEffect blocks for anti-cheating]
 
   // Handler for exam submission
   const handleSubmitExam = useCallback((userAnswers) => {
@@ -178,11 +174,11 @@ const ExamPage = () => {
         let examInfo = {
           id: subjectId,
           name: subjectInfo.name,
-          timeLimit: subjectInfo.defaultTimeLimit || EXAM.DEFAULT_TIME_LIMIT,
+          timeLimit: subjectInfo.defaultTimeLimit || 30,
           icon: subjectInfo.icon || '📝',
           type: examType || 'sample',
           year: year || 'N/A',
-          examId: examId || 'sample',
+          examId: examId || 'Exam1',
           questionCount: subjectInfo.defaultQuestionCount || 0
         };
         
@@ -201,8 +197,8 @@ const ExamPage = () => {
         
         setExamInfo(examInfo);
         
-        // Load questions
-        const examData = await dataLoader.loadExam(subjectId, examType || 'sample', examId);
+        // Load questions using our new data loader
+        const examData = await dataLoader.loadExam(subjectId, examType || 'sample', examId || 'Exam1');
         
         if (!examData || !examData.questions || examData.questions.length === 0) {
           setError('No questions available for this exam');
@@ -224,6 +220,44 @@ const ExamPage = () => {
 
     loadExamData();
   }, [subjectId, examType, year, examId]);
+  
+  // Anti-cheating: Listen for visibility changes
+  useEffect(() => {
+    if (!examStarted) return;
+    
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        // User switched tabs or minimized window
+        setAttemptedNavigations(prev => prev + 1);
+        setShowTabWarning(true);
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [examStarted]);
+  
+  // Anti-cheating: Disable back button
+  useEffect(() => {
+    if (!examStarted) return;
+    
+    const handleBackButton = (e) => {
+      e.preventDefault();
+      setAttemptedNavigations(prev => prev + 1);
+      setShowTabWarning(true);
+      window.history.pushState(null, '', window.location.pathname);
+    };
+    
+    window.history.pushState(null, '', window.location.pathname);
+    window.addEventListener('popstate', handleBackButton);
+    
+    return () => {
+      window.removeEventListener('popstate', handleBackButton);
+    };
+  }, [examStarted]);
   
   // Main render
   return (

@@ -733,3 +733,77 @@
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
   }
 }
+
+.section-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.section-header h2 {
+  font-size: 1.8rem;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.section-header h2::after {
+  content: '';
+  position: absolute;
+  height: 3px;
+  width: 80px;
+  background: var(--gradient-primary);
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: var(--radius-full);
+}
+
+.section-header p {
+  color: var(--dark-gray);
+  max-width: 700px;
+  margin: 1rem auto 0;
+}
+
+.section-divider {
+  height: 1px;
+  background: var(--light-gray);
+  margin: 3rem 0;
+  position: relative;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 4px;
+  background: var(--primary-light);
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+/* Free sample exam card highlighting */
+.exam-type-card.sample-card {
+  border-left: 4px solid var(--accent);
+  background: linear-gradient(to right, rgba(var(--accent-rgb), 0.05), transparent);
+}
+
+.exam-type-card.sample-card .exam-type-icon {
+  background: linear-gradient(to right bottom, var(--accent), var(--accent-light));
+}
+
+/* Free label for sample exams */
+.free-label {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--accent);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-full);
+}

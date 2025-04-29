@@ -1,7 +1,4 @@
-// src/utils/dataLoader.js (update)
-
-// Import the manifest
-import manifest from '../data/category/manifest.json';
+// src/utils/dataLoader.js
 
 /**
  * Utility to load exams from the organized directory structure
@@ -10,56 +7,74 @@ import manifest from '../data/category/manifest.json';
 /**
  * Load exam data by subject, exam type, and optional exam ID
  * @param {string} subjectId - The subject ID (e.g., 'mathematics')
- * @param {string} examType - The exam type (e.g., 'icas', 'naplan')
+ * @param {string} examType - The exam type (e.g., 'icas', 'naplan', 'sample')
  * @param {string} examId - Optional specific exam ID
- * @returns {Object|null} Exam data object or null if not found
+ * @returns {Promise<Object|null>} Exam data object or null if not found
  */
-export const loadExam = async (subjectId, examType, examId) => {
+export const loadExam = async (subjectId, examType = 'sample', examId = null) => {
   try {
-    // Validate inputs
-    if (!subjectId || !examType) {
-      console.error('Missing required parameters for loadExam');
-      return null;
+    // Normalize exam type name for directory structure
+    let examTypeDir;
+    switch (examType) {
+      case 'icas_all_stars':
+      case 'icas_all':
+        examTypeDir = 'ICAS All';
+        break;
+      case 'icas':
+        examTypeDir = 'ICAS';
+        break;
+      case 'naplan':
+        examTypeDir = 'Naplan';
+        break;
+      case 'sample':
+      default:
+        examTypeDir = 'Free Sample exams';
+        break;
     }
+
+    // Capitalize first letter of subject
+    const capitalizedSubject = subjectId.charAt(0).toUpperCase() + subjectId.slice(1);
     
-    // Check if subject and exam type exist in manifest
-    const subject = manifest.subjects[subjectId];
-    if (!subject) {
-      console.error(`Subject not found: ${subjectId}`);
-      return null;
-    }
+    // Handle subject name mapping
+    const subjectMap = {
+      'digital': 'Digital Technologies',
+      'mathematics': 'Mathematics',
+      'science': 'Science',
+      'reading': 'Reading',
+      'writing': 'Writing',
+      'spelling': 'Spelling',
+      'grammar': 'Grammar',
+      'numeracy': 'Numeracy',
+      'language': 'Language Conventions',
+      'reasoning': 'Reasoning'
+    };
     
-    const examTypeInfo = subject.examTypes[examType];
-    if (!examTypeInfo) {
-      console.error(`Exam type not found: ${examType} for subject ${subjectId}`);
-      return null;
-    }
+    const subjectDir = subjectMap[subjectId] || capitalizedSubject;
     
-    // If examId is provided, load that specific exam
-    if (examId) {
+    // Determine exam ID to load
+    const fileId = examId || 'Exam1';
+    
+    // Construct the path to the JSON file
+    const filePath = `../data/category/Subjects/${subjectDir}/${examTypeDir}/${fileId}`;
+    
+    // Dynamically import the JSON file
+    try {
+      const examData = await import(filePath + '.json');
+      return examData.default;
+    } catch (importError) {
+      console.error(`Failed to import exam data from ${filePath}.json:`, importError);
+      
+      // Try alternative path formats if the first attempt fails
       try {
-        // Dynamically import the JSON file
-        const examData = await import(`../data/category/Subjects/${subject.name}/${examTypeInfo.name}/${examId}.json`);
+        // Try with lowercase exam type directory
+        const altFilePath = `../data/category/Subjects/${subjectDir}/${examTypeDir.toLowerCase()}/${fileId}`;
+        const examData = await import(altFilePath + '.json');
         return examData.default;
-      } catch (error) {
-        console.error(`Failed to load specific exam: ${examId}`, error);
+      } catch (altError) {
+        console.error(`Failed alternative import paths as well:`, altError);
         return null;
       }
     }
-    
-    // Otherwise, load the first exam in the directory
-    if (examTypeInfo.exams && examTypeInfo.exams.length > 0) {
-      const firstExam = examTypeInfo.exams[0];
-      try {
-        const examData = await import(`../data/category/Subjects/${subject.name}/${examTypeInfo.name}/${firstExam.id}.json`);
-        return examData.default;
-      } catch (error) {
-        console.error(`Failed to load default exam for ${subject.name}/${examTypeInfo.name}`, error);
-        return null;
-      }
-    }
-    
-    return null;
   } catch (error) {
     console.error('Error loading exam data:', error);
     return null;
@@ -67,41 +82,34 @@ export const loadExam = async (subjectId, examType, examId) => {
 };
 
 /**
- * Load available exams for a subject and exam type
+ * Get available exams for a subject and exam type from the manifest
  * @param {string} subjectId - The subject ID
  * @param {string} examType - The exam type
  * @returns {Array} Array of available exam metadata
  */
-export const loadAvailableExams = (subjectId, examType) => {
+export const getAvailableExams = async (subjectId, examType) => {
   try {
-    // Validate inputs
-    if (!subjectId || !examType) {
-      console.error('Missing required parameters for loadAvailableExams');
-      return [];
+    // Import the manifest dynamically
+    const manifest = await import('../data/category/manifest.json');
+    
+    // Check if subject exists in manifest
+    if (manifest.default.subjects && manifest.default.subjects[subjectId]) {
+      const subject = manifest.default.subjects[subjectId];
+      
+      // Check if exam type exists for this subject
+      if (subject.examTypes && subject.examTypes[examType]) {
+        return subject.examTypes[examType].exams || [];
+      }
     }
     
-    // Check if subject and exam type exist in manifest
-    const subject = manifest.subjects[subjectId];
-    if (!subject) {
-      console.error(`Subject not found: ${subjectId}`);
-      return [];
-    }
-    
-    const examTypeInfo = subject.examTypes[examType];
-    if (!examTypeInfo) {
-      console.error(`Exam type not found: ${examType} for subject ${subjectId}`);
-      return [];
-    }
-    
-    // Return the exams list from the manifest
-    return examTypeInfo.exams || [];
+    return [];
   } catch (error) {
-    console.error('Error loading available exams:', error);
+    console.error('Error getting available exams:', error);
     return [];
   }
 };
 
 export default {
   loadExam,
-  loadAvailableExams
+  getAvailableExams
 };
