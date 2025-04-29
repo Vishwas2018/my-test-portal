@@ -2,10 +2,11 @@
 
 import './Exams.css';
 
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '../../components/common';
+import StudyTips from '../../components/ExamInterface/StudyTips/StudyTips';
 import { YEAR_LEVELS } from '../../utils/constants';
 import examDataService from '../../services/examDataService';
 import { useAuth } from '../../contexts/AuthContext';
@@ -267,6 +268,54 @@ const Exams = () => {
             </p>
           </div>
 
+          {/* New Overview Section */}
+          <div className="exams-overview">
+            <div className="section-header">
+              <h2>How Our Exams Work</h2>
+              <p>Understanding the online evaluation process</p>
+            </div>
+            
+            <div className="overview-content">
+              <div className="overview-section">
+                <h3><i className="fas fa-laptop"></i> Online Evaluation Process</h3>
+                <p>Our platform uses advanced algorithms to evaluate responses in real-time. Multiple-choice and true/false questions are automatically graded, while open-ended responses are analyzed for key concepts and understanding.</p>
+              </div>
+              
+              <div className="overview-section">
+                <h3><i className="fas fa-shield-alt"></i> Anti-Cheating Measures</h3>
+                <p>To maintain academic integrity, our platform monitors for suspicious activity. Switching tabs, copying content, or using browser navigation during an exam will be recorded. We want to help students develop genuine understanding through honest practice.</p>
+              </div>
+              
+              <div className="overview-section">
+                <h3><i className="fas fa-chart-line"></i> Performance Tracking</h3>
+                <p>After each exam, you'll receive detailed feedback showing your performance, areas of strength, and opportunities for improvement. Track your progress over time to see how your skills develop.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Study Tips Section */}
+          <div className="study-tips-container">
+            <div className="section-header">
+              <h2>Study Tips for Success</h2>
+              <p>Maximize your performance with these subject-specific study strategies</p>
+            </div>
+            
+            <div className="tips-grid">
+              <div className="tip-card">
+                <StudyTips subject="mathematics" defaultOpen={false} />
+              </div>
+              <div className="tip-card">
+                <StudyTips subject="science" defaultOpen={false} />
+              </div>
+              <div className="tip-card">
+                <StudyTips subject="english" defaultOpen={false} />
+              </div>
+              <div className="tip-card">
+                <StudyTips subject="digital" defaultOpen={false} />
+              </div>
+            </div>
+          </div>
+
           {/* Sample Tests Section */}
           <div className="section-header">
             <h2>Free Sample Exams</h2>
@@ -275,9 +324,10 @@ const Exams = () => {
 
           <div className="exam-types-grid" style={{ marginBottom: '3rem' }}>
             <div 
-              className="exam-type-card"
+              className="exam-type-card sample-card"
               onClick={handleSampleExamSelect}
             >
+              <div className="free-label">Free</div>
               <div className="exam-type-icon">
                 {sampleExamType.icon}
               </div>
@@ -336,6 +386,26 @@ const Exams = () => {
             </span>
           </div>
           
+          <div className="section-header">
+            <h2>Sample Tests</h2>
+            <p>Try our free sample exams for each subject. Upgrade for full access to comprehensive practice materials.</p>
+          </div>
+          
+          <div className="subject-benefits-container">
+            <div className="subject-benefits">
+              <h3>Benefits of full subscription:</h3>
+              <ul className="benefits-list">
+                <li><i className="fas fa-check"></i> Access to 5 exams per subject per year level</li>
+                <li><i className="fas fa-check"></i> Detailed performance analytics</li>
+                <li><i className="fas fa-check"></i> Track your progress over time</li>
+                <li><i className="fas fa-check"></i> Personalized study recommendations</li>
+              </ul>
+              <div className="upgrade-prompt">
+                <Link to="/pricing" className="btn-outline">View subscription options</Link>
+              </div>
+            </div>
+          </div>
+          
           <h2 className="section-title">Select Subject</h2>
           <div className="exams-grid">
             {sampleSubjects.map(subject => (
@@ -344,6 +414,7 @@ const Exams = () => {
                 className="exam-card"
                 onClick={() => handleSubjectSelect(subject.id)}
               >
+                <div className="free-label">Free Sample</div>
                 <div className="exam-card-content">
                   <div className="exam-card-header">
                     <span className="subject-icon">{subject.icon}</span>
@@ -356,7 +427,7 @@ const Exams = () => {
                   <p className="subject-description">{subject.description}</p>
                 </div>
                 <Button variant="primary" size="small">
-                  Select
+                  Try Free Sample
                 </Button>
               </div>
             ))}
@@ -395,24 +466,39 @@ const Exams = () => {
             </p>
           </div>
           
-          <div className="exam-options-container">
+          <div className="exam-sections-container">
             {/* Sample Tests Section - available to all users */}
-            <div className="exam-option-card">
-              <h2>Sample Tests</h2>
+            <div className="exam-section-card">
+              <div className="section-icon">📝</div>
+              <h3>Sample Tests</h3>
               <p>Try free sample tests to get familiar with our platform.</p>
+              <ul className="section-features">
+                <li><i className="fas fa-check"></i> 1 free exam per subject</li>
+                <li><i className="fas fa-check"></i> No registration required</li>
+                <li><i className="fas fa-check"></i> Instant feedback</li>
+                <li><i className="fas fa-check"></i> Basic results</li>
+              </ul>
               <Button 
                 variant="primary" 
                 size="medium"
                 onClick={() => handleSectionSelect('sampleTests')}
               >
-                Start Practice Tests
+                Start Sample Tests
               </Button>
             </div>
             
-            {/* Full Exams Section - requires login */}
-            <div className="exam-option-card premium-card">
-              <h2>Full Exams</h2>
-              <p>Complete {selectedExamTypeInfo?.name} practice exams with detailed results and progress tracking.</p>
+            {/* Comprehensive Exam Practice Section - requires login */}
+            <div className="exam-section-card premium-card">
+              <div className="pro-badge">Premium</div>
+              <div className="section-icon">🏆</div>
+              <h3>Comprehensive Exam Practice</h3>
+              <p>Complete exam practice with detailed results and progress tracking.</p>
+              <ul className="section-features">
+                <li><i className="fas fa-check"></i> 5 exams per subject per year level</li>
+                <li><i className="fas fa-check"></i> Detailed analytics</li>
+                <li><i className="fas fa-check"></i> Performance tracking</li>
+                <li><i className="fas fa-check"></i> Personalized insights</li>
+              </ul>
               
               {isAuthenticated ? (
                 <Button 
@@ -420,11 +506,11 @@ const Exams = () => {
                   size="medium"
                   onClick={() => handleSectionSelect('fullExams')}
                 >
-                  Select Full Exams
+                  Access Full Exams
                 </Button>
               ) : (
                 <div className="login-required">
-                  <p>You need to be logged in to access full practice exams</p>
+                  <p>You need to be logged in to access comprehensive exams</p>
                   <div className="login-buttons">
                     <Button 
                       variant="primary" 
@@ -440,6 +526,9 @@ const Exams = () => {
                     >
                       Sign Up
                     </Button>
+                  </div>
+                  <div className="pricing-link">
+                    <Link to="/pricing">View subscription options</Link>
                   </div>
                 </div>
               )}
@@ -480,6 +569,7 @@ const Exams = () => {
                 className="exam-card"
                 onClick={() => handleSubjectSelect(subject.id)}
               >
+                <div className="free-label">Free Sample</div>
                 <div className="exam-card-content">
                   <div className="exam-card-header">
                     <span className="subject-icon">{subject.icon}</span>
@@ -554,18 +644,58 @@ const Exams = () => {
               onClick={() => setSelectedGrade(null)}
               className="back-button"
             >
+              ← Back
+            </Button>
+            <span>
+              {examTypes.find(type => type.id === selectedExamType)?.name} &gt;
+              Full Exams
+            </span>
+          </div>
+
+          <h2 className="section-title">Select Year Level</h2>
+          <div className="year-buttons-grid">
+            {YEAR_LEVELS.map(grade => (
+              <div
+                key={grade}
+                className="year-button"
+                onClick={() => handleGradeSelect(grade)}
+              >
+                <div className="year-button-content">
+                  <span className="year-text">Year {grade}</span>
+                  <span className="year-arrow">→</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // After selecting year level for full exams, show subject selection
+  if (selectedExamType && selectedSection === 'fullExams' && selectedGrade && !selectedSubject) {
+    return (
+      <div className="exams-page">
+        <div className="exams-container">
+          <div className="breadcrumb-trail">
+            <Button
+              variant="secondary"
+              size="small"
+              onClick={() => setSelectedGrade(null)}
+              className="back-button"
+            >
               ← Back to Year Levels
             </Button>
             <span>
-              {examTypes.find(type => type.id === selectedExamType)?.name} &gt; 
+              {examTypes.find(type => type.id === selectedExamType)?.name} &gt;
               Full Exams &gt; Year {selectedGrade}
             </span>
           </div>
-          
+
           <h2 className="section-title">Select Subject</h2>
           <div className="exams-grid">
             {displaySubjects.map(subject => (
-              <div 
+              <div
                 key={subject.id}
                 className="exam-card"
                 onClick={() => handleSubjectSelect(subject.id)}
@@ -598,33 +728,33 @@ const Exams = () => {
     const currentSubject = selectedSection === 'sampleTests'
       ? getSampleTestSubjects().find(s => s.id === selectedSubject)
       : displaySubjects.find(s => s.id === selectedSubject);
-    
+
     return (
       <div className="exams-page">
         <div className="exams-container">
           <div className="breadcrumb-trail">
-            <Button 
-              variant="secondary" 
-              size="small" 
+            <Button
+              variant="secondary"
+              size="small"
               onClick={() => setSelectedSubject(null)}
               className="back-button"
             >
               ← Back to Subjects
             </Button>
             <span>
-              {examTypes.find(type => type.id === selectedExamType)?.name} &gt; 
-              {selectedSection === 'fullExams' ? `Full Exams &gt; Year ${selectedGrade} &gt;` : 'Sample Tests &gt;'} 
+              {examTypes.find(type => type.id === selectedExamType)?.name} &gt;
+              {selectedSection === 'fullExams' ? `Full Exams &gt; Year ${selectedGrade} &gt;` : 'Sample Tests &gt;'}
               {currentSubject?.name}
             </span>
           </div>
-          
+
           <h2 className="section-title">
             Available {selectedSection === 'sampleTests' ? 'Sample' : ''} Exams
           </h2>
           <div className="exams-grid">
             {availableExams.length > 0 ? (
               availableExams.map(exam => (
-                <div 
+                <div
                   key={exam.id}
                   className="exam-card"
                   onClick={() => handleExamSelect(exam.id)}

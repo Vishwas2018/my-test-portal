@@ -353,8 +353,30 @@ const ImprovedExamInterface = ({
      * Transitions to review mode before final submission
      */
     const handleReviewExam = useCallback(() => {
+        // Check if there are unanswered questions
+        const unansweredCount = questions.length - Object.keys(userAnswers).length;
+        const flaggedCount = flaggedQuestions.length;
+        
+        if (unansweredCount > 0 || flaggedCount > 0) {
+          // Show warning message
+          setFeedbackMessage({
+            type: 'warning',
+            title: 'Review Needed',
+            message: `You have ${unansweredCount > 0 ? `${unansweredCount} unanswered questions` : ''}
+                     ${unansweredCount > 0 && flaggedCount > 0 ? ' and ' : ''}
+                     ${flaggedCount > 0 ? `${flaggedCount} flagged questions` : ''}.
+                     You'll be able to review them before final submission.`
+          });
+          setShowFeedback(true);
+          
+          // Auto-hide feedback after 5 seconds
+          setTimeout(() => {
+            setShowFeedback(false);
+          }, 5000);
+        }
+        
         setExamState('review');
-    }, []);
+      }, [questions.length, userAnswers, flaggedQuestions]);
 
     /**
      * Returns to the exam from review mode

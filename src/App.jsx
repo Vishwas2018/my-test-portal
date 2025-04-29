@@ -64,7 +64,8 @@ function App() {
                     <Route path="/sample-test/:examType" element={<Navigate to="/exams" replace />} />
                     <Route path="/sample-test/:examType/year-:grade" element={<Navigate to="/exams" replace />} />
                     <Route path="/sample-test/:examType/year-:grade/:subject" element={<Navigate to="/exams" replace />} />
-
+                    <Route path="/exams" element={<Exams />} />
+                    
                     {/* Protected routes */}
                     <Route
                       path="/dashboard"

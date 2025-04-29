@@ -40,6 +40,9 @@ const HomePage = () => {
                   <i className="fas fa-star"></i> START PRACTICING NOW
                 </Link>
               )}
+              <Link to="/exams" className="hero-btn secondary">
+                <i className="fas fa-file-alt"></i> EXPLORE EXAMS
+              </Link>
               <Link to="/features" className="hero-btn secondary">
                 <i className="fas fa-list-check"></i> EXPLORE FEATURES
               </Link>
@@ -166,6 +169,46 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Exam Section */}
+      <section id="exam-section" className="exam-section">
+        <div className="container">
+          <h2 className="section-title">Prepare for Success</h2>
+          <p className="section-subtitle">Comprehensive exam practice to help students excel</p>
+          
+          <div className="exam-overview">
+            <div className="exam-info-card">
+              <div className="exam-icon">📋</div>
+              <h3>How Exams Work</h3>
+              <p>Our online exams simulate real testing conditions with timed sessions, varied question formats, and instant feedback to help you improve.</p>
+            </div>
+            
+            <div className="exam-info-card">
+              <div className="exam-icon">📚</div>
+              <h3>Study Tips</h3>
+              <p>Practice regularly, focus on understanding concepts rather than memorizing, and review your mistakes to learn from them.</p>
+              <div className="tip-subjects">
+                <span className="tip-subject">Math</span>
+                <span className="tip-subject">Science</span>
+                <span className="tip-subject">English</span>
+                <span className="tip-subject">Digital</span>
+              </div>
+            </div>
+            
+            <div className="exam-info-card">
+              <div className="exam-icon">🔒</div>
+              <h3>Academic Integrity</h3>
+              <p>Our platform monitors for tab switching and other behaviors that may compromise exam integrity. Focus on honest practice for genuine improvement.</p>
+            </div>
+          </div>
+          
+          <div className="exam-cta">
+            <Link to="/exams" className="hero-btn primary">
+              <i className="fas fa-file-alt"></i> Explore Exams
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials Section */}
       <Testimonials />
 
@@ -185,7 +228,7 @@ const HomePage = () => {
                 <li><i className="fas fa-check"></i> No time limit - practice at your own pace</li>
                 <li><i className="fas fa-check"></i> No registration required</li>
               </ul>
-              <Link to="/activities" className="hero-btn primary">Try Free Samples</Link>
+              <Link to="/exams" className="hero-btn primary">Try Free Samples</Link>
             </div>
             
             <div className="sample-activity-image">

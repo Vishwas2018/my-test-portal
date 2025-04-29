@@ -101,6 +101,99 @@ const SectionHeading = styled.h3`
   }
 `;
 
+const QuestionBreakdown = styled.div`
+  margin-top: 1.5rem;
+  background-color: var(--light-gray);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+`;
+
+const BreakdownTitle = styled.h4`
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--dark);
+`;
+
+const BreakdownStats = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+`;
+
+const BreakdownStat = styled.div`
+  text-align: center;
+`;
+
+const StatValue = styled.div`
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+`;
+
+const StatLabel = styled.div`
+  font-size: 0.8rem;
+  color: var(--dark-gray);
+`;
+
+const DetailSubtext = styled.div`
+  font-size: 0.75rem;
+  color: var(--dark-gray);
+  margin-top: 0.25rem;
+`;
+
+const ActionSection = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+`;
+
+const ActionButton = styled.button`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  svg {
+    flex-shrink: 0;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+const ReviewButton = styled(ActionButton)`
+  background-color: var(--primary);
+  color: white;
+`;
+
+const DashboardButton = styled(ActionButton)`
+  background-color: var(--light-gray);
+  color: var(--dark);
+`;
+
 /**
  * ExamResultsSummary component displays a comprehensive summary of exam results
  * 
@@ -153,6 +246,14 @@ const ExamResultSummary = ({ result }) => {
           <DetailValue>{formatTimeTaken(result.timeTaken)}</DetailValue>
           <DetailLabel>Time Taken</DetailLabel>
         </DetailCard>
+        
+        {result.mostTimeSpent && (
+          <DetailCard>
+            <DetailValue>Q{result.mostTimeSpent.questionIndex + 1}</DetailValue>
+            <DetailLabel>Most Time Spent</DetailLabel>
+            <DetailSubtext>{result.mostTimeSpent.timeSpent}s</DetailSubtext>
+          </DetailCard>
+        )}
       </ResultsDetails>
       
       <PerformanceSection>
@@ -171,7 +272,52 @@ const ExamResultSummary = ({ result }) => {
               ? " Good effort. With some more practice, you'll improve even more."
               : " Keep practicing to strengthen your understanding of this subject."}
         </p>
+        
+        {result.attemptedQuestions && (
+          <QuestionBreakdown>
+            <BreakdownTitle>Question Breakdown</BreakdownTitle>
+            <BreakdownStats>
+              <BreakdownStat>
+                <StatValue>{result.attemptedQuestions}</StatValue>
+                <StatLabel>Attempted</StatLabel>
+              </BreakdownStat>
+              <BreakdownStat>
+                <StatValue>{result.correctCount}</StatValue>
+                <StatLabel>Correct</StatLabel>
+              </BreakdownStat>
+              <BreakdownStat>
+                <StatValue>{result.attemptedQuestions - result.correctCount}</StatValue>
+                <StatLabel>Wrong</StatLabel>
+              </BreakdownStat>
+              <BreakdownStat>
+                <StatValue>{result.totalQuestions - result.attemptedQuestions}</StatValue>
+                <StatLabel>Skipped</StatLabel>
+              </BreakdownStat>
+            </BreakdownStats>
+          </QuestionBreakdown>
+        )}
       </PerformanceSection>
+      
+      <ActionSection>
+        <ReviewButton onClick={result.onReviewQuestions}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Review Questions
+        </ReviewButton>
+        
+        <DashboardButton onClick={result.onReturnToDashboard}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          Return to Dashboard
+        </DashboardButton>
+      </ActionSection>
     </ResultsContainer>
   );
 };

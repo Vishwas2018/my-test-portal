@@ -57,10 +57,12 @@ const ExamPage = () => {
   const [showAnimatedCelebration, setShowAnimatedCelebration] = useState(false);
   const [examStarted, setExamStarted] = useState(false);
   const [showStudyTips, setShowStudyTips] = useState(true);
+  const [showReviewMode, setShowReviewMode] = useState(false);
   
   // Anti-cheating state
   const [showTabWarning, setShowTabWarning] = useState(false);
   const [attemptedNavigations, setAttemptedNavigations] = useState(0);
+  const [warningTimeout, setWarningTimeout] = useState(null);
 
   // Handler for exam submission
   const handleSubmitExam = useCallback((userAnswers) => {
@@ -87,7 +89,7 @@ const ExamPage = () => {
     const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
     const timeTaken = Math.floor((new Date() - startTime) / 1000);
 
-    // Create result object
+    // Create result object with navigation attempts
     const result = {
       subject: examInfo.id,
       subjectName: examInfo.name,
@@ -100,7 +102,8 @@ const ExamPage = () => {
       timeTaken,
       answers: userAnswers,
       navigationAttempts: attemptedNavigations,
-      date: new Date().toISOString()
+      date: new Date().toISOString(),
+      attemptedQuestions: Object.keys(userAnswers).length
     };
 
     // Store the result
@@ -150,6 +153,12 @@ const ExamPage = () => {
       setLocalDarkMode(isDark);
     }
   }, [themeContextFromHook]);
+
+  const handleReviewQuestions = useCallback(() => {
+    setShowCompletionDialog(false);
+    // Show the questions with answers
+    setShowReviewMode(true);
+  }, []);
 
   // Load exam data on component mount
   useEffect(() => {
@@ -230,6 +239,18 @@ const ExamPage = () => {
         // User switched tabs or minimized window
         setAttemptedNavigations(prev => prev + 1);
         setShowTabWarning(true);
+        
+        // Clear any existing timeout
+        if (warningTimeout) {
+          clearTimeout(warningTimeout);
+        }
+        
+        // Auto-hide the warning after 10 seconds
+        const timeout = setTimeout(() => {
+          setShowTabWarning(false);
+        }, 10000);
+        
+        setWarningTimeout(timeout);
       }
     };
     
@@ -237,25 +258,31 @@ const ExamPage = () => {
     
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (warningTimeout) {
+        clearTimeout(warningTimeout);
+      }
     };
-  }, [examStarted]);
+  }, [examStarted, warningTimeout]);
   
   // Anti-cheating: Disable back button
   useEffect(() => {
     if (!examStarted) return;
     
-    const handleBackButton = (e) => {
+    const handleBeforeUnload = (e) => {
+      // Standard way to show a confirmation dialog when the user tries to leave the page
       e.preventDefault();
+      e.returnValue = 'Changes you made may not be saved.';
+      
       setAttemptedNavigations(prev => prev + 1);
       setShowTabWarning(true);
-      window.history.pushState(null, '', window.location.pathname);
+      
+      return e.returnValue;
     };
     
-    window.history.pushState(null, '', window.location.pathname);
-    window.addEventListener('popstate', handleBackButton);
+    window.addEventListener('beforeunload', handleBeforeUnload);
     
     return () => {
-      window.removeEventListener('popstate', handleBackButton);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [examStarted]);
   
@@ -305,12 +332,41 @@ const ExamPage = () => {
             )}
             
             {/* Exam interface - only shown after confirmation */}
-            {!showCompletionDialog && !showAnimatedCelebration && (
+            {!showCompletionDialog && !showAnimatedCelebration && !showReviewMode && (
               <ImprovedExamInterface 
                 examInfo={examInfo}
                 questions={questions}
                 onSubmitExam={handleSubmitExam}
               />
+            )}
+            
+            {/* Review mode showing questions with answers */}
+            {showReviewMode && (
+              <div className="review-container">
+                <h2>Review Questions</h2>
+                <div className="questions-review">
+                  {questions.map((question, index) => (
+                    <div key={index} className="question-review-item">
+                      <h3>Question {index + 1}</h3>
+                      <p>{question.text}</p>
+                      <div className="user-answer">
+                        <strong>Your answer:</strong> {examResult.answers[index] || "Not answered"}
+                      </div>
+                      <div className="correct-answer">
+                        <strong>Correct answer:</strong> {question.correctAnswer}
+                      </div>
+                      <div className="explanation">
+                        <strong>Explanation:</strong> {question.explanation}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="review-actions">
+                  <Button onClick={() => navigate('/dashboard')}>
+                    Return to Dashboard
+                  </Button>
+                </div>
+              </div>
             )}
           </>
         )}
@@ -336,9 +392,18 @@ const ExamPage = () => {
                 <p>You've completed the {examInfo.name} exam!</p>
                 
                 {/* Enhanced result summary */}
-                <ExamResultSummary result={examResult} />
+                <ExamResultSummary 
+                  result={{
+                    ...examResult,
+                    onReviewQuestions: handleReviewQuestions,
+                    onReturnToDashboard: () => navigate('/dashboard')
+                  }} 
+                />
                 
                 <div className="modal-buttons">
+                  <Button onClick={handleReviewQuestions}>
+                    Review Questions
+                  </Button>
                   <Button 
                     onClick={handleViewResults} 
                     data-exam-link="true"
